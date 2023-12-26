@@ -1,0 +1,5 @@
+add_subdirectory(tc_3rdparty)
+add_subdirectory(tc_common)
+add_subdirectory(tc_message)
+add_subdirectory(tc_opus_codec)
+add_subdirectory(tc_client_sdk)
