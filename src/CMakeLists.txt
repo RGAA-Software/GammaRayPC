@@ -1,5 +1,2 @@
-set(SRCS
-        application.cpp
-)
-
-add_library(main ${SRCS})
+add_subdirectory(client)
+add_subdirectory(host)

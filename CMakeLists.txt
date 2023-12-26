@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.26)
 ## env settings
 include(env_settings.cmake)
 
+set(CMAKE_PREFIX_PATH ${QT_ROOT}/lib/cmake)
 set(CMAKE_TOOLCHAIN_FILE ${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake)
 project(tc_client_pc)
 
@@ -40,6 +41,7 @@ find_package(OpenSSL REQUIRED)
 find_package(SqliteOrm REQUIRED)
 
 ## include directories
+include_directories(${CMAKE_SOURCE_DIR}/src)
 include_directories(${CMAKE_SOURCE_DIR}/deps)
 include_directories(${CMAKE_SOURCE_DIR}/deps/tc_3rdparty)
 include_directories(${CMAKE_SOURCE_DIR}/deps/tc_3rdparty/eventbus/src)
@@ -50,19 +52,5 @@ include_directories(${CMAKE_BINARY_DIR}/deps/tc_message)
 # 执行的时候就Copy一下，方便测试
 #file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/settings.toml" DESTINATION ${CMAKE_BINARY_DIR})
 
-set(SRCS main.cpp)
-
 add_subdirectory(src)
 add_subdirectory(deps)
-
-add_executable(${PROJECT_NAME} ${SRCS})
-target_link_libraries(${PROJECT_NAME} main)
-target_link_libraries(${PROJECT_NAME} tc_common tc_message tc_sdk)
-target_link_libraries(${PROJECT_NAME} sqlite_orm::sqlite_orm EasyHook64 jemalloc)
-
-## Post build
-#add_custom_command(TARGET tc_application POST_BUILD
-#        COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_SOURCE_DIR}/settings.toml"  "${CMAKE_BINARY_DIR}"
-#        COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_BINARY_DIR}/deps/tc_capture/tc_capture_library.dll"  "${CMAKE_BINARY_DIR}"
-        #COMMAND ${CMAKE_COMMAND} -E copy_directory "${VLC_ROOT}/plugins"  "${CMAKE_BINARY_DIR}/plugins"
-#)
