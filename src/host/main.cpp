@@ -5,8 +5,8 @@
 #include <QSurfaceFormat>
 #include <QFontDatabase>
 
-#include "host/workspace.h"
-#include "host/context.h"
+#include "host/host_main_window.h"
+#include "host/host_context.h"
 
 using namespace tc;
 
@@ -37,8 +37,8 @@ int main(int argc, char** argv) {
     qApp->setFont(font);
 #endif
 
-    auto ctx = std::make_shared<Context>();
-    Workspace workspace(ctx);
+    auto ctx = std::make_shared<HostContext>();
+    HostMainWindow workspace(ctx);
     workspace.setFixedSize(1280, 720);
     workspace.show();
 

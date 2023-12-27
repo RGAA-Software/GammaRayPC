@@ -10,8 +10,8 @@ find_package(Qt6 REQUIRED COMPONENTS Widgets Core OpenGL OpenGLWidgets Multimedi
 set(SRCS
         main.cpp
         application.cpp
-        workspace.cpp
-        context.cpp
+        host_main_window.cpp
+        host_context.cpp
 )
 
 add_executable(${PROJECT_NAME} ${SRCS})

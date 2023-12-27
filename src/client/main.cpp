@@ -6,9 +6,9 @@
 #include <QSurfaceFormat>
 #include <QFontDatabase>
 
-#include "host/workspace.h"
-#include "host/context.h"
 #include "thunder_sdk.h"
+#include "client_context.h"
+#include "workspace.h"
 
 using namespace tc;
 
@@ -40,6 +40,11 @@ int main(int argc, char** argv) {
 #endif
 
     ThunderSdkParams params {};
+
+    auto ctx = std::make_shared<ClientContext>();
+    Workspace ws(ctx);
+    ws.resize(1280, 768);
+    ws.show();
 
     return app.exec();
 }
