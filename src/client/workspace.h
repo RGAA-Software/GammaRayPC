@@ -11,6 +11,7 @@ namespace tc
 {
 
     class ClientContext;
+    class ThunderSdk;
 
     class Workspace : public QWidget {
     public:
@@ -21,6 +22,7 @@ namespace tc
     private:
 
         std::shared_ptr<ClientContext> context_ = nullptr;
+        std::shared_ptr<ThunderSdk> sdk_ = nullptr;
 
     };
 
