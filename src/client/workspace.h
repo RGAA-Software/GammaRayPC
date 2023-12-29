@@ -6,14 +6,16 @@
 #define TC_CLIENT_PC_WORKSPACE_H
 
 #include <QWidget>
+#include <QMainWindow>
 
 namespace tc
 {
 
     class ClientContext;
     class ThunderSdk;
+    class OpenGLVideoWidget;
 
-    class Workspace : public QWidget {
+    class Workspace : public QMainWindow {
     public:
 
         explicit Workspace(const std::shared_ptr<ClientContext>& ctx, QWidget* parent = nullptr);
@@ -21,8 +23,14 @@ namespace tc
 
     private:
 
+        void RegisterSdkMsgCallbacks();
+
+    private:
+
         std::shared_ptr<ClientContext> context_ = nullptr;
         std::shared_ptr<ThunderSdk> sdk_ = nullptr;
+
+        OpenGLVideoWidget* video_widget_ = nullptr;
 
     };
 

@@ -10,6 +10,16 @@ set(SRCS
         main.cpp
         client_context.cpp
         workspace.cpp
+
+        director.cpp
+        video_widget.cpp
+        video_widget_event.cpp
+        shader_program.cpp
+        opengl_image_reader.cpp
+        renderer.cpp
+        sprite.cpp
+        opengl_video_widget.cpp
+        qt_key_converter.cpp
 )
 
 add_executable(${PROJECT_NAME} ${SRCS})
