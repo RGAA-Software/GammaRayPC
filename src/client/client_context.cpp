@@ -4,11 +4,13 @@
 
 #include "client_context.h"
 
+#include "tc_common/message_notifier.h"
+
 namespace tc
 {
 
     ClientContext::ClientContext(QObject* parent) : QObject(parent) {
-
+        this->msg_notifier_ = std::make_shared<MessageNotifier>();
     }
 
     ClientContext::~ClientContext() {
@@ -23,6 +25,14 @@ namespace tc
         QMetaObject::invokeMethod(this, [=, this]() {
             task();
         });
+    }
+
+    std::shared_ptr<MessageNotifier> ClientContext::GetMessageNotifier() {
+        return msg_notifier_;
+    }
+
+    std::shared_ptr<MessageListener> ClientContext::ObtainMessageListener() {
+        return msg_notifier_->CreateListener();
     }
 
 }

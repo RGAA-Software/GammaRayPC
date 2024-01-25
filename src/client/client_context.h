@@ -13,6 +13,9 @@
 namespace tc
 {
 
+    class MessageNotifier;
+    class MessageListener;
+
     class ClientContext : public QObject {
     public:
 
@@ -21,6 +24,14 @@ namespace tc
 
         void PostTask(std::function<void()>&& task);
         void PostUITask(std::function<void()>&& task);
+
+        std::shared_ptr<MessageNotifier> GetMessageNotifier();
+        std::shared_ptr<MessageListener> ObtainMessageListener();
+
+    private:
+
+        std::shared_ptr<MessageNotifier> msg_notifier_ = nullptr;
+
     };
 
 }

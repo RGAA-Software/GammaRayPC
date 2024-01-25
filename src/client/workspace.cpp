@@ -7,6 +7,7 @@
 
 #include "thunder_sdk.h"
 #include "opengl_video_widget.h"
+#include "client_context.h"
 
 namespace tc
 {
@@ -14,10 +15,10 @@ namespace tc
     Workspace::Workspace(const std::shared_ptr<ClientContext>& ctx, QWidget* parent) {
         this->context_ = ctx;
 
-        sdk_ = ThunderSdk::Make();
+        sdk_ = ThunderSdk::Make(ctx->GetMessageNotifier());
         sdk_->Init(ThunderSdkParams {
             .ssl_ = false,
-            .ip_ = "127.0.0.1",
+            .ip_ = "10.0.0.16",
             .port_ = 9002,
             .req_path_ = "/media",
         });
