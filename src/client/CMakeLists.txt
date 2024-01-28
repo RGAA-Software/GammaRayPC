@@ -43,7 +43,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE tc_common tc_message tc_sdk)
 target_link_libraries(${PROJECT_NAME} PRIVATE sqlite_orm::sqlite_orm)
 
 if(WIN32)
-    target_link_libraries(${PROJECT_NAME} jemalloc)
+    target_link_libraries(${PROJECT_NAME} PRIVATE jemalloc)
 endif ()
 
 if(QT_VERSION_MAJOR EQUAL 6)

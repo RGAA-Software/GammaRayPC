@@ -21,7 +21,7 @@ namespace tc
             .ip_ = "192.168.31.5",
             .port_ = 9002,
             .req_path_ = "/media",
-        });
+        }, nullptr, DecoderRenderType::kFFmpegI420);
 
         // ui
         auto root_layout = new QHBoxLayout();
