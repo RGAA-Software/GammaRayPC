@@ -18,7 +18,7 @@ namespace tc
         sdk_ = ThunderSdk::Make(ctx->GetMessageNotifier());
         sdk_->Init(ThunderSdkParams {
             .ssl_ = false,
-            .ip_ = "10.0.0.16",
+            .ip_ = "192.168.31.5",
             .port_ = 9002,
             .req_path_ = "/media",
         });

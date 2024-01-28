@@ -1,4 +1,4 @@
-project(tc_client)
+project(tc_client VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
@@ -22,20 +22,33 @@ set(SRCS
         qt_key_converter.cpp
 )
 
-add_executable(${PROJECT_NAME} ${SRCS})
-target_link_libraries(${PROJECT_NAME} Qt6::Widgets
+qt_add_executable(${PROJECT_NAME} MANUAL_FINALIZATION ${SRCS})
+if (APPLE)
+    set_target_properties(${PROJECT_NAME} PROPERTIES
+            MACOSX_BUNDLE_GUI_IDENTIFIER com.tc.client.client
+            MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
+            MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
+            MACOSX_BUNDLE TRUE
+            WIN32_EXECUTABLE TRUE
+    )
+endif()
+
+target_link_libraries(${PROJECT_NAME} PRIVATE Qt6::Widgets
         Qt6::Core
         Qt6::OpenGL
         Qt6::OpenGLWidgets
         Qt6::Multimedia
 )
-target_link_libraries(${PROJECT_NAME} tc_common tc_message tc_sdk)
-target_link_libraries(${PROJECT_NAME} sqlite_orm::sqlite_orm)
+target_link_libraries(${PROJECT_NAME} PRIVATE tc_common tc_message tc_sdk)
+target_link_libraries(${PROJECT_NAME} PRIVATE sqlite_orm::sqlite_orm)
 
 if(WIN32)
     target_link_libraries(${PROJECT_NAME} jemalloc)
 endif ()
 
+if(QT_VERSION_MAJOR EQUAL 6)
+    qt_finalize_executable(${PROJECT_NAME})
+endif()
 
 if (WIN32)
     add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
