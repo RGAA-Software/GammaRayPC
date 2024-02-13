@@ -8,9 +8,7 @@
 
 namespace tc
 {
-
     QtKeyConverter::QtKeyConverter() {
-
         key_mapping_.insert(Qt::Key_Left,0x25);
         key_mapping_.insert(Qt::Key_Up,0x26);
         key_mapping_.insert(Qt::Key_Right,0x27);
@@ -55,7 +53,7 @@ namespace tc
         key_mapping_.insert(Qt::Key_7,0x37);
         key_mapping_.insert(Qt::Key_Ampersand,0x37); // &
         key_mapping_.insert(Qt::Key_8,0x38);
-        key_mapping_.insert(Qt::Key_Asterisk,0x38); // *
+        key_mapping_.insert(Qt::Key_Asterisk,0x6A); // *
         key_mapping_.insert(Qt::Key_9,0x39);
         key_mapping_.insert(Qt::Key_ParenLeft,0x39); // (
         key_mapping_.insert(Qt::Key_A,0x41);
@@ -116,7 +114,7 @@ namespace tc
         key_mapping_.insert(Qt::Key_VolumeMute,0xAD);
         key_mapping_.insert(Qt::Key_MediaStop,0xB2);
         key_mapping_.insert(Qt::Key_MediaPlay,0xB3);
-        key_mapping_.insert(Qt::Key_Plus,0xBB); // +
+        key_mapping_.insert(Qt::Key_Plus,0x6B); // +
         key_mapping_.insert(Qt::Key_Minus,0xBD); // -
         key_mapping_.insert(Qt::Key_Underscore,0xBD); // _
         key_mapping_.insert(Qt::Key_Equal,0xBB); // =
@@ -138,7 +136,7 @@ namespace tc
         key_mapping_.insert(Qt::Key_QuoteDbl,0xDE); // "
         key_mapping_.insert(Qt::Key_QuoteLeft,0xC0); // `
         key_mapping_.insert(Qt::Key_AsciiTilde,0xC0); // ~
-
+        key_mapping_.insert(Qt::Key_Meta,0x5B);
     }
 
     int QtKeyConverter::ToVK(int qt_key) {
@@ -154,7 +152,6 @@ namespace tc
         auto func_is_pressed = [](int vk) -> bool {
             return GetKeyState(vk) < 0;
         };
-
         status.insert(std::make_pair(VK_SHIFT, func_is_pressed(VK_SHIFT)));
         status.insert(std::make_pair(VK_LSHIFT, func_is_pressed(VK_LSHIFT)));
         status.insert(std::make_pair(VK_RSHIFT, func_is_pressed(VK_RSHIFT)));
@@ -170,5 +167,4 @@ namespace tc
 #endif
         return status;
     }
-
 }

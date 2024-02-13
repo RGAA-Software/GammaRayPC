@@ -3,6 +3,7 @@
 #include "tc_message.pb.h"
 #include "qt_key_converter.h"
 #include "tc_common/log.h"
+#include "tc_common/time_ext.h"
 #include "tc_client_sdk/thunder_sdk.h"
 #include "client_context.h"
 
@@ -118,32 +119,15 @@ namespace tc
 	}
 
 	void VideoWidgetEvent::OnKeyPressEvent(QKeyEvent* e) {
-//        int vk = key_converter_->ToVK(e->key());
-//        //LOGI("Key pressed , vk : {}", vk);
-//        int num_lock_state;
-//        int caps_lock_state;
-//#ifdef WIN32
-//        num_lock_state = GetKeyState(VK_NUMLOCK);
-//        caps_lock_state = GetKeyState(VK_CAPITAL);
-//
-//        std::map<int, bool> sys_key_status = key_converter_->GetSysKeyStatus();
-//
-//#endif
-//		auto keyboard_msg = MessageMaker::MakeKeyboardInfo(vk, true, 0, caps_lock_state, num_lock_state);
-//        SendCallback(keyboard_msg);
+#ifdef WIN32
+        SendKeyEvent(e, true);
+#endif
 	}
 
 	void VideoWidgetEvent::OnKeyReleaseEvent(QKeyEvent* e) {
-//		int vk = key_converter_->ToVK(e->key());
-//		//LOGI("Key release , vk : {}", vk);
-//        int num_lock_state;
-//        int caps_lock_state;
-//#ifdef WIN32
-//        num_lock_state = GetKeyState(VK_NUMLOCK);
-//        caps_lock_state = GetKeyState(VK_CAPITAL);
-//#endif
-//		auto keyboard_msg = MessageMaker::MakeKeyboardInfo(vk, false, 0, caps_lock_state, num_lock_state);
-//        SendCallback(keyboard_msg);
+#ifdef WIN32
+        SendKeyEvent(e, false);
+#endif
 	}
 
     void VideoWidgetEvent::RegisterMouseKeyboardEventCallback(const OnMouseKeyboardEventCallback& cbk) {
@@ -158,5 +142,52 @@ namespace tc
 
     void VideoWidgetEvent::SetMultipleMonitors(bool multi) {
         is_multi_monitors_ = multi;
+    }
+
+    void VideoWidgetEvent::SendKeyEvent(QKeyEvent* e, bool down) {
+        int vk = key_converter_->ToVK(e->key());
+        //LOGI("Key pressed , vk : {}", vk);
+        std::cout << "vk = " << vk << std::endl;
+        short num_lock_state = -1;
+        if (vk >= VK_NUMPAD0 && vk <= VK_DIVIDE || vk == VK_NUMLOCK   // 17个键
+            || vk == VK_HOME || vk == VK_END		// HOME(7) END(1)
+            || vk == VK_PRIOR || vk == VK_NEXT	// PAGE_UP(9) PAGE_DOWN(3)
+            || vk == VK_UP || vk == VK_DOWN || vk == VK_LEFT || vk == VK_RIGHT // UP(8) DOWN(2) LEFT(4) RIGHT(6)
+            || vk == VK_INSERT || vk == VK_DELETE // INSERT(0) DELETE(.)
+                ) {
+            num_lock_state = GetKeyState(VK_NUMLOCK);
+        }
+
+        short caps_lock_state = -1;
+        if (vk >= 0x41 && vk <= 0x5A) {
+            caps_lock_state = GetKeyState(VK_CAPITAL);
+            std::cout << "caps_lock_state = " << caps_lock_state << std::endl;
+        }
+
+        std::map<int, bool> sys_key_status = key_converter_->GetSysKeyStatus();
+        auto msg = std::make_shared<Message>();
+        msg->set_type(tc::kKeyEvent);
+        auto key_event = new KeyEvent();
+        key_event->set_down(down);
+        key_event->set_key_code(vk);
+        key_event->set_num_lock_status(num_lock_state);
+        key_event->set_caps_lock_status(caps_lock_state);
+        if (num_lock_state != -1) {
+            key_event->set_status_check(tc::KeyEvent::kCheckNumLock);
+        }
+        else if (caps_lock_state != -1) {
+            key_event->set_status_check(tc::KeyEvent::kCheckCapsLock);
+        }
+        else {
+            key_event->set_status_check(tc::KeyEvent::kDontCareLockKey);
+        }
+        auto cur_time = GetCurrentTime();
+        key_event->set_timestamp(cur_time);
+        msg->set_allocated_key_event(key_event);
+
+        // to do 要判斷當前客戶端是否是主控
+        if(this->sdk_) {
+            this->sdk_->PostBinaryMessage(msg->SerializeAsString());
+        }
     }
 }

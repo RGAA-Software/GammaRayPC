@@ -44,6 +44,7 @@ namespace tc
 
         float CalculateX(int x);
 
+        void SendKeyEvent(QKeyEvent* event, bool down);
     protected:
 		
 		std::shared_ptr<ClientContext> context = nullptr;
