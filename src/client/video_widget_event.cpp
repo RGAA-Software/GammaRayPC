@@ -10,6 +10,7 @@
 #ifdef WIN32
 #include <Windows.h>
 #endif
+#include <qdebug.h>
 
 namespace tc
 {
@@ -61,61 +62,93 @@ namespace tc
         return x_percent;
     }
 
-	void VideoWidgetEvent::OnMouseMoveEvent(QMouseEvent* e) {
-//		if (width == 0 || height == 0) {
-//			return;
-//		}
-//		float x = CalculateX(e->x()); // e->x() * 1.0 / width;
-//		float y = e->y() * 1.0 / height;
-//
-//		float dx = 0;
-//		float dy = 0;
-//
-//		if (last_cursor_x != invalid_position && last_cursor_y != invalid_position) {
-//			dx = (e->x() - last_cursor_x) * 1.0 / width;
-//			dy = (e->y() - last_cursor_y) * 1.0 / height;
-//		}
-//		last_cursor_x = e->x();
-//		last_cursor_y = e->y();
-//
-//		auto key = (MouseKey)GetMouseKey(e);
-//		auto mouse_msg = MessageMaker::MakeMouseInfo(key, false, false, x, y, dx, dy);
-//        SendCallback(mouse_msg);
-//        //LOGI("move: {} {} ", last_cursor_x, last_cursor_y);
+	void VideoWidgetEvent::OnMouseMoveEvent(QMouseEvent* event, int widget_width, int widget_height) {
+        auto curr_pos = event->pos();
+        MouseEventDesc mouse_event_desc;
+        mouse_event_desc.buttons = 0;
+        mouse_event_desc.buttons |= MOUSEEVENTF_MOVE;
+        mouse_event_desc.x_ratio = ((float)curr_pos.x()) / ((float)(widget_width));
+        mouse_event_desc.y_ratio = ((float)curr_pos.y()) / ((float)(widget_height));
+        //qDebug() << "curr_pos = " << curr_pos << " width = " << widget_width << " height = " << widget_height ;
+
+        last_cursor_x_ = curr_pos.x();
+        last_cursor_y_ = curr_pos.y();
+
+        SendMousewEvent(mouse_event_desc);
 	}
 
-	void VideoWidgetEvent::OnMousePressEvent(QMouseEvent* e) {
-//		float x = CalculateX(e->x()); //e->x() * 1.0 / width;
-//		float y = e->y() * 1.0 / height;
-//		auto key = (MouseKey)GetMouseKey(e);
-//		auto mouse_msg = MessageMaker::MakeMouseInfo(key, true, false, x, y, 0, 0);
-//        SendCallback(mouse_msg);
-//
-//        // app message
-//        context->SendAppMessage(MousePressedMessage::Make());
+	void VideoWidgetEvent::OnMousePressEvent(QMouseEvent* event, int widget_width, int widget_height) {
+        // to do MOUSEEVENTF_LEFTDOWN 等标志 是 win32里面的，如果是其他平台，这里要改下
+        auto curr_pos = event->pos();
+        //qDebug() << "curr_pos = " << curr_pos << " width = " << widget_width << " height = " << widget_height ;
+        MouseEventDesc mouse_event_desc;
+        mouse_event_desc.buttons = 0;
+        if(event->button() == Qt::LeftButton) {
+            std::cout << "OnMousePressEvent LeftButton" << std::endl;
+            mouse_event_desc.buttons |= MOUSEEVENTF_LEFTDOWN;
+        } else if(event->button() == Qt::RightButton) {
+            std::cout << "OnMousePressEvent RightButton" << std::endl;
+            mouse_event_desc.buttons |= MOUSEEVENTF_RIGHTDOWN;
+        } else if(event->button() == Qt::MiddleButton) {
+            std::cout << "OnMousePressEvent MiddleButton" << std::endl;
+            mouse_event_desc.buttons |= MOUSEEVENTF_MIDDLEDOWN;
+        }
+        mouse_event_desc.x_ratio = ((float)curr_pos.x()) / ((float)(widget_width));
+        mouse_event_desc.y_ratio = ((float)curr_pos.y()) / ((float)(widget_height));
+        SendMousewEvent(mouse_event_desc);
 	}
 
-	void VideoWidgetEvent::OnMouseReleaseEvent(QMouseEvent* e) {
-//		float x = CalculateX(e->x()); //e->x() * 1.0 / width;
-//		float y = e->y() * 1.0 / height;
-//		auto key = (MouseKey)GetMouseKey(e);
-//
-//		auto mouse_msg = MessageMaker::MakeMouseInfo(key, false, true, x, y, 0, 0);
-//        SendCallback(mouse_msg);
+	void VideoWidgetEvent::OnMouseReleaseEvent(QMouseEvent* event, int widget_width, int widget_height) {
+        auto curr_pos = event->pos();
+        //qDebug() << "curr_pos = " << curr_pos << " width = " << widget_width << " height = " << widget_height ;
+        MouseEventDesc mouse_event_desc;
+        mouse_event_desc.buttons = 0;
+        if (event->button() == Qt::LeftButton) {
+            std::cout << "OnMouseReleaseEvent LeftButton" << std::endl;
+            mouse_event_desc.buttons |= MOUSEEVENTF_LEFTUP;
+        } else if (event->button() == Qt::RightButton) {
+            std::cout << "OnMouseReleaseEvent RightButton" << std::endl;
+            mouse_event_desc.buttons |= MOUSEEVENTF_RIGHTUP;
+        } else if (event->button() == Qt::MiddleButton) {
+            std::cout << "OnMouseReleaseEvent MiddleButton" << std::endl;
+            mouse_event_desc.buttons |= MOUSEEVENTF_MIDDLEUP;
+        }
+        mouse_event_desc.x_ratio = ((float)curr_pos.x()) / ((float)(widget_width));
+        mouse_event_desc.y_ratio = ((float)curr_pos.y()) / ((float)(widget_height));
+        SendMousewEvent(mouse_event_desc);
 	}
 
 	void VideoWidgetEvent::OnMouseDoubleClickEvent(QMouseEvent*) {
-
+        std::cout << " OnMouseDoubleClickEvent " << std::endl;
 	}
 
-	void VideoWidgetEvent::OnWheelEvent(QWheelEvent* e) {
-//		float x = e->position().x() * 1.0 / width;
-//		float y = e->position().y() * 1.0 / height;
-//
-//		int scroll = e->angleDelta().y();
-////		std::cout << "scroll : " << scroll << " x : " << x << " y : " << y << std::endl;
-//		auto mouse_msg = MessageMaker::MakeWheelScrollMouseInfo(x, y, scroll);
-//        SendCallback(mouse_msg);
+	void VideoWidgetEvent::OnWheelEvent(QWheelEvent* event, int widget_width, int widget_height) {
+        MouseEventDesc mouse_event_desc;
+        mouse_event_desc.buttons = 0;
+        mouse_event_desc.x_ratio = ((float)last_cursor_x_) / ((float)(widget_width));
+        mouse_event_desc.y_ratio = ((float)last_cursor_y_) / ((float)(widget_height));
+        std::cout << " OnWheelEvent " << std::endl;
+        qDebug() << "event->angleDelta() = " << event->angleDelta();
+        QPoint angle_delta = event->angleDelta();
+        QPoint numDegrees = event->angleDelta() / 8;
+        qDebug() << "numDegrees = " << numDegrees;
+        if (!numDegrees.isNull()) {
+            QPoint numSteps = numDegrees / 15;
+            qDebug() << "numSteps = " << numSteps;
+            if(angle_delta.x() != 0) {
+                mouse_event_desc.buttons |= MOUSEEVENTF_HWHEEL;
+                mouse_event_desc.data = angle_delta.x();
+                std::cout << "MOUSEEVENTF_WHEEL data = " << mouse_event_desc.data << std::endl;
+            }
+            if(angle_delta.y() != 0) {
+                mouse_event_desc.buttons |= MOUSEEVENTF_WHEEL;
+                mouse_event_desc.data = angle_delta.y();
+            }
+            SendMousewEvent(mouse_event_desc);
+        }
+        // event->angleDelta() =  QPoint(0,120)
+        // numDegrees =  QPoint(0,15)
+        // numSteps =  QPoint(0,1)
 	}
 
 	void VideoWidgetEvent::OnKeyPressEvent(QKeyEvent* e) {
@@ -167,7 +200,7 @@ namespace tc
         std::map<int, bool> sys_key_status = key_converter_->GetSysKeyStatus();
         auto msg = std::make_shared<Message>();
         msg->set_type(tc::kKeyEvent);
-        auto key_event = new KeyEvent();
+        auto key_event = new tc::KeyEvent();
         key_event->set_down(down);
         key_event->set_key_code(vk);
         key_event->set_num_lock_status(num_lock_state);
@@ -185,6 +218,25 @@ namespace tc
         key_event->set_timestamp(cur_time);
         msg->set_allocated_key_event(key_event);
 
+        // to do 要判斷當前客戶端是否是主控
+        if(this->sdk_) {
+            this->sdk_->PostBinaryMessage(msg->SerializeAsString());
+        }
+    }
+
+    void VideoWidgetEvent::SendMousewEvent(const MouseEventDesc& mouse_event_desc) {
+        auto msg = std::make_shared<Message>();
+        msg->set_type(tc::kMouseEvent);
+        auto mouse_event = new tc::MouseEvent();
+        mouse_event->set_x_ratio(mouse_event_desc.x_ratio);
+        mouse_event->set_y_ratio(mouse_event_desc.y_ratio);
+        mouse_event->set_button(mouse_event_desc.buttons);
+        auto cur_time = GetCurrentTime();
+        mouse_event->set_timestamp(cur_time);
+        // to do 屏幕索引暂定为 0, 等后面兼容多屏模式
+        mouse_event->set_monitor_index(0);
+        mouse_event->set_data(mouse_event_desc.data);
+        msg->set_allocated_mouse_event(mouse_event);
         // to do 要判斷當前客戶端是否是主控
         if(this->sdk_) {
             this->sdk_->PostBinaryMessage(msg->SerializeAsString());

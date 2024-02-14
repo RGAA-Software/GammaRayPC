@@ -29,6 +29,7 @@ namespace tc
 
 	OpenGLVideoWidget::OpenGLVideoWidget(const std::shared_ptr<ClientContext>& ctx, const std::shared_ptr<ThunderSdk>& sdk, int dup_idx, RawImageFormat format, QWidget* parent)
 		: QOpenGLWidget(parent), VideoWidgetEvent(ctx, sdk, dup_idx) {
+        setMouseTracking(true);
 		context = ctx;
 		raw_image_format = format;
 //		statistics = Statistics::Instance();
@@ -340,26 +341,27 @@ namespace tc
 
 	void OpenGLVideoWidget::mouseMoveEvent(QMouseEvent* e) {
 		QOpenGLWidget::mouseMoveEvent(e);
-		VideoWidgetEvent::OnMouseMoveEvent(e);
+		VideoWidgetEvent::OnMouseMoveEvent(e, QWidget::width(), QWidget::height());
 	}
 
 	void OpenGLVideoWidget::mousePressEvent(QMouseEvent* e) {
 		QOpenGLWidget::mousePressEvent(e);
-		VideoWidgetEvent::OnMousePressEvent(e);
+		VideoWidgetEvent::OnMousePressEvent(e, QWidget::width(), QWidget::height());
 	}
 
 	void OpenGLVideoWidget::mouseReleaseEvent(QMouseEvent* e) {
 		QOpenGLWidget::mouseReleaseEvent(e);
-		VideoWidgetEvent::OnMouseReleaseEvent(e);
+		VideoWidgetEvent::OnMouseReleaseEvent(e, QWidget::width(), QWidget::height());
 	}
 
 	void OpenGLVideoWidget::mouseDoubleClickEvent(QMouseEvent* e) {
 		QOpenGLWidget::mouseDoubleClickEvent(e);
+        VideoWidgetEvent::OnMouseDoubleClickEvent(e);
 	}
 
 	void OpenGLVideoWidget::wheelEvent(QWheelEvent* e) {
 		QOpenGLWidget::wheelEvent(e);
-		VideoWidgetEvent::OnWheelEvent(e);
+		VideoWidgetEvent::OnWheelEvent(e, QWidget::width(), QWidget::height());
 	}
 
 	void OpenGLVideoWidget::keyPressEvent(QKeyEvent* e) {
