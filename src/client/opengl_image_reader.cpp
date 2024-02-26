@@ -1,6 +1,6 @@
 ﻿#include "opengl_image_reader.h"
 
-#include "tc_client_sdk/raw_image.h"
+#include "tc_client_sdk/gl/raw_image.h"
 
 #include <QDebug>
 

@@ -6,7 +6,7 @@
 #include <memory>
 #include <atomic>
 
-namespace rgaa
+namespace tc
 {
 
 	class RawImage;

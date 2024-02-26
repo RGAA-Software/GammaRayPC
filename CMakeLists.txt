@@ -7,21 +7,19 @@ set(CMAKE_PREFIX_PATH ${QT_ROOT}/lib/cmake)
 set(CMAKE_TOOLCHAIN_FILE ${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake)
 project(tc_client_pc)
 
-## Template
-if (WIN32)
-
-elseif (APPLE)
-
-elseif (UNIX)
-
-endif ()
-## Template
-
 set(CMAKE_CXX_STANDARD 20)
 
 include(${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake)
-link_directories(${VCPKG_ROOT}/installed/x64-windows/lib)
-include_directories(${VCPKG_ROOT}/installed/x64-windows/include)
+
+if (WIN32)
+    link_directories(${VCPKG_ROOT}/installed/x64-windows/lib)
+    include_directories(${VCPKG_ROOT}/installed/x64-windows/include)
+elseif (APPLE)
+    link_directories(${VCPKG_ROOT}/installed/x64-osx/lib)
+    include_directories(${VCPKG_ROOT}/installed/x64-osx/include)
+elseif (UNIX)
+
+endif ()
 
 ##
 add_compile_options("$<$<C_COMPILER_ID:MSVC>:/utf-8>")

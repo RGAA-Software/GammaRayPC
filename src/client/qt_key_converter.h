@@ -25,7 +25,7 @@ namespace tc
 
     private:
 
-        QMap<int, char> key_mapping_;
+        QMap<int, int> key_mapping_;
 
     };
 

@@ -1,6 +1,6 @@
 #include "video_widget.h"
 
-namespace rgaa
+namespace tc
 {
 
 	VideoWidget::VideoWidget(const std::shared_ptr<ThunderSdk>& sdk, int dup_idx, QWidget* parent) : QWidget(parent) {
