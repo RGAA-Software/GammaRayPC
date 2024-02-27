@@ -21,6 +21,7 @@
 #include "video_widget_shaders.h"
 #include "tc_common/time_ext.h"
 #include "tc_common/log.h"
+#include "tc_common/data.h"
 #include "director.h"
 #include "sprite.h"
 
@@ -153,22 +154,24 @@ namespace tc
 		const char* u_buf, int u_buf_size,
 		const char* v_buf, int v_buf_size,
 		int width, int height) {
-		if (!y_buffer) {
-			y_buffer = (char*)malloc(y_buf_size);
+        auto target_y_size = width * height;
+        auto target_u_size = width/2 * height/2;
+		if (!y_buffer || y_buffer->Size() != y_buf_size) {
+			y_buffer = Data::Make(y_buf, y_buf_size);
 		}
-		if (!u_buffer) {
-			u_buffer = (char*)malloc(u_buf_size);
+		if (!u_buffer || u_buffer->Size() != u_buf_size) {
+			u_buffer = Data::Make(u_buf, u_buf_size);
 		}
-		if (!v_buffer) {
-			v_buffer = (char*)malloc(v_buf_size);
+		if (!v_buffer || v_buffer->Size() != v_buf_size) {
+			v_buffer = Data::Make(v_buf, v_buf_size);
 		}
 	
 		if (tex_width != width || tex_height != height) {
 			need_create_texture = true;
 		}
-		memcpy(y_buffer, y_buf, y_buf_size);
-		memcpy(u_buffer, u_buf, u_buf_size);
-		memcpy(v_buffer, v_buf, v_buf_size);
+		memcpy(y_buffer->DataAddr(), y_buf, y_buf_size);
+		memcpy(u_buffer->DataAddr(), u_buf, u_buf_size);
+		memcpy(v_buffer->DataAddr(), v_buf, v_buf_size);
 		
 		tex_width = width;
 		tex_height = height;
@@ -217,17 +220,17 @@ namespace tc
 			if (y_buffer) {
 				glActiveTexture(GL_TEXTURE0);
 				glBindTexture(GL_TEXTURE_2D, y_texture_id);
-				glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, tex_width, tex_height, GL_RED, GL_UNSIGNED_BYTE, y_buffer);
+				glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, tex_width, tex_height, GL_RED, GL_UNSIGNED_BYTE, y_buffer->CStr());
 			}
 			if (u_buffer) {
 				glActiveTexture(GL_TEXTURE1);
 				glBindTexture(GL_TEXTURE_2D, u_texture_id);
-				glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, tex_width/2, tex_height/2, GL_RED, GL_UNSIGNED_BYTE, u_buffer);
+				glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, tex_width/2, tex_height/2, GL_RED, GL_UNSIGNED_BYTE, u_buffer->CStr());
 			}
 			if (v_buffer) {
 				glActiveTexture(GL_TEXTURE2);
 				glBindTexture(GL_TEXTURE_2D, v_texture_id);
-				glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, tex_width / 2, tex_height / 2, GL_RED, GL_UNSIGNED_BYTE, v_buffer);
+				glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, tex_width / 2, tex_height / 2, GL_RED, GL_UNSIGNED_BYTE, v_buffer->CStr());
 			}
 		}
 

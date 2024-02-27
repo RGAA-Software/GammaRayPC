@@ -21,6 +21,7 @@
 namespace tc
 {
 
+    class Data;
 	class Sprite;
 	class RawImage;
 	class Director;
@@ -72,7 +73,7 @@ namespace tc
 		GLuint			vbo{ 0 };
 		GLuint			ibo{ 0 };
 
-		char* y_buffer = nullptr;
+		std::shared_ptr<Data> y_buffer = nullptr;
 		char* uv_buffer = nullptr;
 		GLuint			y_texture_id = 0;
 		GLuint			uv_texture_id = 0;
@@ -84,8 +85,8 @@ namespace tc
 		GLuint			rgb_texture_id = 0;
 
 		// I420
-		char* u_buffer = nullptr;
-		char* v_buffer = nullptr;
+		std::shared_ptr<Data> u_buffer = nullptr;
+		std::shared_ptr<Data> v_buffer = nullptr;
 		GLuint			u_texture_id = 0;
 		GLuint			v_texture_id = 0;
 
