@@ -8,6 +8,9 @@
 #include "thunder_sdk.h"
 #include "opengl_video_widget.h"
 #include "client_context.h"
+#include "tc_common/data.h"
+#include "tc_common/log.h"
+#include "audio_player.h"
 
 namespace tc
 {
@@ -18,7 +21,8 @@ namespace tc
         sdk_ = ThunderSdk::Make(ctx->GetMessageNotifier());
         sdk_->Init(ThunderSdkParams {
             .ssl_ = false,
-            .ip_ = "192.168.31.5",
+            //.ip_ = "192.168.31.5",
+            .ip_ = "127.0.0.1",
             .port_ = 9002,
             .req_path_ = "/media",
         }, nullptr, DecoderRenderType::kFFmpegI420);
@@ -46,6 +50,15 @@ namespace tc
     void Workspace::RegisterSdkMsgCallbacks() {
         sdk_->RegisterOnVideoFrameDecodedCallback([=, this](const std::shared_ptr<RawImage>& image) {
             video_widget_->RefreshI420Image(image);
+        });
+
+        sdk_->RegisterOnAudioFrameDecodedCallback([=, this](const std::shared_ptr<Data>& data, int samples, int channels, int bits) {
+            LOGI("data size: {}, samples: {}, channel: {}, bits: {}", data->Size(), samples, channels, bits);
+            if (!audio_player_) {
+                audio_player_ = std::make_shared<AudioPlayer>();
+                audio_player_->Init(samples, channels);
+            }
+            audio_player_->Write(data);
         });
     }
 

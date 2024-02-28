@@ -10,7 +10,6 @@ set(SRCS
         main.cpp
         client_context.cpp
         workspace.cpp
-
         director.cpp
         video_widget.cpp
         video_widget_event.cpp
@@ -20,6 +19,7 @@ set(SRCS
         sprite.cpp
         opengl_video_widget.cpp
         qt_key_converter.cpp
+        audio_player.cpp
 )
 
 qt_add_executable(${PROJECT_NAME} MANUAL_FINALIZATION ${SRCS})

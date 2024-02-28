@@ -14,6 +14,7 @@ namespace tc
     class ClientContext;
     class ThunderSdk;
     class OpenGLVideoWidget;
+    class AudioPlayer;
 
     class Workspace : public QMainWindow {
     public:
@@ -29,6 +30,7 @@ namespace tc
 
         std::shared_ptr<ClientContext> context_ = nullptr;
         std::shared_ptr<ThunderSdk> sdk_ = nullptr;
+        std::shared_ptr<AudioPlayer> audio_player_ = nullptr;
 
         OpenGLVideoWidget* video_widget_ = nullptr;
 
