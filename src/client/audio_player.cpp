@@ -11,7 +11,7 @@
 
 namespace tc
 {
-    AudioPlayer::AudioPlayer(QObject* parent) : QObject(parent) {
+    AudioPlayer::AudioPlayer() {
 
     }
 
@@ -23,8 +23,11 @@ namespace tc
     }
 
     void AudioPlayer::Init(int samples, int channels) {
+        if (init) {
+            return;
+        }
         devices_ = new QMediaDevices();
-        QAudioDevice outputDevice = devices_->defaultAudioOutput();
+        QAudioDevice outputDevice = QMediaDevices::defaultAudioOutput();
         QAudioFormat format = outputDevice.preferredFormat();
         format.setSampleRate(samples);
         format.setChannelCount(channels);
@@ -46,9 +49,7 @@ namespace tc
 
     void AudioPlayer::Write(std::shared_ptr<Data> data) {
         if (io) {
-            QMetaObject::invokeMethod(this, [=]() {
-                io->write(data->CStr(), data->Size());
-            }, Qt::QueuedConnection);
+            io->write(data->CStr(), data->Size());
         }
     }
 

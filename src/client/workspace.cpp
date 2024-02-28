@@ -22,7 +22,7 @@ namespace tc
         sdk_->Init(ThunderSdkParams {
             .ssl_ = false,
             //.ip_ = "192.168.31.5",
-            .ip_ = "127.0.0.1",
+            .ip_ = "10.0.0.241",
             .port_ = 9002,
             .req_path_ = "/media",
         }, nullptr, DecoderRenderType::kFFmpegI420);
@@ -53,12 +53,17 @@ namespace tc
         });
 
         sdk_->RegisterOnAudioFrameDecodedCallback([=, this](const std::shared_ptr<Data>& data, int samples, int channels, int bits) {
-            LOGI("data size: {}, samples: {}, channel: {}, bits: {}", data->Size(), samples, channels, bits);
+            //LOGI("data size: {}, samples: {}, channel: {}, bits: {}", data->Size(), samples, channels, bits);
             if (!audio_player_) {
                 audio_player_ = std::make_shared<AudioPlayer>();
-                audio_player_->Init(samples, channels);
+                context_->PostUITask([=, this]() {
+                    audio_player_->Init(samples, channels);
+                });
+                return;
             }
-            audio_player_->Write(data);
+            context_->PostUITask([=, this]() {
+                audio_player_->Write(data);
+            });
         });
     }
 

@@ -19,8 +19,8 @@ namespace tc
     class ClientContext : public QObject {
     public:
 
-        ClientContext(QObject* parent = nullptr);
-        ~ClientContext();
+        explicit ClientContext(QObject* parent = nullptr);
+        ~ClientContext() override;
 
         void PostTask(std::function<void()>&& task);
         void PostUITask(std::function<void()>&& task);

@@ -18,11 +18,11 @@ namespace tc
 
     class Data;
 
-    class AudioPlayer : public QObject {
+    class AudioPlayer {
     public:
 
-        explicit AudioPlayer(QObject* parent = nullptr);
-        ~AudioPlayer() override;
+        AudioPlayer();
+        ~AudioPlayer();
 
         void Init(int samples, int channels);
         void Write(const char* data, int size);
