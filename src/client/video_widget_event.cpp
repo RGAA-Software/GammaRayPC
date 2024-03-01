@@ -71,6 +71,11 @@ namespace tc
         mouse_event_desc.y_ratio = ((float)curr_pos.y()) / ((float)(widget_height));
         //qDebug() << "curr_pos = " << curr_pos << " width = " << widget_width << " height = " << widget_height ;
 
+        if (last_cursor_x_ != invalid_position && last_cursor_y_ != invalid_position) {
+            mouse_event_desc.dx = curr_pos.x() - last_cursor_x_;
+            mouse_event_desc.dy = curr_pos.y() - last_cursor_y_;
+        }
+
         last_cursor_x_ = curr_pos.x();
         last_cursor_y_ = curr_pos.y();
 
@@ -83,16 +88,23 @@ namespace tc
         //qDebug() << "curr_pos = " << curr_pos << " width = " << widget_width << " height = " << widget_height ;
         MouseEventDesc mouse_event_desc;
         mouse_event_desc.buttons = 0;
+        auto pressed_button = 0;
         if(event->button() == Qt::LeftButton) {
-            std::cout << "OnMousePressEvent LeftButton" << std::endl;
-            mouse_event_desc.buttons |= MOUSEEVENTF_LEFTDOWN;
+            //std::cout << "OnMousePressEvent LeftButton" << std::endl;
+            //mouse_event_desc.buttons |= MOUSEEVENTF_LEFTDOWN;
+            pressed_button = EButtonFlag::kLeftMouseButton;
         } else if(event->button() == Qt::RightButton) {
-            std::cout << "OnMousePressEvent RightButton" << std::endl;
-            mouse_event_desc.buttons |= MOUSEEVENTF_RIGHTDOWN;
+            //std::cout << "OnMousePressEvent RightButton" << std::endl;
+            //mouse_event_desc.buttons |= MOUSEEVENTF_RIGHTDOWN;
+            pressed_button = EButtonFlag::kRightMouseButton;
         } else if(event->button() == Qt::MiddleButton) {
-            std::cout << "OnMousePressEvent MiddleButton" << std::endl;
-            mouse_event_desc.buttons |= MOUSEEVENTF_MIDDLEDOWN;
+            //std::cout << "OnMousePressEvent MiddleButton" << std::endl;
+            //mouse_event_desc.buttons |= MOUSEEVENTF_MIDDLEDOWN;
+            pressed_button = EButtonFlag::kMiddleMouseButton;
         }
+
+        mouse_event_desc.buttons = pressed_button;
+        mouse_event_desc.pressed = true;
         mouse_event_desc.x_ratio = ((float)curr_pos.x()) / ((float)(widget_width));
         mouse_event_desc.y_ratio = ((float)curr_pos.y()) / ((float)(widget_height));
         SendMousewEvent(mouse_event_desc);
@@ -102,17 +114,22 @@ namespace tc
         auto curr_pos = event->pos();
         //qDebug() << "curr_pos = " << curr_pos << " width = " << widget_width << " height = " << widget_height ;
         MouseEventDesc mouse_event_desc;
-        mouse_event_desc.buttons = 0;
+        auto released_button = 0;
         if (event->button() == Qt::LeftButton) {
-            std::cout << "OnMouseReleaseEvent LeftButton" << std::endl;
-            mouse_event_desc.buttons |= MOUSEEVENTF_LEFTUP;
+            //std::cout << "OnMouseReleaseEvent LeftButton" << std::endl;
+            //mouse_event_desc.buttons |= MOUSEEVENTF_LEFTUP;
+            released_button = EButtonFlag::kLeftMouseButton;
         } else if (event->button() == Qt::RightButton) {
-            std::cout << "OnMouseReleaseEvent RightButton" << std::endl;
-            mouse_event_desc.buttons |= MOUSEEVENTF_RIGHTUP;
+            //std::cout << "OnMouseReleaseEvent RightButton" << std::endl;
+            //mouse_event_desc.buttons |= MOUSEEVENTF_RIGHTUP;
+            released_button = EButtonFlag::kRightMouseButton;
         } else if (event->button() == Qt::MiddleButton) {
-            std::cout << "OnMouseReleaseEvent MiddleButton" << std::endl;
-            mouse_event_desc.buttons |= MOUSEEVENTF_MIDDLEUP;
+            //std::cout << "OnMouseReleaseEvent MiddleButton" << std::endl;
+            //mouse_event_desc.buttons |= MOUSEEVENTF_MIDDLEUP;
+            released_button = EButtonFlag::kMiddleMouseButton;
         }
+        mouse_event_desc.buttons = released_button;
+        mouse_event_desc.released = true;
         mouse_event_desc.x_ratio = ((float)curr_pos.x()) / ((float)(widget_width));
         mouse_event_desc.y_ratio = ((float)curr_pos.y()) / ((float)(widget_height));
         SendMousewEvent(mouse_event_desc);
@@ -236,6 +253,10 @@ namespace tc
         // to do 屏幕索引暂定为 0, 等后面兼容多屏模式
         mouse_event->set_monitor_index(0);
         mouse_event->set_data(mouse_event_desc.data);
+        mouse_event->set_delta_x(mouse_event_desc.dx);
+        mouse_event->set_delta_y(mouse_event_desc.dy);
+        mouse_event->set_pressed(mouse_event_desc.pressed);
+        mouse_event->set_released(mouse_event_desc.released);
         msg->set_allocated_mouse_event(mouse_event);
         // to do 要判斷當前客戶端是否是主控
         if(this->sdk_) {

@@ -31,6 +31,10 @@ namespace tc
             int buttons = 0;
             // 滚轮数据
             int data = 0;
+            int dx = 0;
+            int dy = 0;
+            bool pressed = false;
+            bool released = false;
         };
 		VideoWidgetEvent(const std::shared_ptr<ClientContext>& ctx, const std::shared_ptr<ThunderSdk>& sdk, int dup_idx);
 		virtual ~VideoWidgetEvent();
