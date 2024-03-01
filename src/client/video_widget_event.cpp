@@ -152,13 +152,14 @@ namespace tc
         if (!numDegrees.isNull()) {
             QPoint numSteps = numDegrees / 15;
             qDebug() << "numSteps = " << numSteps;
+            mouse_event_desc.buttons = EButtonFlag::kMiddleMouseButton;
             if(angle_delta.x() != 0) {
-                mouse_event_desc.buttons |= MOUSEEVENTF_HWHEEL;
+                //mouse_event_desc.buttons |= MOUSEEVENTF_HWHEEL;
                 mouse_event_desc.data = angle_delta.x();
                 std::cout << "MOUSEEVENTF_WHEEL data = " << mouse_event_desc.data << std::endl;
             }
             if(angle_delta.y() != 0) {
-                mouse_event_desc.buttons |= MOUSEEVENTF_WHEEL;
+                //mouse_event_desc.buttons |= MOUSEEVENTF_WHEEL;
                 mouse_event_desc.data = angle_delta.y();
             }
             SendMousewEvent(mouse_event_desc);
