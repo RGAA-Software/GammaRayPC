@@ -13,3 +13,6 @@
 [submodule "deps/tc_client_sdk"]
 	path = deps/tc_client_sdk
 	url = git@github.com:RGAA-Software/tc_client_sdk.git
+[submodule "deps/tc_webrtc_client"]
+	path = deps/tc_webrtc_client
+	url = git@github.com:RGAA-Software/tc_webrtc_client.git

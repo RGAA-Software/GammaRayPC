@@ -21,9 +21,11 @@ elseif (UNIX)
 
 endif ()
 
-##
-add_compile_options("$<$<C_COMPILER_ID:MSVC>:/utf-8>")
-add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
+if(MSVC)
+    add_compile_options($<IF:$<CONFIG:Debug>,/MTd,/MT>)
+    add_compile_options("$<$<C_COMPILER_ID:MSVC>:/utf-8>")
+    add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
+endif()
 
 ## Boost
 find_package(Boost REQUIRED COMPONENTS system filesystem thread random)
@@ -51,3 +53,11 @@ include_directories(${CMAKE_BINARY_DIR}/deps/tc_message)
 
 add_subdirectory(src)
 add_subdirectory(deps)
+
+add_custom_target(tc_build_all COMMENT "Build all targets")
+add_dependencies(tc_build_all tc_client tc_rtc)
+add_custom_command(TARGET tc_build_all POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy
+            "${CMAKE_CURRENT_BINARY_DIR}/deps/tc_webrtc_client/tc_rtc.dll"
+            "${CMAKE_CURRENT_BINARY_DIR}/src/client/"
+)
