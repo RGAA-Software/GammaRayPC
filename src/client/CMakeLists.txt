@@ -5,7 +5,11 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
 find_package(Qt6 REQUIRED COMPONENTS Widgets Core OpenGL OpenGLWidgets Multimedia)
+find_package(leveldb CONFIG REQUIRED)
+find_package(SqliteOrm CONFIG REQUIRED)
 
+set(RES resources/font.qrc resources/main.qrc resources/qss.qrc resources.qrc)
+add_compile_options(/bigobj)
 set(SRCS
         main.cpp
         client_context.cpp
@@ -20,6 +24,11 @@ set(SRCS
         opengl_video_widget.cpp
         qt_key_converter.cpp
         audio_player.cpp
+        logo.rc ${RES}
+        ui/SwitchButton.cpp
+        ui/FloatButton.cpp
+        ui/MessageDialog.cpp
+        ui/RoundRectWidget.cpp
 )
 
 qt_add_executable(${PROJECT_NAME} MANUAL_FINALIZATION ${SRCS})
