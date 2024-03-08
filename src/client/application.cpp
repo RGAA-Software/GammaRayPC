@@ -13,7 +13,6 @@
 
 #include "ui/app_menu.h"
 #include "ui/app_stream_list.h"
-#include "workspace.h"
 #include "tc_common/log.h"
 #include "tc_common/thread.h"
 #include "ui/create_stream_dialog.h"
@@ -157,13 +156,14 @@ namespace tc
     }
 
     bool Application::HasWorkspace(const std::string &stream_id) {
-        return workspaces_.find(stream_id) != workspaces_.end();
+        //return workspaces_.find(stream_id) != workspaces_.end();
+        return false;
     }
 
     void Application::StartStreaming(const StreamItem& item) {
-        std::shared_ptr<Workspace> workspace = std::make_shared<Workspace>(context_, nullptr/*item*/);
-        //workspace->Run();
-        workspaces_.insert(std::make_pair(item.stream_id, workspace));
+//        std::shared_ptr<Workspace> workspace = std::make_shared<Workspace>(context_, nullptr/*item*/);
+//        //workspace->Run();
+//        workspaces_.insert(std::make_pair(item.stream_id, workspace));
     }
 
 }

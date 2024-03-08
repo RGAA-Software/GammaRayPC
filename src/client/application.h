@@ -15,7 +15,7 @@ namespace tc
 
     class AppMenu;
     class ClientContext;
-    class Workspace;
+    //class Workspace;
     class StreamContent;
 
     class Application : public QMainWindow {
@@ -32,7 +32,7 @@ namespace tc
     private:
 
         std::shared_ptr<ClientContext> context_ = nullptr;
-        std::map<std::string, std::shared_ptr<Workspace>> workspaces_;
+        //std::map<std::string, std::shared_ptr<Workspace>> workspaces_;
         AppMenu* app_menu_ = nullptr;
         QStackedWidget* content_widget_ = nullptr;
         StreamContent* stream_content_ = nullptr;
