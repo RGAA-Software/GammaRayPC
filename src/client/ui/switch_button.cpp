@@ -2,7 +2,7 @@
 // Created by RGAA on 2023-09-01.
 //
 
-#include "SwitchButton.h"
+#include "switch_button.h"
 #include <QVariant>
 #include <QTimer>
 #include <QPropertyAnimation>

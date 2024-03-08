@@ -2,14 +2,14 @@
 // Created by RGAA on 2023/8/19.
 //
 
-#include "MessageDialog.h"
+#include "message_dialog.h"
 
 #include <QPainter>
 
 namespace tc
 {
 
-    MessageDialog::MessageDialog(const std::shared_ptr<Context> &ctx, const QString &msg, QWidget *parent) : QDialog(
+    MessageDialog::MessageDialog(const std::shared_ptr<ClientContext> &ctx, const QString &msg, QWidget *parent) : QDialog(
             parent) {
         setFixedSize(400, 220);
         msg_ = msg;

@@ -9,6 +9,7 @@
 #include "thunder_sdk.h"
 #include "client_context.h"
 #include "workspace.h"
+#include "application.h"
 
 using namespace tc;
 
@@ -42,9 +43,12 @@ int main(int argc, char** argv) {
     ThunderSdkParams params {};
 
     auto ctx = std::make_shared<ClientContext>();
-    Workspace ws(ctx);
-    ws.resize(1280, 768);
-    ws.show();
+//    Workspace ws(ctx);
+//    ws.resize(1280, 768);
+//    ws.show();
+
+    Application application(ctx);
+    application.show();
 
     return app.exec();
 }

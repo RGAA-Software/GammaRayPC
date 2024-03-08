@@ -2,7 +2,7 @@
 // Created by RGAA on 2023-08-22.
 //
 
-#include "FloatButton.h"
+#include "float_button.h"
 
 #include <QPainter>
 #include <QPen>

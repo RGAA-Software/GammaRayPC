@@ -17,7 +17,7 @@
 namespace tc
 {
 
-    class Context;
+    class ClientContext;
 
     enum DialogButton {
         kCancel,
@@ -27,11 +27,11 @@ namespace tc
     class MessageDialog : public QDialog {
     public:
 
-        static std::shared_ptr<MessageDialog> Make(const std::shared_ptr<Context> &ctx, const QString &msg) {
+        static std::shared_ptr<MessageDialog> Make(const std::shared_ptr<ClientContext> &ctx, const QString &msg) {
             return std::make_shared<MessageDialog>(ctx, msg, nullptr);
         }
 
-        explicit MessageDialog(const std::shared_ptr<Context> &ctx, const QString &msg, QWidget *parent = nullptr);
+        explicit MessageDialog(const std::shared_ptr<ClientContext> &ctx, const QString &msg, QWidget *parent = nullptr);
 
         ~MessageDialog() override;
 
@@ -43,7 +43,7 @@ namespace tc
 
     private:
 
-        std::shared_ptr<Context> context_ = nullptr;
+        std::shared_ptr<ClientContext> context_ = nullptr;
 
         QString msg_;
 

@@ -5,8 +5,13 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
 find_package(Qt6 REQUIRED COMPONENTS Widgets Core OpenGL OpenGLWidgets Multimedia)
-find_package(leveldb CONFIG REQUIRED)
 find_package(SqliteOrm CONFIG REQUIRED)
+
+include_directories(${CMAKE_SOURCE_DIR})
+include_directories(${CMAKE_SOURCE_DIR}/src)
+include_directories(${CMAKE_SOURCE_DIR}/src/client)
+
+link_directories(${VCPKG_ROOT}/installed/x64-windows-static/lib)
 
 set(RES resources/font.qrc resources/main.qrc resources/qss.qrc resources.qrc)
 add_compile_options(/bigobj)
@@ -25,10 +30,22 @@ set(SRCS
         qt_key_converter.cpp
         audio_player.cpp
         logo.rc ${RES}
-        ui/SwitchButton.cpp
-        ui/FloatButton.cpp
-        ui/MessageDialog.cpp
-        ui/RoundRectWidget.cpp
+        ui/switch_button.cpp
+        ui/float_button.cpp
+        ui/message_dialog.cpp
+        ui/round_rect_widget.cpp
+        ui/app_menu.cpp
+        ui/app_stream_list.cpp
+        ui/create_stream_dialog.cpp
+        ui/app_color_theme.cpp
+        ui/app_content.cpp
+        ui/stream_item_widget.cpp
+        ui/stream_content.cpp
+        ui/settings_content.cpp
+        db/stream_db_manager.cpp
+        db/stream_item.cpp
+        application.cpp
+        settings.cpp
 )
 
 qt_add_executable(${PROJECT_NAME} MANUAL_FINALIZATION ${SRCS})
