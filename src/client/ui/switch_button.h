@@ -7,6 +7,8 @@
 
 #include <QWidget>
 #include <QPainter>
+#include "switch_button.h"
+#include "app_color_theme.h"
 
 namespace tc
 {
@@ -42,7 +44,7 @@ namespace tc
         int normal_bg_color_ = 0xffffff;
         int selected_bg_color_ = 0xffffff;
         int normal_thumb_color = 0xaaaaaa;
-        int selected_thumb_color = 0x6894b7;
+        int selected_thumb_color = AppColorTheme::kAppMenuItemBgHoverColor;
 
         bool selected = false;
 

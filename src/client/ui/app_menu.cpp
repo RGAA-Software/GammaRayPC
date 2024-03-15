@@ -25,6 +25,7 @@ namespace tc
         icon_ = new QLabel(this);
         text_ = new QLabel(this);
         text_->setText(name);
+        text_->setStyleSheet("color:#FFFFFF;font-weight:bold;");
 
         inner_layout->addSpacing(10);
         inner_layout->addWidget(icon_);
@@ -176,10 +177,10 @@ namespace tc
     void AppMenu::paintEvent(QPaintEvent *event) {
         QWidget::paintEvent(event);
 
-        QPainter painter(this);
-        painter.setPen(Qt::NoPen);
-        painter.setBrush(QBrush(QColor(0xFFFFFF)));
-        painter.drawRect(0, 0, QWidget::width(), QWidget::height());
+        //QPainter painter(this);
+        //painter.setPen(Qt::NoPen);
+        //painter.setBrush(QBrush(QColor(0xFFFFFF)));
+        //painter.drawRect(0, 0, QWidget::width(), QWidget::height());
     }
 
     void AppMenu::SetOnItemClickedCallback(OnItemClickedCallback cbk) {
