@@ -45,6 +45,8 @@ include_directories(${CMAKE_SOURCE_DIR}/deps)
 include_directories(${CMAKE_SOURCE_DIR}/deps/tc_3rdparty)
 include_directories(${CMAKE_SOURCE_DIR}/deps/tc_3rdparty/eventbus/src)
 include_directories(${CMAKE_SOURCE_DIR}/deps/tc_client_sdk)
+include_directories(${CMAKE_SOURCE_DIR}/deps/tc_3rdparty/asio2/include)
+include_directories(${CMAKE_SOURCE_DIR}/deps/tc_3rdparty/asio2/3rd)
 
 include_directories(${CMAKE_BINARY_DIR}/deps/tc_message)
 
