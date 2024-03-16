@@ -18,8 +18,8 @@ namespace tc
     class StreamItemWidget : public QWidget {
     public:
 
-        StreamItemWidget(int bg_color, QWidget* parent = nullptr);
-        ~StreamItemWidget();
+        explicit StreamItemWidget(int bg_color, QWidget* parent = nullptr);
+        ~StreamItemWidget() override;
 
         void paintEvent(QPaintEvent *event) override;
         void enterEvent(QEnterEvent *event) override;
@@ -31,6 +31,9 @@ namespace tc
         bool enter_ = false;
 
         QPixmap icon_;
+        QPixmap bg_image_;
+        QBitmap mask_;
+        int radius_;
 
     };
 

@@ -90,7 +90,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE Qt6::Widgets
         Qt6::OpenGLWidgets
         Qt6::Multimedia
 )
-target_link_libraries(${PROJECT_NAME} PRIVATE tc_common tc_message tc_sdk)
+target_link_libraries(${PROJECT_NAME} PRIVATE tc_common tc_message tc_sdk tc_qt_widget)
 target_link_libraries(${PROJECT_NAME} PRIVATE sqlite_orm::sqlite_orm)
 if(WIN32)
     target_link_libraries(${PROJECT_NAME} PRIVATE jemalloc)
@@ -102,7 +102,7 @@ target_link_libraries(${PROJECT_NAME}_ws PRIVATE Qt6::Widgets
         Qt6::OpenGLWidgets
         Qt6::Multimedia
 )
-target_link_libraries(${PROJECT_NAME}_ws PRIVATE tc_common tc_message tc_sdk)
+target_link_libraries(${PROJECT_NAME}_ws PRIVATE tc_common tc_message tc_sdk tc_qt_widget)
 target_link_libraries(${PROJECT_NAME}_ws PRIVATE sqlite_orm::sqlite_orm)
 if(WIN32)
     target_link_libraries(${PROJECT_NAME}_ws PRIVATE jemalloc)

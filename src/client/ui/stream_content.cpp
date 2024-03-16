@@ -33,11 +33,11 @@ namespace tc
             QPen pen;
             QColor c;
             if (pressed_) {
-                c = QColor(0x38, 0x64, 0x87, 0xFF);
+                c = QColor(0xff, 0xd3, 0x00, 0xFF);
             } else if (enter_) {
-                c = QColor(0x38, 0x64, 0x87, 0xBB);
+                c = QColor(0xff, 0xd3, 0x00, 0xEE);
             } else {
-                c = QColor(0x38, 0x64, 0x87, 0x66);
+                c = QColor(0xff, 0xd3, 0x00, 0xDD);
             }
             painter.setBrush(QBrush(c));
             pen.setColor(c);

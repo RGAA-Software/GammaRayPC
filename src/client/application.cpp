@@ -26,13 +26,13 @@ namespace tc
 
     Application::Application(const std::shared_ptr<ClientContext>& ctx, QWidget* parent) {
         context_ = ctx;
-        resize(1280, 768);
-        setWindowTitle(tr("Bee Cloud Client"));
+        resize(1344, 768);
+        setWindowTitle(tr("Beloud Client"));
 
         CreateLayout();
         Init();
 
-        LoadStyle("");
+        //LoadStyle("");
     }
 
     Application::~Application() {
@@ -49,10 +49,11 @@ namespace tc
         // 1. app menu
         content_widget_ = new QStackedWidget(this);
         content_widget_->setContentsMargins(0,0,0,0);
+        content_widget_->setStyleSheet("border:none;background-color:#ffffff;");
 
         std::vector<AppItemDesc> menus = {
-                {tr("STREAM"), ":/resources/image/ic_stream.svg"},
-                {tr("SETTING"), ":/resources/image/ic_settings.svg"}
+                {tr("GAMES"), ":/resources/image/ic_stream.svg"},
+                {tr("SETTINGS"), ":/resources/image/ic_settings.svg"}
         };
         app_menu_ = new AppMenu(menus, this);
         app_menu_->SetOnItemClickedCallback([this](const QString& name, int idx) {

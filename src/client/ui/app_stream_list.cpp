@@ -19,7 +19,7 @@
 #include "Application.h"
 #include "app_message.h"
 #include "create_stream_dialog.h"
-//#include "stream_content.h"
+#include "stream_content.h"
 
 namespace tc
 {
@@ -77,7 +77,7 @@ namespace tc
         stream_list_->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
         stream_list_->setResizeMode(QListWidget::Adjust);
         stream_list_->setContextMenuPolicy(Qt::CustomContextMenu);
-        stream_list_->setSpacing(10);
+        stream_list_->setSpacing(20);
         //background-color: #DEF0FE;
         stream_list_->setStyleSheet(R"(
             QListWidget::item {
@@ -213,29 +213,31 @@ namespace tc
 
     QListWidgetItem* AppStreamList::AddItem(const StreamItem& stream) {
         auto item = new QListWidgetItem(stream_list_);
-        item->setSizeHint(QSize(220, 145));
+        item->setSizeHint(QSize(150, 225));
         auto widget = new StreamItemWidget(stream.bg_color, stream_list_);
 
         auto root_layout = new QVBoxLayout();
         WidgetHelper::ClearMargin(root_layout);
-        root_layout->setContentsMargins(20, 0, 20, 0);
+        root_layout->setContentsMargins(2, 0, 2, 0);
 
         auto layout = new QVBoxLayout();
         layout->addStretch();
         WidgetHelper::ClearMargin(layout);
         root_layout->addLayout(layout);
 
-        auto gap = 5;
+        auto gap = 0;//5;
 
         // name
         auto name = new QLabel(stream_list_);
+        name->hide();
         name->setObjectName("st_name");
         name->setText(stream.stream_name.c_str());
-        name->setStyleSheet(R"(color:#386487; font-size:14px; font-weight:bold;)");
+        name->setStyleSheet(R"(color:#386487; font-size:14px; font-weight:bold; background-color:#909099;)");
         layout->addWidget(name);
 
         // host
         auto host = new QLabel(stream_list_);
+        host->hide();
         host->setObjectName("st_host");
         host->setText(stream.stream_host.c_str());
         host->setStyleSheet(R"(color:#386487; font-size:14px; )");
@@ -244,6 +246,7 @@ namespace tc
 
         //
         auto port = new QLabel(stream_list_);
+        port->hide();
         port->setObjectName("st_port");
         port->setText(std::to_string(stream.stream_port).c_str());
         port->setStyleSheet(R"(color:#386487; font-size:14px; )");
@@ -252,6 +255,7 @@ namespace tc
 
         //
         auto bitrate = new QLabel(stream_list_);
+        bitrate->hide();
         bitrate->setObjectName("st_bitrate");
         std::string bt_str = std::to_string(stream.encode_bps) + " Mbps";
         bitrate->setText(bt_str.c_str());
@@ -260,6 +264,7 @@ namespace tc
         layout->addWidget(bitrate);
 
         auto fps = new QLabel(stream_list_);
+        fps->hide();
         fps->setObjectName("st_fps");
         std::string fps_str = std::to_string(stream.encode_fps) + " FPS";
         fps->setText(fps_str.c_str());
@@ -267,10 +272,10 @@ namespace tc
         layout->addSpacing(gap);
         layout->addWidget(fps);
 
-        layout->addStretch();
+        //layout->addStretch();
 
         root_layout->addLayout(layout);
-        layout->addSpacing(6);
+        //layout->addSpacing(6);
         widget->setLayout(root_layout);
         stream_list_->setItemWidget(item, widget);
         return item;
@@ -279,6 +284,16 @@ namespace tc
     void AppStreamList::LoadStreamItems() {
         auto db_mgr = context_->GetDBManager();
         streams_ = db_mgr->GetAllStreams();
+
+        // mock //
+        for (int i = 0; i < 10; i++) {
+            StreamItem item {
+                .stream_id = std::format("stream id: {}", i),
+                .stream_name = std::format("Stream: {}", i),
+            };
+            streams_.push_back(item);
+        }
+        // mock //
 
         context_->PostUITask([=, this]() {
             int count = stream_list_->count();
@@ -291,10 +306,10 @@ namespace tc
             }
 
             if (!streams_.empty()) {
-                //stream_content_->HideEmptyTip();
+                stream_content_->HideEmptyTip();
             }
             else {
-                //stream_content_->ShowEmptyTip();
+                stream_content_->ShowEmptyTip();
             }
         });
     }

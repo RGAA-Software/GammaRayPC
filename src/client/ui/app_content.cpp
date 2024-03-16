@@ -13,7 +13,7 @@
 namespace tc
 {
 
-    AppContent::AppContent(const std::shared_ptr<ClientContext>& ctx, QWidget* parent) : RoundRectWidget(0xEAF7FF, 10, parent) {
+    AppContent::AppContent(const std::shared_ptr<ClientContext>& ctx, QWidget* parent) : RoundRectWidget(0xFFFFFF, 10, parent) {
         context_ = ctx;
         settings_ = Settings::Instance();
     }
