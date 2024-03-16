@@ -9,13 +9,14 @@
 #include <QPainter>
 #include <QPen>
 #include <QBrush>
+#include <format>
 
 #include "app_color_theme.h"
 
 namespace tc
 {
 
-    AppMenuItem::AppMenuItem(const QString& name, int idx, QWidget* parent) : QWidget(parent) {
+    AppMenuItem::AppMenuItem(const QString& name, int idx, const QString& icon, QWidget* parent) : QWidget(parent) {
         name_ = name;
         idx_ = idx;
 
@@ -23,6 +24,8 @@ namespace tc
         inner_layout->setSpacing(0);
         inner_layout->setContentsMargins(0,0,0,0);
         icon_ = new QLabel(this);
+        icon_->setFixedSize(QSize(20, 20));
+        icon_->setStyleSheet(std::format("background-image: url({});", icon.toStdString()).c_str());
         text_ = new QLabel(this);
         text_->setText(name);
         text_->setStyleSheet("color:#FFFFFF;font-weight:bold;");
@@ -111,7 +114,7 @@ namespace tc
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
 
-    AppMenu::AppMenu(const std::vector<QString>& items, QWidget* parent) : QWidget(parent) {
+    AppMenu::AppMenu(const std::vector<AppItemDesc>& items, QWidget* parent) : QWidget(parent) {
         setFixedWidth(230);
 
         auto root_layout = new QHBoxLayout();
@@ -127,7 +130,7 @@ namespace tc
 
         auto logo_layout = new QHBoxLayout();
         auto logo = new QLabel(this);
-        auto image = new QImage(":/resources/image/logo.png");
+        auto image = new QImage(":/resources/image/bc_icon.png");
         auto pixmap = QPixmap::fromImage(*image);
         pixmap = pixmap.scaled(pixmap.width()/4, pixmap.height()/4, Qt::KeepAspectRatio, Qt::SmoothTransformation);
         logo->setPixmap(pixmap);
@@ -141,7 +144,8 @@ namespace tc
 
         int idx = 0;
         for (const auto& item : items) {
-            auto app_item = new AppMenuItem(item, idx++, this);
+
+            auto app_item = new AppMenuItem(item.name_, idx++, item.url_, this);
             if (idx == 1) {
                 app_item->Select();
             }

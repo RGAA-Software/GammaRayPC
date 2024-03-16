@@ -1,6 +1,7 @@
 <RCC>
     <qresource prefix="/">
-        <file>resources/image/logo.png</file>
+        <file>resources/image/bc_icon.png</file>
+        <file>resources/image/bc_icon_raw.png</file>
         <file>resources/image/empty.svg</file>
         <file>resources/image/windows.svg</file>
         <file>resources/image/ic_expand.svg</file>
@@ -13,7 +14,8 @@
         <file>resources/image/ic_debug_off.svg</file>
         <file>resources/image/ic_exit_fullscreen.svg</file>
         <file>resources/image/ic_fullscreen.svg</file>
-
+        <file>resources/image/ic_settings.svg</file>
+        <file>resources/image/ic_stream.svg</file>
         <file>resources/font/blade.ttf</file>
         <file>resources/font/quixotic-1.otf</file>
     </qresource>

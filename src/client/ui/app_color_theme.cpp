@@ -7,9 +7,9 @@
 namespace tc
 {
 
-    int AppColorTheme::kAppMenuItemBgNormalColor = 0xAABBAA;
-    int AppColorTheme::kAppMenuItemBgHoverColor = 0x518242;
-    int AppColorTheme::kAppMenuItemBgPressColor = 0x39682a;
+    int AppColorTheme::kAppMenuItemBgNormalColor = 0xCCBBBB;
+    int AppColorTheme::kAppMenuItemBgHoverColor = 0xffde40;
+    int AppColorTheme::kAppMenuItemBgPressColor = 0xffd300;
     int AppColorTheme::kAppMenuItemFontNormalColor = 0x333333;
     int AppColorTheme::kAppMenuItemFontSelectedColor = 0x333333;
 

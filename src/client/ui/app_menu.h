@@ -20,8 +20,8 @@ namespace tc
     class AppMenuItem : public QWidget {
     public:
 
-        AppMenuItem(const QString& name, int idx, QWidget* parent = nullptr);
-        ~AppMenuItem();
+        AppMenuItem(const QString& name, int idx, const QString& icon, QWidget* parent = nullptr);
+        ~AppMenuItem() override;
 
         void SetOnItemClickedCallback(const OnItemClickedCallback& cbk);
         void Select();
@@ -52,12 +52,17 @@ namespace tc
         QLabel* text_ = nullptr;
     };
 
+    class AppItemDesc {
+    public:
+        QString name_;
+        QString url_;
+    };
 
     class AppMenu : public QWidget {
     public:
 
-        AppMenu(const std::vector<QString>& items, QWidget* parent = nullptr);
-        ~AppMenu();
+        explicit AppMenu(const std::vector<AppItemDesc>& items, QWidget* parent = nullptr);
+        ~AppMenu() override;
 
         void SetOnItemClickedCallback(OnItemClickedCallback cbk);
 
