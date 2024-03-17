@@ -77,7 +77,7 @@ namespace tc
         stream_list_->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
         stream_list_->setResizeMode(QListWidget::Adjust);
         stream_list_->setContextMenuPolicy(Qt::CustomContextMenu);
-        stream_list_->setSpacing(20);
+        stream_list_->setSpacing(10);
         //background-color: #DEF0FE;
         stream_list_->setStyleSheet(R"(
             QListWidget::item {
@@ -213,7 +213,7 @@ namespace tc
 
     QListWidgetItem* AppStreamList::AddItem(const StreamItem& stream) {
         auto item = new QListWidgetItem(stream_list_);
-        item->setSizeHint(QSize(150, 225));
+        item->setSizeHint(QSize(230, 108 + 15));
         auto widget = new StreamItemWidget(stream.bg_color, stream_list_);
 
         auto root_layout = new QVBoxLayout();
@@ -286,7 +286,7 @@ namespace tc
         streams_ = db_mgr->GetAllStreams();
 
         // mock //
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 63; i++) {
             StreamItem item {
                 .stream_id = std::format("stream id: {}", i),
                 .stream_name = std::format("Stream: {}", i),

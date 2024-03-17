@@ -16,7 +16,7 @@
         <file>resources/image/ic_fullscreen.svg</file>
         <file>resources/image/ic_settings.svg</file>
         <file>resources/image/ic_stream.svg</file>
-        <file>resources/image/dota2_cache.jpg</file>
+        <file>resources/image/test_cover.jpg</file>
         <file>resources/font/blade.ttf</file>
         <file>resources/font/quixotic-1.otf</file>
     </qresource>

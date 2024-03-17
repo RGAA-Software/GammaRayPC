@@ -26,7 +26,7 @@ namespace tc
 
     Application::Application(const std::shared_ptr<ClientContext>& ctx, QWidget* parent) {
         context_ = ctx;
-        resize(1344, 768);
+        resize(1515, 768);
         setWindowTitle(tr("Beloud Client"));
 
         CreateLayout();

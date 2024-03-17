@@ -15,7 +15,7 @@ namespace tc
         icon_ = QPixmap::fromImage(QImage(":/resources/image/windows.svg"));
         icon_ = icon_.scaled(icon_.width()/3, icon_.height()/3, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
-        bg_image_ = QPixmap::fromImage(QImage(":/resources/image/dota2_cache.jpg"));
+        bg_image_ = QPixmap::fromImage(QImage(":/resources/image/test_cover.jpg"));
         bg_image_ = bg_image_.scaled(bg_image_.width()/2, bg_image_.height()/2, Qt::KeepAspectRatio, Qt::SmoothTransformation);
         mask_ = QBitmap(bg_image_.size());
     }
@@ -36,7 +36,7 @@ namespace tc
         //painter.drawRect(0, 0, QWidget::width(), QWidget::height());
         //painter.setBrush(QBrush(QColor(bg_color_)));
         //painter.drawRoundedRect(0, 0, width(), height(), radius_, radius_);
-        radius_ = 12;
+        radius_ = 5;
 
         // images
         painter.save();
@@ -53,22 +53,23 @@ namespace tc
         }
         painter.restore();
 
+        int border_width = 2;
         {
-            int bottom_region_height = 40;
+            int bottom_region_height = 28;
             painter.setPen(Qt::NoPen);
             painter.setBrush(QBrush(QColor(0x33, 0x33, 0x33)));
-            painter.drawRoundedRect(0, this->height() - bottom_region_height, this->width(), bottom_region_height, radius_, radius_);
-            painter.drawRect(0, this->height() - bottom_region_height, this->width(), bottom_region_height/2);
+            painter.drawRoundedRect(0, this->height() - bottom_region_height, this->width()-border_width, bottom_region_height, radius_, radius_);
+            painter.drawRect(0, this->height() - bottom_region_height, this->width()-border_width, bottom_region_height/2);
 
             auto font = painter.font();
-            font.setBold(true);
+            //font.setBold(true);
+            font.setPointSize(10);
             painter.setFont(font);
             painter.setPen(QPen(QColor(0xffffff)));
-            painter.drawText(QRect(10, this->height()-bottom_region_height, this->width(), bottom_region_height), Qt::AlignVCenter, "Dota2");
+            painter.drawText(QRect(10, this->height()-bottom_region_height, this->width(), bottom_region_height), Qt::AlignVCenter, "theHunter: Call of the Wild");
         }
 
         QPen pen;
-        int border_width = 2;
         if (enter_) {
             pen.setColor(QColor(0xff, 0xd3, 0x00));
         }
