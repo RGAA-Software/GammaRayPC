@@ -69,7 +69,6 @@ namespace tc
         mouse_event_desc.buttons |= MOUSEEVENTF_MOVE;
         mouse_event_desc.x_ratio = ((float)curr_pos.x()) / ((float)(widget_width));
         mouse_event_desc.y_ratio = ((float)curr_pos.y()) / ((float)(widget_height));
-        //qDebug() << "curr_pos = " << curr_pos << " width = " << widget_width << " height = " << widget_height ;
 
         if (last_cursor_x_ != invalid_position && last_cursor_y_ != invalid_position) {
             mouse_event_desc.dx = curr_pos.x() - last_cursor_x_;
@@ -79,6 +78,7 @@ namespace tc
         last_cursor_x_ = curr_pos.x();
         last_cursor_y_ = curr_pos.y();
 
+        //LOGI("xr: {}, yr: {}, dx: {}, dy: {}", mouse_event_desc.x_ratio, mouse_event_desc.y_ratio, mouse_event_desc.dx, mouse_event_desc.dy);
         SendMousewEvent(mouse_event_desc);
 	}
 

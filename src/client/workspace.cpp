@@ -29,6 +29,8 @@ namespace tc
 
         // ui
         auto root_layout = new QHBoxLayout();
+        root_layout->setSpacing(0);
+        root_layout->setContentsMargins(0,0,0,0);
         auto root_widget = new QWidget(this);
         root_widget->setLayout(root_layout);
 

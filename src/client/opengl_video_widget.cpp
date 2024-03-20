@@ -30,7 +30,7 @@ namespace tc
 
 	OpenGLVideoWidget::OpenGLVideoWidget(const std::shared_ptr<ClientContext>& ctx, const std::shared_ptr<ThunderSdk>& sdk, int dup_idx, RawImageFormat format, QWidget* parent)
 		: QOpenGLWidget(parent), VideoWidgetEvent(ctx, sdk, dup_idx) {
-        setMouseTracking(true);
+
 		context = ctx;
 		raw_image_format = format;
 //		statistics = Statistics::Instance();
@@ -45,13 +45,11 @@ namespace tc
         timer->start(17);
 	}
 
-	OpenGLVideoWidget::~OpenGLVideoWidget()
-	{
+	OpenGLVideoWidget::~OpenGLVideoWidget() {
 
 	}
 
-	void OpenGLVideoWidget::initializeGL()
-	{
+	void OpenGLVideoWidget::initializeGL() {
 		initializeOpenGLFunctions();
 
 		auto functions = QOpenGLVersionFunctionsFactory::get<QOpenGLFunctions_3_3_Core>(QOpenGLContext::currentContext());
@@ -179,7 +177,7 @@ namespace tc
 
 	void OpenGLVideoWidget::resizeEvent(QResizeEvent* event) {
 		QOpenGLWidget::resizeEvent(event);
-
+        glViewport(0, 0, event->size().width(), event->size().height());
 	}
 
 	void OpenGLVideoWidget::paintGL() {
