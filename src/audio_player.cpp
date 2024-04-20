@@ -6,8 +6,8 @@
 
 #include "audio_player.h"
 
-#include "tc_common/data.h"
-#include "tc_common/log.h"
+#include "tc_common_new/data.h"
+#include "tc_common_new/log.h"
 
 namespace tc
 {

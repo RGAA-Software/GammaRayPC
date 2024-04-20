@@ -44,12 +44,11 @@ include_directories(${CMAKE_SOURCE_DIR}/src)
 include_directories(${CMAKE_SOURCE_DIR}/deps)
 include_directories(${CMAKE_SOURCE_DIR}/deps/tc_3rdparty)
 include_directories(${CMAKE_SOURCE_DIR}/deps/tc_3rdparty/eventbus/src)
-include_directories(${CMAKE_SOURCE_DIR}/deps/tc_client_sdk)
+include_directories(${CMAKE_SOURCE_DIR}/deps/tc_client_sdk_new)
 include_directories(${CMAKE_SOURCE_DIR}/deps/tc_3rdparty/asio2/include)
 include_directories(${CMAKE_SOURCE_DIR}/deps/tc_3rdparty/asio2/3rd)
 include_directories(${CMAKE_SOURCE_DIR}/deps/tc_qt_widget)
-
-include_directories(${CMAKE_BINARY_DIR}/deps/tc_message)
+include_directories(${CMAKE_BINARY_DIR}/deps/tc_message_new)
 
 # 执行的时候就Copy一下，方便测试
 #file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/settings.toml" DESTINATION ${CMAKE_BINARY_DIR})

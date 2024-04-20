@@ -5,7 +5,7 @@
 #include "stream_content.h"
 
 #include "settings.h"
-#include "tc_common/log.h"
+#include "tc_common_new/log.h"
 #include "client_context.h"
 #include "app_stream_list.h"
 #include "widget_helper.h"

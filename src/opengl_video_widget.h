@@ -14,7 +14,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <QVBoxLayout>
 
-#include "tc_client_sdk/gl/raw_image.h"
+#include "tc_client_sdk_new/gl/raw_image.h"
 #include "tc_message.pb.h"
 #include "video_widget_event.h"
 

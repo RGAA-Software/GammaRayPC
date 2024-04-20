@@ -9,7 +9,7 @@
 #include <QBrush>
 #include <QPropertyAnimation>
 
-#include "tc_common/log.h"
+#include "tc_common_new/log.h"
 
 namespace tc
 {

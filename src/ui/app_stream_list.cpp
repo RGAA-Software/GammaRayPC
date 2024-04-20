@@ -12,7 +12,7 @@
 #include "db/stream_item.h"
 #include "db/stream_db_manager.h"
 #include "client_context.h"
-#include "tc_common/log.h"
+#include "tc_common_new/log.h"
 #include "widget_helper.h"
 #include "message_dialog.h"
 #include "stream_item_widget.h"

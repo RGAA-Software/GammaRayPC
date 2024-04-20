@@ -5,9 +5,9 @@
 #include "client_context.h"
 
 #include "settings.h"
-#include "tc_common/message_notifier.h"
-#include "tc_common/shared_preference.h"
-#include "tc_common/thread.h"
+#include "tc_common_new/message_notifier.h"
+#include "tc_common_new/shared_preference.h"
+#include "tc_common_new/thread.h"
 #include "db/stream_db_manager.h"
 
 namespace tc

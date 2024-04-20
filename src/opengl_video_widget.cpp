@@ -19,9 +19,9 @@
 #include "shader_program.h"
 #include "opengl_video_widget.h"
 #include "video_widget_shaders.h"
-#include "tc_common/time_ext.h"
-#include "tc_common/log.h"
-#include "tc_common/data.h"
+#include "tc_common_new/time_ext.h"
+#include "tc_common_new/log.h"
+#include "tc_common_new/data.h"
 #include "director.h"
 #include "sprite.h"
 

@@ -8,8 +8,8 @@
 #include "thunder_sdk.h"
 #include "opengl_video_widget.h"
 #include "client_context.h"
-#include "tc_common/data.h"
-#include "tc_common/log.h"
+#include "tc_common_new/data.h"
+#include "tc_common_new/log.h"
 #include "audio_player.h"
 
 namespace tc

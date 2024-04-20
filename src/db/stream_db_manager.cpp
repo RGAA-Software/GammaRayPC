@@ -11,7 +11,7 @@
 #include <sqlite3.h>
 
 #include "stream_item.h"
-#include "tc_common/log.h"
+#include "tc_common_new/log.h"
 
 namespace tc
 {

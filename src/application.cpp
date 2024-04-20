@@ -13,8 +13,8 @@
 
 #include "ui/app_menu.h"
 #include "ui/app_stream_list.h"
-#include "tc_common/log.h"
-#include "tc_common/thread.h"
+#include "tc_common_new/log.h"
+#include "tc_common_new/thread.h"
 #include "ui/create_stream_dialog.h"
 #include "client_context.h"
 #include "ui/widget_helper.h"
