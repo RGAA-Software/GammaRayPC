@@ -22,6 +22,8 @@ namespace tc
         explicit Workspace(const std::shared_ptr<ClientContext>& ctx, QWidget* parent = nullptr);
         ~Workspace() override;
 
+        void closeEvent(QCloseEvent *event) override;
+
     private:
 
         void RegisterSdkMsgCallbacks();

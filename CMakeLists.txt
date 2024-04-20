@@ -5,7 +5,7 @@ include(env_settings.cmake)
 
 set(CMAKE_PREFIX_PATH ${QT_ROOT}/lib/cmake)
 set(CMAKE_TOOLCHAIN_FILE ${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake)
-project(tc_client_pc)
+project(GammaRayPC)
 
 set(CMAKE_CXX_STANDARD 20)
 

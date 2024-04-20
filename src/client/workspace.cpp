@@ -23,7 +23,7 @@ namespace tc
             .ssl_ = false,
             .ip_ = "127.0.0.1",
 //            .ip_ = "10.0.0.241",
-            .port_ = 9002,
+            .port_ = 20371,
             .req_path_ = "/media",
         }, nullptr, DecoderRenderType::kFFmpegI420);
 
@@ -67,6 +67,13 @@ namespace tc
                 audio_player_->Write(data);
             });
         });
+    }
+
+    void Workspace::closeEvent(QCloseEvent *event) {
+        LOGI("closed event...");
+        if (sdk_) {
+            sdk_->Exit();
+        }
     }
 
 }

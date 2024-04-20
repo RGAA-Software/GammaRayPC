@@ -44,7 +44,7 @@ int main(int argc, char** argv) {
 
     auto ctx = std::make_shared<ClientContext>();
     Workspace ws(ctx);
-    ws.resize(400, 225);
+    ws.resize(1280, 768);
     ws.show();
 
     return app.exec();
