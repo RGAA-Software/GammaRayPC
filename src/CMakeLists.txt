@@ -31,6 +31,7 @@ set(SRCS
         ui/stream_item_widget.cpp
         ui/stream_content.cpp
         ui/settings_content.cpp
+        ui/about_content.cpp
         db/stream_db_manager.cpp
         db/stream_item.cpp
         application.cpp

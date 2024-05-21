@@ -22,9 +22,13 @@ namespace tc
         sdk_->Init(ThunderSdkParams {
             .ssl_ = false,
             .ip_ = "127.0.0.1",
-//            .ip_ = "10.0.0.241",
             .port_ = 20371,
             .req_path_ = "/media",
+#if defined(WIN32)
+            .client_type_ = ClientType::kWindows,
+#elif defined(ANDROID)
+            .client_type_ = ClientType::kAndroid,
+#endif
         }, nullptr, DecoderRenderType::kFFmpegI420);
 
         // ui
@@ -50,11 +54,11 @@ namespace tc
     }
 
     void Workspace::RegisterSdkMsgCallbacks() {
-        sdk_->RegisterOnVideoFrameDecodedCallback([=, this](const std::shared_ptr<RawImage>& image) {
+        sdk_->SetOnVideoFrameDecodedCallback([=, this](const std::shared_ptr<RawImage>& image) {
             video_widget_->RefreshI420Image(image);
         });
 
-        sdk_->RegisterOnAudioFrameDecodedCallback([=, this](const std::shared_ptr<Data>& data, int samples, int channels, int bits) {
+        sdk_->SetOnAudioFrameDecodedCallback([=, this](const std::shared_ptr<Data>& data, int samples, int channels, int bits) {
             //LOGI("data size: {}, samples: {}, channel: {}, bits: {}", data->Size(), samples, channels, bits);
             if (!audio_player_) {
                 audio_player_ = std::make_shared<AudioPlayer>();

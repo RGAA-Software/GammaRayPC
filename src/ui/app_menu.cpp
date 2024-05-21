@@ -151,7 +151,7 @@ namespace tc
             }
 
             app_items.push_back(app_item);
-            app_item->setFixedSize(180, 45);
+            app_item->setFixedSize(180, 40);
             app_item->SetOnItemClickedCallback([=, this](const QString& name, int idx) {
                 if (callback_) {
                     callback_(name, idx);

@@ -44,6 +44,7 @@ int main(int argc, char** argv) {
 
     auto ctx = std::make_shared<ClientContext>();
     Workspace ws(ctx);
+    ws.setWindowTitle(QMainWindow::tr("GammaRay Game Streamer"));
     ws.resize(1280, 768);
     ws.show();
 

@@ -17,8 +17,8 @@ namespace tc
     class SettingsContent : public AppContent {
     public:
 
-        SettingsContent(const std::shared_ptr<ClientContext>& ctx, QWidget* parent = nullptr);
-        ~SettingsContent();
+        explicit SettingsContent(const std::shared_ptr<ClientContext>& ctx, QWidget* parent = nullptr);
+        ~SettingsContent() override;
 
         void OnContentShow() override;
         void OnContentHide() override;

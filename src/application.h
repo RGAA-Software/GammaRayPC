@@ -15,7 +15,6 @@ namespace tc
 
     class AppMenu;
     class ClientContext;
-    //class Workspace;
     class StreamContent;
 
     class Application : public QMainWindow {
@@ -26,13 +25,12 @@ namespace tc
     private:
         void CreateLayout();
         void Init();
-        void LoadStyle(const std::string& name);
+        static void LoadStyle(const std::string& name);
         void StartStreaming(const StreamItem& item);
 
     private:
 
         std::shared_ptr<ClientContext> context_ = nullptr;
-        //std::map<std::string, std::shared_ptr<Workspace>> workspaces_;
         AppMenu* app_menu_ = nullptr;
         QStackedWidget* content_widget_ = nullptr;
         StreamContent* stream_content_ = nullptr;

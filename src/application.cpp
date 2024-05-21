@@ -20,6 +20,7 @@
 #include "ui/widget_helper.h"
 #include "ui/stream_content.h"
 #include "ui/settings_content.h"
+#include "ui/about_content.h"
 
 namespace tc
 {
@@ -27,12 +28,12 @@ namespace tc
     Application::Application(const std::shared_ptr<ClientContext>& ctx, QWidget* parent) {
         context_ = ctx;
         resize(1515, 768);
-        setWindowTitle(tr("Beloud Client"));
+        setWindowTitle(tr("GammaRay Client"));
 
         CreateLayout();
         Init();
 
-        //LoadStyle("");
+        LoadStyle("");
     }
 
     Application::~Application() {
@@ -53,7 +54,8 @@ namespace tc
 
         std::vector<AppItemDesc> menus = {
                 {tr("GAMES"), ":/resources/image/ic_stream.svg"},
-                {tr("SETTINGS"), ":/resources/image/ic_settings.svg"}
+                {tr("SETTINGS"), ":/resources/image/ic_settings.svg"},
+                {tr("ABOUT"), ":/resources/image/windows.svg"}
         };
         app_menu_ = new AppMenu(menus, this);
         app_menu_->SetOnItemClickedCallback([this](const QString& name, int idx) {
@@ -76,8 +78,8 @@ namespace tc
         content_widget_->addWidget(settings_content);
 
         // about
-        //auto about_content = new AboutContent(context_, this);
-        //content_widget_->addWidget(about_content);
+        auto about_content = new AboutContent(context_, this);
+        content_widget_->addWidget(about_content);
 
         root_layout->addWidget(content_widget_);
         root_widget->setLayout(root_layout);
@@ -127,18 +129,12 @@ namespace tc
     }
 
     void Application::LoadStyle(const std::string& name) {
-        QElapsedTimer time;
-        time.start();
-
         auto qssFile = ":/qss/lightblue.css";
-
         QString qss;
         QFile file(qssFile);
         if (file.open(QFile::ReadOnly)) {
-            qDebug() << "open success...";
             QStringList list;
             QTextStream in(&file);
-            //in.setCodec("utf-8");
             while (!in.atEnd()) {
                 QString line;
                 in >> line;
@@ -151,8 +147,6 @@ namespace tc
             qApp->setPalette(QPalette(paletteColor));
             qApp->setStyleSheet(qss);
         }
-
-        qDebug() << "用时:" << time.elapsed();
     }
 
     bool Application::HasWorkspace(const std::string &stream_id) {

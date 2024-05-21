@@ -61,5 +61,5 @@ add_dependencies(tc_build_all tc_client tc_rtc tc_client_ws)
 add_custom_command(TARGET tc_build_all POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy
             "${CMAKE_CURRENT_BINARY_DIR}/deps/tc_webrtc_client/tc_rtc.dll"
-            "${CMAKE_CURRENT_BINARY_DIR}/src/client/"
+            "${CMAKE_CURRENT_BINARY_DIR}/src/"
 )

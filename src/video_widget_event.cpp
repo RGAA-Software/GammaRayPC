@@ -92,15 +92,15 @@ namespace tc
         if(event->button() == Qt::LeftButton) {
             //std::cout << "OnMousePressEvent LeftButton" << std::endl;
             //mouse_event_desc.buttons |= MOUSEEVENTF_LEFTDOWN;
-            pressed_button = EButtonFlag::kLeftMouseButtonDown;
+            pressed_button = ButtonFlag::kLeftMouseButtonDown;
         } else if(event->button() == Qt::RightButton) {
             //std::cout << "OnMousePressEvent RightButton" << std::endl;
             //mouse_event_desc.buttons |= MOUSEEVENTF_RIGHTDOWN;
-            pressed_button = EButtonFlag::kRightMouseButtonDown;
+            pressed_button = ButtonFlag::kRightMouseButtonDown;
         } else if(event->button() == Qt::MiddleButton) {
             //std::cout << "OnMousePressEvent MiddleButton" << std::endl;
             //mouse_event_desc.buttons |= MOUSEEVENTF_MIDDLEDOWN;
-            pressed_button = EButtonFlag::kMiddleMouseButtonDown;
+            pressed_button = ButtonFlag::kMiddleMouseButtonDown;
         }
 
         mouse_event_desc.buttons = pressed_button;
@@ -118,15 +118,15 @@ namespace tc
         if (event->button() == Qt::LeftButton) {
             //std::cout << "OnMouseReleaseEvent LeftButton" << std::endl;
             //mouse_event_desc.buttons |= MOUSEEVENTF_LEFTUP;
-            released_button = EButtonFlag::kLeftMouseButtonUp;
+            released_button = ButtonFlag::kLeftMouseButtonUp;
         } else if (event->button() == Qt::RightButton) {
             //std::cout << "OnMouseReleaseEvent RightButton" << std::endl;
             //mouse_event_desc.buttons |= MOUSEEVENTF_RIGHTUP;
-            released_button = EButtonFlag::kRightMouseButtonUp;
+            released_button = ButtonFlag::kRightMouseButtonUp;
         } else if (event->button() == Qt::MiddleButton) {
             //std::cout << "OnMouseReleaseEvent MiddleButton" << std::endl;
             //mouse_event_desc.buttons |= MOUSEEVENTF_MIDDLEUP;
-            released_button = EButtonFlag::kMiddleMouseButtonUp;
+            released_button = ButtonFlag::kMiddleMouseButtonUp;
         }
         mouse_event_desc.buttons = released_button;
         mouse_event_desc.released = true;
@@ -152,7 +152,7 @@ namespace tc
         if (!numDegrees.isNull()) {
             QPoint numSteps = numDegrees / 15;
             qDebug() << "numSteps = " << numSteps;
-            mouse_event_desc.buttons = EButtonFlag::kMiddleMouseButtonDown;
+            mouse_event_desc.buttons = ButtonFlag::kMiddleMouseButtonDown;
             if(angle_delta.x() != 0) {
                 //mouse_event_desc.buttons |= MOUSEEVENTF_HWHEEL;
                 mouse_event_desc.data = angle_delta.x();
