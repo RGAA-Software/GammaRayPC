@@ -40,10 +40,18 @@ int main(int argc, char** argv) {
     qApp->setFont(font);
 #endif
 
-    ThunderSdkParams params {};
-
     auto ctx = std::make_shared<ClientContext>();
-    Workspace ws(ctx);
+    Workspace ws(ctx, ThunderSdkParams {
+            .ssl_ = false,
+            .ip_ = "10.0.0.90",
+            .port_ = 20371,
+            .req_path_ = "/media",
+#if defined(WIN32)
+            .client_type_ = ClientType::kWindows,
+#elif defined(ANDROID)
+            .client_type_ = ClientType::kAndroid,
+#endif
+    });
     ws.setWindowTitle(QMainWindow::tr("GammaRay Game Streamer"));
     ws.resize(1280, 768);
     ws.show();

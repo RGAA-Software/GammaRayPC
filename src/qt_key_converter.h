@@ -21,7 +21,7 @@ namespace tc
 
         int ToVK(int qt_key);
 
-        std::map<int, bool> GetSysKeyStatus();
+        static std::map<int, bool> GetSysKeyStatus();
 
     private:
 

@@ -15,21 +15,11 @@
 namespace tc
 {
 
-    Workspace::Workspace(const std::shared_ptr<ClientContext>& ctx, QWidget* parent) {
+    Workspace::Workspace(const std::shared_ptr<ClientContext>& ctx, const ThunderSdkParams& params, QWidget* parent) {
         this->context_ = ctx;
 
         sdk_ = ThunderSdk::Make(ctx->GetMessageNotifier());
-        sdk_->Init(ThunderSdkParams {
-            .ssl_ = false,
-            .ip_ = "127.0.0.1",
-            .port_ = 20371,
-            .req_path_ = "/media",
-#if defined(WIN32)
-            .client_type_ = ClientType::kWindows,
-#elif defined(ANDROID)
-            .client_type_ = ClientType::kAndroid,
-#endif
-        }, nullptr, DecoderRenderType::kFFmpegI420);
+        sdk_->Init(params, nullptr, DecoderRenderType::kFFmpegI420);
 
         // ui
         auto root_layout = new QHBoxLayout();

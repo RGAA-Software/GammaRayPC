@@ -7,6 +7,7 @@
 
 #include <QWidget>
 #include <QMainWindow>
+#include "thunder_sdk.h"
 
 namespace tc
 {
@@ -19,7 +20,7 @@ namespace tc
     class Workspace : public QMainWindow {
     public:
 
-        explicit Workspace(const std::shared_ptr<ClientContext>& ctx, QWidget* parent = nullptr);
+        explicit Workspace(const std::shared_ptr<ClientContext>& ctx, const ThunderSdkParams& params, QWidget* parent = nullptr);
         ~Workspace() override;
 
         void closeEvent(QCloseEvent *event) override;
