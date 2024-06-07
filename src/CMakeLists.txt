@@ -19,7 +19,7 @@ add_compile_options(/bigobj)
 set(SRCS
         main.cpp
         client_context.cpp
-        logo.rc ${RES}
+        icon.rc ${RES}
         ui/switch_button.cpp
         ui/float_button.cpp
         ui/message_dialog.cpp
@@ -53,7 +53,7 @@ set(SRCS_WS
         opengl_video_widget.cpp
         qt_key_converter.cpp
         audio_player.cpp
-        logo.rc ${RES}
+        icon.rc ${RES}
         ui/switch_button.cpp
         ui/float_button.cpp
         ui/message_dialog.cpp

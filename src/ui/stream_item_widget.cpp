@@ -7,6 +7,8 @@
 #include <QPainter>
 #include <QPainterPath>
 
+#include "app_color_theme.h"
+
 namespace tc
 {
 
@@ -27,11 +29,10 @@ namespace tc
         painter.setRenderHints(QPainter::TextAntialiasing, true);
         painter.setRenderHints(QPainter::SmoothPixmapTransform, true);
         painter.setPen(Qt::NoPen);
-        painter.setBrush(QBrush(0xEAF7FF));
+        painter.setBrush(QBrush(0xffffff));
         painter.drawRect(0, 0, QWidget::width(), QWidget::height());
         painter.setBrush(QBrush(QColor(bg_color_)));
         painter.drawRoundedRect(0, 0, width(), height(), radius_, radius_);
-        radius_ = 5;
 
         int border_width = 2;
         {
@@ -51,10 +52,9 @@ namespace tc
 
         QPen pen;
         if (enter_) {
-            pen.setColor(QColor(0xff, 0xd3, 0x00));
-        }
-        else {
-            pen.setColor(QColor(0xff, 0xd3, 0x00, 0x11));
+            pen.setColor(QColor(AppColorTheme::kAppMenuItemBgHoverColor));
+        } else {
+            pen.setColor(QColor(0xffffff));
         }
         pen.setWidth(border_width);
         painter.setPen(pen);

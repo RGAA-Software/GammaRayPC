@@ -17,6 +17,8 @@
         <file>resources/image/ic_settings.svg</file>
         <file>resources/image/ic_stream.svg</file>
         <file>resources/image/test_cover.jpg</file>
+        <file>resources/image/tc_icon.png</file>
+        <file>resources/image/tc_icon_raw.png</file>
         <file>resources/font/blade.ttf</file>
         <file>resources/font/quixotic-1.otf</file>
     </qresource>

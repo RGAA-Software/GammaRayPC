@@ -33,7 +33,7 @@ namespace tc
 
         QPixmap icon_;
         QBitmap mask_;
-        int radius_;
+        int radius_ = 13;
 
     };
 

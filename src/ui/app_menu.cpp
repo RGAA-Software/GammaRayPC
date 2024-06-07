@@ -130,9 +130,9 @@ namespace tc
 
         auto logo_layout = new QHBoxLayout();
         auto logo = new QLabel(this);
-        auto image = new QImage(":/resources/image/bc_icon.png");
+        auto image = new QImage(":resources/image/tc_icon.png");
         auto pixmap = QPixmap::fromImage(*image);
-        pixmap = pixmap.scaled(pixmap.width()/4, pixmap.height()/4, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+        pixmap = pixmap.scaled(pixmap.width()/3, pixmap.height()/3, Qt::KeepAspectRatio, Qt::SmoothTransformation);
         logo->setPixmap(pixmap);
 
         logo_layout->addStretch();
