@@ -13,11 +13,11 @@
 namespace tc
 {
 
-    ClientContext::ClientContext(QObject* parent) : QObject(parent) {
+    ClientContext::ClientContext(const std::string& name, QObject* parent) : QObject(parent) {
+        this->name_ = name;
         this->msg_notifier_ = std::make_shared<MessageNotifier>();
-
         sp_ = std::make_shared<SharedPreference>();
-        sp_->Init("", "app.dat");
+        sp_->Init("", std::format("app.{}.dat", name));
 
         auto settings = Settings::Instance();
         settings->SetSharedPreference(sp_);
@@ -30,7 +30,7 @@ namespace tc
     }
 
     ClientContext::~ClientContext() {
-
+        Exit();
     }
 
     void ClientContext::PostTask(std::function<void()>&& task) {
@@ -55,8 +55,10 @@ namespace tc
         return db_mgr_;
     }
 
-    void ClientContext::SendAppMessage(const std::shared_ptr<AppMessage>& msg) {
-
+    void ClientContext::Exit() {
+        if (task_thread_ && task_thread_->IsJoinable()) {
+            task_thread_->Exit();
+        }
     }
 
 }

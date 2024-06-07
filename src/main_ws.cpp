@@ -5,16 +5,22 @@
 #include <QApplication>
 #include <QSurfaceFormat>
 #include <QFontDatabase>
+#include <QMessageBox>
 
 #include "thunder_sdk.h"
 #include "client_context.h"
 #include "workspace.h"
 #include "application.h"
+#include "gflags/gflags.h"
+#include "tc_common_new/md5.h"
 
 using namespace tc;
 
-int main(int argc, char** argv) {
+DEFINE_string(host, "", "remote host");
+DEFINE_int32(port, 0, "remote port");
 
+int main(int argc, char** argv) {
+    gflags::ParseCommandLineFlags(&argc, &argv, true);
 #ifdef WIN32
     //CaptureDump();
 #endif
@@ -40,11 +46,19 @@ int main(int argc, char** argv) {
     qApp->setFont(font);
 #endif
 
-    auto ctx = std::make_shared<ClientContext>();
+    auto host = FLAGS_host;
+    auto port = FLAGS_port;
+    if (host.empty() || port <= 0 || port >= 65535) {
+        QMessageBox::critical(nullptr, "Error Params", "You must give HOST & PORT");
+        return -1;
+    }
+
+    auto name = MD5::Hex(host).substr(0, 10);
+    auto ctx = std::make_shared<ClientContext>(name);
     Workspace ws(ctx, ThunderSdkParams {
             .ssl_ = false,
-            .ip_ = "10.0.0.90",
-            .port_ = 20371,
+            .ip_ = host,
+            .port_ = port,
             .req_path_ = "/media",
 #if defined(WIN32)
             .client_type_ = ClientType::kWindows,

@@ -49,18 +49,10 @@ namespace tc
     }
 
     AppStreamList::~AppStreamList() {
-//        context_->RemoveMessageTask(stream_added_task_id_);
-//        context_->RemoveMessageTask(stream_updated_task_id_);
     }
 
     void AppStreamList::paintEvent(QPaintEvent *event) {
         QWidget::paintEvent(event);
-
-//        QPainter painter(this);
-//        painter.setPen(Qt::NoPen);
-//        painter.setBrush(QBrush(QColor(0x07a7374)));
-//        painter.drawRect(0, 0, width(), height());
-
     }
 
     void AppStreamList::CreateLayout() {
@@ -78,7 +70,6 @@ namespace tc
         stream_list_->setResizeMode(QListWidget::Adjust);
         stream_list_->setContextMenuPolicy(Qt::CustomContextMenu);
         stream_list_->setSpacing(10);
-        //background-color: #DEF0FE;
         stream_list_->setStyleSheet(R"(
             QListWidget::item {
                 color: #000000;
@@ -116,20 +107,18 @@ namespace tc
     }
 
     void AppStreamList::Init() {
-//        stream_added_task_id_ = context_->RegisterMessageTask(MessageTask::Make(kCodeStreamAdded, [=, this](const std::shared_ptr<Message>& msg) {
-//            auto target_msg = std::dynamic_pointer_cast<StreamItemAdded>(msg);
-//            auto item = target_msg->item_;
-//            db_mgr_->AddStream(item);
-//            LoadStreamItems();
-//        }));
-//
-//        stream_updated_task_id_ = context_->RegisterMessageTask(MessageTask::Make(kCodeStreamUpdated, [=, this](const std::shared_ptr<Message>& msg) {
-//            auto target_msg = std::dynamic_pointer_cast<StreamItemUpdated>(msg);
-//            auto item = target_msg->item_;
-//            db_mgr_->UpdateStream(item);
-//            LoadStreamItems();
-//            LOGI("Update stream : {}", item.stream_id);
-//        }));
+        msg_listener_ = context_->ObtainMessageListener();
+        msg_listener_->Listen<StreamItemAdded>([=, this](const StreamItemAdded& msg) {
+            auto item = msg.item_;
+            db_mgr_->AddStream(item);
+            LoadStreamItems();
+        });
+
+        msg_listener_->Listen<StreamItemUpdated>([=, this](const StreamItemUpdated& msg) {
+            db_mgr_->UpdateStream(msg.item_);
+            LoadStreamItems();
+            LOGI("Update stream : {}", msg.item_.stream_id);
+        });
     }
 
     void AppStreamList::RegisterActions(int index) {
@@ -178,9 +167,7 @@ namespace tc
     }
 
     void AppStreamList::StartStream(const StreamItem& item) {
-        if (dbk_callback_) {
-            dbk_callback_(item);
-        }
+        context_->SendAppMessage(item);
     }
 
     void AppStreamList::StopStream(const StreamItem& item) {
@@ -194,12 +181,6 @@ namespace tc
     }
 
     void AppStreamList::DeleteStream(const StreamItem& item) {
-        if (application_->HasWorkspace(item.stream_id)) {
-            auto dialog = MessageDialog::Make(context_, tr("The stream is running, please exit streaming then delete it."));
-            dialog->exec();
-            return;
-        }
-
         auto alert = MessageDialog::Make(context_, tr("Do you want to *DELETE* the stream ?"));
         if (alert->exec() == DialogButton::kCancel) {
             return;
@@ -213,8 +194,8 @@ namespace tc
 
     QListWidgetItem* AppStreamList::AddItem(const StreamItem& stream) {
         auto item = new QListWidgetItem(stream_list_);
-        item->setSizeHint(QSize(230, 108 + 15));
-        auto widget = new StreamItemWidget(stream.bg_color, stream_list_);
+        item->setSizeHint(QSize(230, 128 + 15));
+        auto widget = new StreamItemWidget(stream, stream.bg_color, stream_list_);
 
         auto root_layout = new QVBoxLayout();
         WidgetHelper::ClearMargin(root_layout);
@@ -285,16 +266,6 @@ namespace tc
         auto db_mgr = context_->GetDBManager();
         streams_ = db_mgr->GetAllStreams();
 
-        // mock //
-        for (int i = 0; i < 63; i++) {
-            StreamItem item {
-                .stream_id = std::format("stream id: {}", i),
-                .stream_name = std::format("Stream: {}", i),
-            };
-            streams_.push_back(item);
-        }
-        // mock //
-
         context_->PostUITask([=, this]() {
             int count = stream_list_->count();
             for (int i = 0; i < count; i++) {
@@ -312,10 +283,6 @@ namespace tc
                 stream_content_->ShowEmptyTip();
             }
         });
-    }
-
-    void AppStreamList::SetOnItemDoubleClickedCallback(OnItemDoubleClickedCallback&& cbk) {
-        dbk_callback_ = std::move(cbk);
     }
 
 }

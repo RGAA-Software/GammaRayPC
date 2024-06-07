@@ -68,6 +68,8 @@ namespace tc
             return std::make_shared<StreamItemAdded>(item);
         }
 
+        StreamItemAdded() : AppMessage(kCodeStreamAdded) {
+        }
         explicit StreamItemAdded(const StreamItem& item) : AppMessage(kCodeStreamAdded) {
             this->item_ = item;
         }

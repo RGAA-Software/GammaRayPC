@@ -10,11 +10,11 @@
 #include <QObject>
 #include <QWidget>
 
+#include "tc_common_new/message_notifier.h"
+
 namespace tc
 {
 
-    class MessageNotifier;
-    class MessageListener;
     class StreamDBManager;
     class SharedPreference;
     class AppMessage;
@@ -23,7 +23,7 @@ namespace tc
     class ClientContext : public QObject {
     public:
 
-        explicit ClientContext(QObject* parent = nullptr);
+        explicit ClientContext(const std::string& name, QObject* parent = nullptr);
         ~ClientContext() override;
 
         void PostTask(std::function<void()>&& task);
@@ -33,15 +33,20 @@ namespace tc
         std::shared_ptr<MessageListener> ObtainMessageListener();
 
         std::shared_ptr<StreamDBManager> GetDBManager();
-        void SendAppMessage(const std::shared_ptr<AppMessage>& msg);
+
+        template<class T>
+        void SendAppMessage(const T& msg) {
+            msg_notifier_->SendAppMessage(msg);
+        }
+
+        void Exit();
 
     private:
-
         std::shared_ptr<MessageNotifier> msg_notifier_ = nullptr;
         std::shared_ptr<StreamDBManager> db_mgr_ = nullptr;
         std::shared_ptr<SharedPreference> sp_ = nullptr;
         std::shared_ptr<Thread> task_thread_ = nullptr;
-
+        std::string name_;
     };
 
 }

@@ -6,6 +6,7 @@ set(CMAKE_AUTORCC ON)
 
 find_package(Qt6 REQUIRED COMPONENTS Widgets Core OpenGL OpenGLWidgets Multimedia)
 find_package(SqliteOrm CONFIG REQUIRED)
+find_package(gflags CONFIG REQUIRED)
 
 include_directories(${CMAKE_SOURCE_DIR})
 include_directories(${CMAKE_SOURCE_DIR}/src)
@@ -92,7 +93,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE Qt6::Widgets
         Qt6::Multimedia
 )
 target_link_libraries(${PROJECT_NAME} PRIVATE tc_common_new tc_message tc_sdk tc_qt_widget)
-target_link_libraries(${PROJECT_NAME} PRIVATE sqlite_orm::sqlite_orm)
+target_link_libraries(${PROJECT_NAME} PRIVATE sqlite_orm::sqlite_orm gflags::gflags)
 if(WIN32)
     target_link_libraries(${PROJECT_NAME} PRIVATE jemalloc)
 endif ()
@@ -104,7 +105,7 @@ target_link_libraries(${PROJECT_NAME}_ws PRIVATE Qt6::Widgets
         Qt6::Multimedia
 )
 target_link_libraries(${PROJECT_NAME}_ws PRIVATE tc_common_new tc_message tc_sdk tc_qt_widget)
-target_link_libraries(${PROJECT_NAME}_ws PRIVATE sqlite_orm::sqlite_orm)
+target_link_libraries(${PROJECT_NAME}_ws PRIVATE sqlite_orm::sqlite_orm gflags::gflags)
 if(WIN32)
     target_link_libraries(${PROJECT_NAME}_ws PRIVATE jemalloc)
 endif ()

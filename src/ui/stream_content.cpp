@@ -26,9 +26,7 @@ namespace tc
     void AddButton::paintEvent(QPaintEvent *) {
         QPainter painter(this);
         painter.setRenderHint(QPainter::RenderHint::Antialiasing);
-
         int gap = 2;
-
         {
             QPen pen;
             QColor c;
@@ -104,12 +102,6 @@ namespace tc
 
         setLayout(root_layout);
 
-        stream_list_->SetOnItemDoubleClickedCallback([=, this](const StreamItem& item) {
-            if (starting_stream_cbk_) {
-                starting_stream_cbk_(item);
-            }
-        });
-
         add_btn_ = new AddButton(this);
         add_btn_->SetOnClickCallback([=, this]() {
             CreateStreamDialog dialog(context_);
@@ -131,10 +123,6 @@ namespace tc
 
     }
 
-    void StreamContent::SetOnStartingStreamCallback(OnStartingStreamCallback&& cbk) {
-        starting_stream_cbk_ = std::move(cbk);
-    }
-
     void StreamContent::OnContentShow() {
         AppContent::OnContentShow();
     }
@@ -146,13 +134,9 @@ namespace tc
     void StreamContent::resizeEvent(QResizeEvent *event) {
         int width = event->size().width();
         int height = event->size().height();
-
-        int gap = 20;
-
+        int gap = 25;
         add_btn_->setGeometry(width - add_btn_->width() - gap, height - add_btn_->height() - gap, add_btn_->width(), add_btn_->height());
-
         empty_tip_->setGeometry((width - empty_tip_->width())/2, (height - empty_tip_->height())/2, empty_tip_->width(), empty_tip_->height());
-
     }
 
     void StreamContent::ShowEmptyTip() {

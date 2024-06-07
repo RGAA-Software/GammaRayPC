@@ -68,6 +68,9 @@ namespace tc
         if (sdk_) {
             sdk_->Exit();
         }
+        if (context_) {
+            context_->Exit();
+        }
     }
 
 }

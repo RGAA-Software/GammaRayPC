@@ -28,6 +28,7 @@ namespace tc
     class StreamDBManager;
     class Application;
     class StreamContent;
+    class MessageListener;
 
     using OnItemDoubleClickedCallback = std::function<void(const StreamItem&)>;
 
@@ -35,11 +36,10 @@ namespace tc
     public:
 
         explicit AppStreamList(const std::shared_ptr<ClientContext>& ctx, QWidget* parent = nullptr);
-        ~AppStreamList();
+        ~AppStreamList() override;
 
         void paintEvent(QPaintEvent *event) override;
 
-        void SetOnItemDoubleClickedCallback(OnItemDoubleClickedCallback&& cbk);
         void LoadStreamItems();
 
     private:
@@ -50,27 +50,17 @@ namespace tc
         void CreateLayout();
         void Init();
 
-
-
-    private:
-
         void DeleteStream(const StreamItem& item);
         void StartStream(const StreamItem& item);
         void StopStream(const StreamItem& item);
         void EditStream(const StreamItem& item);
 
     private:
-
         std::shared_ptr<ClientContext> context_ = nullptr;
         std::shared_ptr<StreamDBManager> db_mgr_ = nullptr;
         std::vector<StreamItem> streams_;
-
+        std::shared_ptr<MessageListener> msg_listener_ = nullptr;
         QListWidget* stream_list_ = nullptr;
-
-        int stream_added_task_id_ = -1;
-        int stream_updated_task_id_ = -1;
-
-        OnItemDoubleClickedCallback dbk_callback_;
 
         Application* application_ = nullptr;
         StreamContent* stream_content_ = nullptr;

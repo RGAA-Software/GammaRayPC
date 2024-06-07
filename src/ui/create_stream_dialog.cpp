@@ -109,6 +109,7 @@ namespace tc
             auto validator = new QIntValidator(this);
             edit->setValidator(validator);
             ed_port_ = edit;
+            ed_port_->setText("20371");
             if (stream_item_.IsValid()) {
                 ed_port_->setText(QString::number(stream_item_.stream_port));
             }
@@ -121,7 +122,7 @@ namespace tc
         }
 
         // 3. bitrate
-        {
+        if (0) {
             auto layout = new QHBoxLayout();
             layout->setSpacing(0);
             layout->setContentsMargins(0,0,0,0);
@@ -151,7 +152,7 @@ namespace tc
             root_layout->addLayout(layout);
         }
 
-        {
+        if (0) {
             auto layout = new QHBoxLayout();
             layout->setSpacing(0);
             layout->setContentsMargins(0,0,0,0);
@@ -227,7 +228,13 @@ namespace tc
         auto host = ed_host_->text().toStdString();
         auto port = std::atoi(ed_port_->text().toStdString().c_str());
         auto name = ed_name_->text().toStdString();
-        auto bitrate = std::atoi(ed_bitrate_->text().toStdString().c_str());
+        auto bitrate = [this]() -> int {
+            if (ed_bitrate_) {
+                return std::atoi(ed_bitrate_->text().toStdString().c_str());
+            } else {
+                return 0;
+            }
+        } ();
 
         if (host.empty() || port == 0) {
             auto dialog = MessageDialog::Make(context_, tr("Please input necessary information !"));
@@ -240,19 +247,25 @@ namespace tc
             item.stream_host = host;
             item.stream_port = port;
             item.encode_bps = bitrate;
-            item.encode_fps = std::atoi(cb_fps_->currentText().toStdString().c_str());
+            item.encode_fps = [=, this]() -> int {
+                if (cb_fps_) {
+                    return std::atoi(cb_fps_->currentText().toStdString().c_str());
+                } else {
+                    return 0;
+                }
+            }();
         };
 
         if (stream_item_.IsValid()) {
             func_update_stream(stream_item_);
-            auto msg = StreamItemUpdated::Make(stream_item_);
+            StreamItemUpdated msg(stream_item_);
             context_->SendAppMessage(msg);
         }
         else {
             StreamItem item;
             func_update_stream(item);
 
-            auto msg = StreamItemAdded::Make(item);
+            StreamItemAdded msg(item);
             context_->SendAppMessage(msg);
         }
         return true;

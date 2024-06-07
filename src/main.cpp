@@ -40,13 +40,7 @@ int main(int argc, char** argv) {
     qApp->setFont(font);
 #endif
 
-    ThunderSdkParams params {};
-
-    auto ctx = std::make_shared<ClientContext>();
-//    Workspace ws(ctx);
-//    ws.resize(1280, 768);
-//    ws.show();
-
+    auto ctx = std::make_shared<ClientContext>("ui");
     Application application(ctx);
     application.show();
 

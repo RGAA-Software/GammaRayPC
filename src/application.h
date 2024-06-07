@@ -16,12 +16,13 @@ namespace tc
     class AppMenu;
     class ClientContext;
     class StreamContent;
+    class MessageListener;
 
     class Application : public QMainWindow {
     public:
         explicit Application(const std::shared_ptr<ClientContext>& ctx, QWidget* parent = nullptr);
         ~Application() override;
-        bool HasWorkspace(const std::string& stream_id);
+
     private:
         void CreateLayout();
         void Init();
@@ -29,14 +30,11 @@ namespace tc
         void StartStreaming(const StreamItem& item);
 
     private:
-
         std::shared_ptr<ClientContext> context_ = nullptr;
+        std::shared_ptr<MessageListener> msg_listener_ = nullptr;
         AppMenu* app_menu_ = nullptr;
         QStackedWidget* content_widget_ = nullptr;
         StreamContent* stream_content_ = nullptr;
-
-        int clear_ws_task_id_ = -1;
-        int close_ws_task_id_ = -1;
 
     };
 

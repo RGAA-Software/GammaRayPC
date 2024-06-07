@@ -48,8 +48,6 @@ namespace tc
         explicit StreamContent(const std::shared_ptr<ClientContext>& ctx, QWidget* parent = nullptr);
         ~StreamContent() override;
 
-        void SetOnStartingStreamCallback(OnStartingStreamCallback&& cbk);
-
         void OnContentShow() override;
         void OnContentHide() override;
 
@@ -61,7 +59,6 @@ namespace tc
     private:
 
         AppStreamList* stream_list_ = nullptr;
-        OnStartingStreamCallback starting_stream_cbk_;
         AddButton* add_btn_ = nullptr;
         QLabel* empty_tip_ = nullptr;
 
