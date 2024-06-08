@@ -57,6 +57,8 @@ int main(int argc, char** argv) {
     auto ctx = std::make_shared<ClientContext>(name);
     Workspace ws(ctx, ThunderSdkParams {
             .ssl_ = false,
+            .only_audio_ = false,
+            .enable_controller_ = false,
             .ip_ = host,
             .port_ = port,
             .req_path_ = "/media",
