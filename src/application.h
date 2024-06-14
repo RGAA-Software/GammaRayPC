@@ -28,6 +28,7 @@ namespace tc
         void Init();
         static void LoadStyle(const std::string& name);
         void StartStreaming(const StreamItem& item);
+        void changeEvent(QEvent *) override;
 
     private:
         std::shared_ptr<ClientContext> context_ = nullptr;

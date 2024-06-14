@@ -44,7 +44,8 @@ namespace tc
     }
 
     void Workspace::RegisterSdkMsgCallbacks() {
-        sdk_->SetOnVideoFrameDecodedCallback([=, this](const std::shared_ptr<RawImage>& image) {
+        sdk_->SetOnVideoFrameDecodedCallback([=, this](const std::shared_ptr<RawImage>& image, const CaptureMonitorInfo& info) {
+            video_widget_->RefreshCapturedMonitorInfo(info);
             video_widget_->RefreshI420Image(image);
         });
 
@@ -61,6 +62,15 @@ namespace tc
                 audio_player_->Write(data);
             });
         });
+    }
+
+    void Workspace::changeEvent(QEvent* event) {
+        is_window_active_ = isActiveWindow() && !(windowState() & Qt::WindowMinimized);
+        qDebug() << "window state: " << is_window_active_;
+    }
+
+    bool Workspace::IsActiveNow() {
+        return is_window_active_;
     }
 
     void Workspace::closeEvent(QCloseEvent *event) {

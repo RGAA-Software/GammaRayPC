@@ -9,6 +9,7 @@
 namespace tc
 {
     QtKeyConverter::QtKeyConverter() {
+#if 0 // deprecated
         key_mapping_.insert(Qt::Key_Left,0x25);
         key_mapping_.insert(Qt::Key_Up,0x26);
         key_mapping_.insert(Qt::Key_Right,0x27);
@@ -137,14 +138,17 @@ namespace tc
         key_mapping_.insert(Qt::Key_QuoteLeft,0xC0); // `
         key_mapping_.insert(Qt::Key_AsciiTilde,0xC0); // ~
         key_mapping_.insert(Qt::Key_Meta,0x5B);
+#endif
     }
 
+#if 0
     int QtKeyConverter::ToVK(int qt_key) {
         if (key_mapping_.find(qt_key) != key_mapping_.end()) {
             return key_mapping_[qt_key];
         }
         return -1;
     }
+#endif
 
     std::map<int, bool> QtKeyConverter::GetSysKeyStatus() {
         std::map<int, bool> status;

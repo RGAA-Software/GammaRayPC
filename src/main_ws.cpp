@@ -13,6 +13,8 @@
 #include "application.h"
 #include "gflags/gflags.h"
 #include "tc_common_new/md5.h"
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
 
 using namespace tc;
 
@@ -55,7 +57,7 @@ int main(int argc, char** argv) {
 
     auto name = MD5::Hex(host).substr(0, 10);
     auto ctx = std::make_shared<ClientContext>(name);
-    Workspace ws(ctx, ThunderSdkParams {
+    static Workspace ws(ctx, ThunderSdkParams {
             .ssl_ = false,
             .enable_audio_ = true,
             .enable_video_ = true,
@@ -73,5 +75,20 @@ int main(int argc, char** argv) {
     ws.resize(1280, 768);
     ws.show();
 
-    return app.exec();
+    HHOOK keyboardHook = SetWindowsHookExA(WH_KEYBOARD_LL, [](int code, WPARAM wParam, LPARAM lParam) -> LRESULT {
+        if (code >= 0 && ws.IsActiveNow()) {
+            if (wParam == WM_KEYDOWN || wParam == WM_KEYUP) {
+                // 检查按下的键是否是需要屏蔽的键
+                auto kbdStruct = (KBDLLHOOKSTRUCT *)lParam;
+                if (kbdStruct->vkCode == VK_LWIN || kbdStruct->vkCode == VK_RWIN) {
+                    return 1;  // 不传递按键消息
+                }
+            }
+        }
+        return CallNextHookEx(nullptr, code, wParam, lParam);
+    }, nullptr, 0);
+
+    auto r = app.exec();
+    UnhookWindowsHookEx(keyboardHook);
+    return r;
 }

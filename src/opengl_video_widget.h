@@ -17,6 +17,7 @@
 #include "tc_client_sdk_new/gl/raw_image.h"
 #include "tc_message.pb.h"
 #include "video_widget_event.h"
+#include "sdk_messages.h"
 
 namespace tc
 {
@@ -42,6 +43,7 @@ namespace tc
 		void RefreshI420Buffer(const char* y, int y_size, const char* u, int u_size, const char* v, int v_size, int width, int height);
 
         void RefreshCursor(int x, int y, int tex_left, int text_right, int hpx, int hpy, const std::shared_ptr<RawImage>& cursor);
+        void RefreshCapturedMonitorInfo(const CaptureMonitorInfo& mon_info);
 
         void Exit();
 
@@ -104,6 +106,8 @@ namespace tc
 
         int tex_rect_left_ = 0;
         int tex_rect_right_ = 0;
+
+        CaptureMonitorInfo cap_mon_info_{};
 	};
 
 

@@ -19,7 +19,8 @@ namespace tc
 
         QtKeyConverter();
 
-        int ToVK(int qt_key);
+        // deprecated
+        // int ToVK(int qt_key);
 
         static std::map<int, bool> GetSysKeyStatus();
 

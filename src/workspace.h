@@ -24,6 +24,8 @@ namespace tc
         ~Workspace() override;
 
         void closeEvent(QCloseEvent *event) override;
+        void changeEvent(QEvent* event);
+        bool IsActiveNow();
 
     private:
 
@@ -36,6 +38,8 @@ namespace tc
         std::shared_ptr<AudioPlayer> audio_player_ = nullptr;
 
         OpenGLVideoWidget* video_widget_ = nullptr;
+
+        bool is_window_active_ = false;
 
     };
 

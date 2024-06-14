@@ -126,4 +126,10 @@ namespace tc
         process->start("./tc_client_ws.exe", arguments);
     }
 
+    void Application::changeEvent(QEvent* event) {
+        if (event->type() == QEvent::ActivationChange) {
+            qDebug() << "window state: " << isActiveWindow();
+        }
+    }
+
 }

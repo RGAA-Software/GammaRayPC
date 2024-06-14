@@ -329,6 +329,10 @@ namespace tc
         //LOGI("xp : {}, yp : {}, size: {}x{}", xp, yp, cursor->img_width, cursor->img_height);
     }
 
+    void OpenGLVideoWidget::RefreshCapturedMonitorInfo(const CaptureMonitorInfo& mon_info) {
+        cap_mon_info_ = mon_info;
+    }
+
 	void OpenGLVideoWidget::resizeGL(int width, int height) {
 		VideoWidgetEvent::OnWidgetResize(width, height);
 		glViewport(0, 0, width, height);
