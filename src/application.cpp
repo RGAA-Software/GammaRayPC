@@ -34,7 +34,6 @@ namespace tc
         CreateLayout();
         Init();
 
-        LoadStyle("");
     }
 
     Application::~Application() {
@@ -56,7 +55,7 @@ namespace tc
         std::vector<AppItemDesc> menus = {
                 {tr("GAMES"), ":/resources/image/ic_stream.svg"},
                 {tr("SETTINGS"), ":/resources/image/ic_settings.svg"},
-                {tr("ABOUT"), ":/resources/image/windows.svg"}
+                //{tr("ABOUT"), ":/resources/image/ic_settings.svg"}
         };
         app_menu_ = new AppMenu(menus, this);
         app_menu_->SetOnItemClickedCallback([this](const QString& name, int idx) {
@@ -96,34 +95,13 @@ namespace tc
         });
     }
 
-    void Application::LoadStyle(const std::string& name) {
-        auto qssFile = ":/qss/lightblue.css";
-        QString qss;
-        QFile file(qssFile);
-        if (file.open(QFile::ReadOnly)) {
-            QStringList list;
-            QTextStream in(&file);
-            while (!in.atEnd()) {
-                QString line;
-                in >> line;
-                list << line;
-            }
-
-            file.close();
-            qss = list.join("\n");
-            QString paletteColor = qss.mid(20, 7);
-            qApp->setPalette(QPalette(paletteColor));
-            qApp->setStyleSheet(qss);
-        }
-    }
-
     void Application::StartStreaming(const StreamItem& item) {
         auto process = new QProcess(this);
         QStringList arguments;
         arguments << std::format("--host={}", item.stream_host).c_str()
             << std::format("--port={}", item.stream_port).c_str();
         qDebug() << "args: " << arguments;
-        process->start("./tc_client_ws.exe", arguments);
+        process->start("./GammaRayClientInner.exe", arguments);
     }
 
     void Application::changeEvent(QEvent* event) {

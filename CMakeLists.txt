@@ -47,7 +47,7 @@ add_subdirectory(src)
 add_subdirectory(deps)
 
 add_custom_target(tc_build_all COMMENT "Build all targets")
-add_dependencies(tc_build_all tc_client tc_rtc tc_client_ws)
+add_dependencies(tc_build_all GammaRayClient tc_rtc GammaRayClientInner)
 add_custom_command(TARGET tc_build_all POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy
             "${CMAKE_CURRENT_BINARY_DIR}/deps/tc_webrtc_client/tc_rtc.dll"

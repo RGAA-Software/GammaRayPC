@@ -1,4 +1,4 @@
-project(tc_client VERSION 0.1 LANGUAGES CXX)
+project(GammaRayClient VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
@@ -67,7 +67,7 @@ set(SRCS_WS
 
 
 qt_add_executable(${PROJECT_NAME} MANUAL_FINALIZATION ${SRCS})
-qt_add_executable(${PROJECT_NAME}_ws MANUAL_FINALIZATION ${SRCS_WS})
+qt_add_executable(GammaRayClientInner MANUAL_FINALIZATION ${SRCS_WS})
 if (APPLE)
     set_target_properties(${PROJECT_NAME} PROPERTIES
             MACOSX_BUNDLE_GUI_IDENTIFIER com.tc.client.client
@@ -76,7 +76,7 @@ if (APPLE)
             MACOSX_BUNDLE TRUE
             WIN32_EXECUTABLE TRUE
     )
-    set_target_properties(${PROJECT_NAME}_ws PROPERTIES
+    set_target_properties(GammaRayClientInner PROPERTIES
             MACOSX_BUNDLE_GUI_IDENTIFIER com.tc.client.client
             MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
             MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
@@ -94,23 +94,23 @@ target_link_libraries(${PROJECT_NAME} PRIVATE Qt6::Widgets
 target_link_libraries(${PROJECT_NAME} PRIVATE tc_common_new tc_message tc_sdk tc_qt_widget)
 target_link_libraries(${PROJECT_NAME} PRIVATE sqlite_orm::sqlite_orm gflags::gflags)
 
-target_link_libraries(${PROJECT_NAME}_ws PRIVATE Qt6::Widgets
+target_link_libraries(GammaRayClientInner PRIVATE Qt6::Widgets
         Qt6::Core
         Qt6::OpenGL
         Qt6::OpenGLWidgets
         Qt6::Multimedia
 )
-target_link_libraries(${PROJECT_NAME}_ws PRIVATE tc_common_new tc_message tc_sdk tc_qt_widget)
-target_link_libraries(${PROJECT_NAME}_ws PRIVATE sqlite_orm::sqlite_orm gflags::gflags)
+target_link_libraries(GammaRayClientInner PRIVATE tc_common_new tc_message tc_sdk tc_qt_widget)
+target_link_libraries(GammaRayClientInner PRIVATE sqlite_orm::sqlite_orm gflags::gflags)
 
 if(QT_VERSION_MAJOR EQUAL 6)
-    qt_finalize_executable(${PROJECT_NAME})
-    qt_finalize_executable(${PROJECT_NAME}_ws)
+    qt_finalize_executable(GammaRayClient})
+    qt_finalize_executable(GammaRayClientInner)
 endif()
 
 if (WIN32)
-    add_custom_command(TARGET ${PROJECT_NAME}_ws POST_BUILD
-            COMMAND ${QT_ROOT}/bin/windeployqt.exe $<TARGET_FILE:${PROJECT_NAME}_ws> --no-translations --release
+    add_custom_command(TARGET GammaRayClientInner POST_BUILD
+            COMMAND ${QT_ROOT}/bin/windeployqt.exe $<TARGET_FILE:GammaRayClientInner> --no-translations --release
             #        COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_SOURCE_DIR}/settings.toml"  "${CMAKE_BINARY_DIR}"
             #        COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_BINARY_DIR}/deps/tc_capture/tc_capture_library.dll"  "${CMAKE_BINARY_DIR}"
             #COMMAND ${CMAKE_COMMAND} -E copy_directory "${VLC_ROOT}/plugins"  "${CMAKE_BINARY_DIR}/plugins"

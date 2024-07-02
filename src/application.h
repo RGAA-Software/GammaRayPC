@@ -26,7 +26,6 @@ namespace tc
     private:
         void CreateLayout();
         void Init();
-        static void LoadStyle(const std::string& name);
         void StartStreaming(const StreamItem& item);
         void changeEvent(QEvent *) override;
 

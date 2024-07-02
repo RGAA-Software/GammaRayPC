@@ -139,7 +139,7 @@ namespace tc
 
             QAction* action = new QAction(action_name, menu);
             menu->addAction(action);
-            QObject::connect(action, &QAction::triggered, this, [=]() {
+            QObject::connect(action, &QAction::triggered, this, [=, this]() {
                 ProcessAction(i, streams_.at(index));
             });
         }
