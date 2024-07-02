@@ -27,17 +27,7 @@ if(MSVC)
     add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
 endif()
 
-## Boost
-find_package(Boost REQUIRED COMPONENTS system filesystem thread random)
-if(Boost_FOUND)
-    include_directories(${Boost_INCLUDE_DIRS})
-    MESSAGE(STATUS "Boost_INCLUDE_DIRS = ${Boost_INCLUDE_DIRS}.")
-    MESSAGE(STATUS "Boost_LIBRARIES = ${Boost_LIBRARIES}.")
-    MESSAGE(STATUS "Boost_LIB_VERSION = ${Boost_LIB_VERSION}.")
-endif()
-
 find_package(OpenSSL REQUIRED)
-find_package(SqliteOrm REQUIRED)
 
 ## include directories
 include_directories(${CMAKE_SOURCE_DIR}/src)
