@@ -7,11 +7,19 @@
 
 #include <QtWidgets/QMainWindow>
 #include <QStackedWidget>
+#include "theme/QtAdvancedStylesheet.h"
 
 #include "db/stream_item.h"
 
 namespace tc
 {
+
+    struct MainWindowPrivate {
+        explicit MainWindowPrivate(QMainWindow* _public) : _this(_public) {}
+
+        QMainWindow* _this;
+        acss::QtAdvancedStylesheet* AdvancedStyleSheet{};
+    };
 
     class AppMenu;
     class ClientContext;
@@ -35,7 +43,7 @@ namespace tc
         AppMenu* app_menu_ = nullptr;
         QStackedWidget* content_widget_ = nullptr;
         StreamContent* stream_content_ = nullptr;
-
+        MainWindowPrivate* d;
     };
 
 }

@@ -4,7 +4,7 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-find_package(Qt6 REQUIRED COMPONENTS Widgets Core OpenGL OpenGLWidgets Multimedia)
+find_package(Qt6 REQUIRED COMPONENTS Widgets Core OpenGL OpenGLWidgets Multimedia Svg)
 find_package(gflags CONFIG REQUIRED)
 
 include_directories(${CMAKE_SOURCE_DIR})
@@ -36,6 +36,7 @@ set(SRCS
         db/stream_item.cpp
         application.cpp
         settings.cpp
+        theme/QtAdvancedStylesheet.cpp
 )
 
 set(SRCS_WS
@@ -63,6 +64,7 @@ set(SRCS_WS
         db/stream_db_manager.cpp
         db/stream_item.cpp
         settings.cpp
+        theme/QtAdvancedStylesheet.cpp
 )
 
 
@@ -86,19 +88,13 @@ if (APPLE)
 endif()
 
 target_link_libraries(${PROJECT_NAME} PRIVATE Qt6::Widgets
-        Qt6::Core
-        Qt6::OpenGL
-        Qt6::OpenGLWidgets
-        Qt6::Multimedia
+        Qt6::Core Qt6::OpenGL Qt6::OpenGLWidgets Qt6::Multimedia Qt6::Svg
 )
 target_link_libraries(${PROJECT_NAME} PRIVATE tc_common_new tc_message tc_sdk tc_qt_widget)
 target_link_libraries(${PROJECT_NAME} PRIVATE sqlite_orm::sqlite_orm gflags::gflags)
 
 target_link_libraries(GammaRayClientInner PRIVATE Qt6::Widgets
-        Qt6::Core
-        Qt6::OpenGL
-        Qt6::OpenGLWidgets
-        Qt6::Multimedia
+        Qt6::Core Qt6::OpenGL Qt6::OpenGLWidgets Qt6::Multimedia Qt6::Svg
 )
 target_link_libraries(GammaRayClientInner PRIVATE tc_common_new tc_message tc_sdk tc_qt_widget)
 target_link_libraries(GammaRayClientInner PRIVATE sqlite_orm::sqlite_orm gflags::gflags)
@@ -111,8 +107,7 @@ endif()
 if (WIN32)
     add_custom_command(TARGET GammaRayClientInner POST_BUILD
             COMMAND ${QT_ROOT}/bin/windeployqt.exe $<TARGET_FILE:GammaRayClientInner> --no-translations --release
-            #        COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_SOURCE_DIR}/settings.toml"  "${CMAKE_BINARY_DIR}"
-            #        COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_BINARY_DIR}/deps/tc_capture/tc_capture_library.dll"  "${CMAKE_BINARY_DIR}"
+            COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/resources/qt_material"  "${CMAKE_CURRENT_BINARY_DIR}/resources/qt_material"
             #COMMAND ${CMAKE_COMMAND} -E copy_directory "${VLC_ROOT}/plugins"  "${CMAKE_BINARY_DIR}/plugins"
     )
 elseif (APPLE)

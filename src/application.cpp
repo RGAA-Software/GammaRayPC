@@ -31,6 +31,18 @@ namespace tc
         resize(1515, 768);
         setWindowTitle(tr("GammaRay Client"));
 
+        d = new MainWindowPrivate(this);
+        QString app_dir = qApp->applicationDirPath();
+        QString style_dir = app_dir + "/resources/";
+        d->AdvancedStyleSheet = new acss::QtAdvancedStylesheet(this);
+        d->AdvancedStyleSheet->setStylesDirPath(style_dir);
+        d->AdvancedStyleSheet->setOutputDirPath(app_dir + "/output");
+        d->AdvancedStyleSheet->setCurrentStyle("qt_material");
+        d->AdvancedStyleSheet->setCurrentTheme("light_blue");
+        d->AdvancedStyleSheet->updateStylesheet();
+        setWindowIcon(d->AdvancedStyleSheet->styleIcon());
+        qApp->setStyleSheet(d->AdvancedStyleSheet->styleSheet());
+
         CreateLayout();
         Init();
 
