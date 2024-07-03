@@ -65,6 +65,8 @@ set(SRCS_WS
         db/stream_item.cpp
         settings.cpp
         theme/QtAdvancedStylesheet.cpp
+        ui/float_controller.cpp
+        ui/base_widget.cpp
 )
 
 

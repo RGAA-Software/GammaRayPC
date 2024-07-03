@@ -28,11 +28,11 @@ namespace tc
 
         void PostTask(std::function<void()>&& task);
         void PostUITask(std::function<void()>&& task);
-
         std::shared_ptr<MessageNotifier> GetMessageNotifier();
         std::shared_ptr<MessageListener> ObtainMessageListener();
-
         std::shared_ptr<StreamDBManager> GetDBManager();
+        void SaveKeyValue(const std::string& k, const std::string& v);
+        std::string GetValueByKey(const std::string& k);
 
         template<class T>
         void SendAppMessage(const T& msg) {

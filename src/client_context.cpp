@@ -61,4 +61,13 @@ namespace tc
         }
     }
 
+    void ClientContext::SaveKeyValue(const std::string& k, const std::string& v) {
+        sp_->Put(k, v);
+    }
+
+    std::string ClientContext::GetValueByKey(const std::string& k) {
+        return sp_->Get(k);
+    }
+
+
 }

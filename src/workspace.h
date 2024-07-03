@@ -16,6 +16,7 @@ namespace tc
     class ThunderSdk;
     class OpenGLVideoWidget;
     class AudioPlayer;
+    class FloatController;
 
     class Workspace : public QMainWindow {
     public:
@@ -38,7 +39,7 @@ namespace tc
         std::shared_ptr<AudioPlayer> audio_player_ = nullptr;
 
         OpenGLVideoWidget* video_widget_ = nullptr;
-
+        FloatController* float_controller_ = nullptr;
         bool is_window_active_ = false;
 
     };

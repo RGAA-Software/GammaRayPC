@@ -11,6 +11,8 @@
 #include "tc_common_new/data.h"
 #include "tc_common_new/log.h"
 #include "audio_player.h"
+#include "ui/float_controller.h"
+#include <QGraphicsDropShadowEffect>
 
 namespace tc
 {
@@ -33,7 +35,16 @@ namespace tc
 
         setCentralWidget(root_widget);
 
-        //
+        // float controller
+        float_controller_ = new FloatController(ctx, this);
+        float_controller_->setFixedSize(55, 55);
+        auto shadow = new QGraphicsDropShadowEffect();
+        shadow->setBlurRadius(10);
+        shadow->setOffset(0, 0);
+        shadow->setColor(Qt::black);
+        float_controller_->setGraphicsEffect(shadow);
+
+        // sdk
         RegisterSdkMsgCallbacks();
         sdk_->Start();
 
