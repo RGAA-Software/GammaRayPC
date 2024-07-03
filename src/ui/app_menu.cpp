@@ -30,7 +30,7 @@ namespace tc
         text_->setText(name);
         text_->setStyleSheet("color:#FFFFFF;font-weight:bold;");
 
-        inner_layout->addSpacing(10);
+        inner_layout->addSpacing(18);
         inner_layout->addWidget(icon_);
         inner_layout->addSpacing(10);
         inner_layout->addWidget(text_);
@@ -55,6 +55,7 @@ namespace tc
         else if (entered_) {
             target_color = AppColorTheme::kAppMenuItemBgHoverColor;
         }
+        round_radius_ = this->height()/2;
         painter.setBrush(QBrush(QColor(target_color)));
         painter.drawRoundedRect(0, 0, this->width(), this->height(), round_radius_, round_radius_);
 
@@ -126,13 +127,13 @@ namespace tc
         item_layout->setAlignment(Qt::AlignHCenter);
         item_layout->setSpacing(0);
         item_layout->setContentsMargins(0,0,0,0);
-        item_layout->addSpacing(45);
+        item_layout->addSpacing(35);
 
         auto logo_layout = new QHBoxLayout();
         auto logo = new QLabel(this);
         auto image = new QImage(":resources/image/tc_icon.png");
         auto pixmap = QPixmap::fromImage(*image);
-        pixmap = pixmap.scaled(pixmap.width()/3, pixmap.height()/3, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+        pixmap = pixmap.scaled(pixmap.width()/2.5, pixmap.height()/2.5, Qt::KeepAspectRatio, Qt::SmoothTransformation);
         logo->setPixmap(pixmap);
 
         logo_layout->addStretch();
@@ -140,7 +141,7 @@ namespace tc
         logo_layout->addStretch();
 
         item_layout->addLayout(logo_layout);
-        item_layout->addSpacing(45);
+        item_layout->addSpacing(35);
 
         int idx = 0;
         for (const auto& item : items) {
