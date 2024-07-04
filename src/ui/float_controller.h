@@ -21,11 +21,16 @@ namespace tc
         void enterEvent(QEnterEvent *event) override;
         void leaveEvent(QEvent *event) override;
 
+        void SetOnClickListener(std::function<void()>&& l) {
+            click_listener_ = l;
+        }
+
     private:
         QPixmap pixmap_;
         bool enter_ = false;
         bool pressed_ = false;
         QPoint drag_position_;
+        std::function<void()> click_listener_;
     };
 }
 

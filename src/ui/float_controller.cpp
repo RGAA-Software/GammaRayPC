@@ -63,6 +63,10 @@ namespace tc
         float y_pos_ratio = this->pos().y() * 1.0f / parent_rect.height();
         context_->SaveKeyValue(kPosX, std::to_string(x_pos_ratio));
         context_->SaveKeyValue(kPosY, std::to_string(y_pos_ratio));
+
+        if (click_listener_) {
+            click_listener_();
+        }
     }
 
     void FloatController::mouseMoveEvent(QMouseEvent *event) {

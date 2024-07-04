@@ -67,6 +67,7 @@ set(SRCS_WS
         theme/QtAdvancedStylesheet.cpp
         ui/float_controller.cpp
         ui/base_widget.cpp
+        ui/float_controller_panel.cpp
 )
 
 
