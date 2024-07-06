@@ -12,18 +12,28 @@
 #include <QFont>
 #include <QPainter>
 #include <QPixmap>
+#include <QHBoxLayout>
+#include <QVBoxLayout>
 #include <memory>
+#include <functional>
+#include "widget_helper.h"
 
 namespace tc
 {
     class ClientContext;
+    class MessageListener;
+
+    using OnClickListener = std::function<void(QWidget*)>;
 
     class BaseWidget : public QWidget {
     public:
         explicit BaseWidget(const std::shared_ptr<ClientContext>& ctx, QWidget* parent = nullptr);
+        void SetOnClickListener(OnClickListener&& l);
 
     protected:
         std::shared_ptr<ClientContext> context_ = nullptr;
+        OnClickListener click_listener_;
+        std::shared_ptr<MessageListener> msg_listener_ = nullptr;
     };
 }
 

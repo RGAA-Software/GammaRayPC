@@ -3,23 +3,38 @@
 //
 
 #include <QHBoxLayout>
-#include "workspace.h"
+#include <QApplication>
+#include <QGraphicsDropShadowEffect>
 
+#include "workspace.h"
 #include "thunder_sdk.h"
 #include "opengl_video_widget.h"
 #include "client_context.h"
 #include "tc_common_new/data.h"
 #include "tc_common_new/log.h"
+#include "tc_common_new/message_notifier.h"
 #include "audio_player.h"
 #include "ui/float_controller.h"
 #include "ui/float_controller_panel.h"
-#include <QGraphicsDropShadowEffect>
+#include "app_message.h"
+#include "settings.h"
 
 namespace tc
 {
 
     Workspace::Workspace(const std::shared_ptr<ClientContext>& ctx, const ThunderSdkParams& params, QWidget* parent) {
         this->context_ = ctx;
+        this->settings_ = Settings::Instance();
+        QString app_dir = qApp->applicationDirPath();
+        QString style_dir = app_dir + "/resources/";
+        theme_ = new acss::QtAdvancedStylesheet(this);
+        theme_->setStylesDirPath(style_dir);
+        theme_->setOutputDirPath(app_dir + "/output");
+        theme_->setCurrentStyle("qt_material");
+        theme_->setCurrentTheme("light_blue");
+        theme_->updateStylesheet();
+        setWindowIcon(theme_->styleIcon());
+        qApp->setStyleSheet(theme_->styleSheet());
 
         sdk_ = ThunderSdk::Make(ctx->GetMessageNotifier());
         sdk_->Init(params, nullptr, DecoderRenderType::kFFmpegI420);
@@ -77,6 +92,11 @@ namespace tc
         RegisterSdkMsgCallbacks();
         sdk_->Start();
 
+        msg_listener_ = context_->GetMessageNotifier()->CreateListener();
+        msg_listener_->Listen<ExitAppMessage>([=, this](const ExitAppMessage& msg) {
+            this->Exit();
+        });
+
     }
 
     Workspace::~Workspace() {
@@ -98,6 +118,9 @@ namespace tc
                 });
                 return;
             }
+            if (!settings_->IsAudioEnabled()) {
+                return;
+            }
             context_->PostUITask([=, this]() {
                 audio_player_->Write(data);
             });
@@ -115,12 +138,19 @@ namespace tc
 
     void Workspace::closeEvent(QCloseEvent *event) {
         LOGI("closed event...");
+        Exit();
+    }
+
+    void Workspace::Exit() {
         if (sdk_) {
             sdk_->Exit();
+            sdk_ = nullptr;
         }
         if (context_) {
             context_->Exit();
+            context_ = nullptr;
         }
+        qApp->exit(0);
     }
 
 }

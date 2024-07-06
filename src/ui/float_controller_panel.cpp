@@ -3,6 +3,12 @@
 //
 
 #include "float_controller_panel.h"
+#include "float_icon.h"
+#include "tc_common_new/message_notifier.h"
+#include "client_context.h"
+#include "app_message.h"
+#include "sized_msg_box.h"
+#include "settings.h"
 
 namespace tc
 {
@@ -10,6 +16,89 @@ namespace tc
     FloatControllerPanel::FloatControllerPanel(const std::shared_ptr<ClientContext>& ctx, QWidget* parent) : BaseWidget(ctx, parent) {
         this->setWindowFlags(Qt::FramelessWindowHint);
         this->setFixedSize(200, 300);
+        this->setStyleSheet("background:#00000000;");
+        auto root_layout = new QVBoxLayout();
+        WidgetHelper::ClearMargin(root_layout);
+        int border_spacing = 5;
+        QSize btn_size = QSize(35, 35);
+        root_layout->addSpacing(border_spacing);
+        {
+            auto layout = new QHBoxLayout();
+            layout->addStretch();
+            WidgetHelper::ClearMargin(layout);
+            {
+                auto btn = new FloatIcon(ctx, this);
+                btn->setFixedSize(btn_size);
+                btn->SetIcons(":resources/image/ic_volume_on.svg", ":resources/image/ic_volume_off.svg");
+                layout->addWidget(btn);
+
+                auto settings = Settings::Instance();
+                if (settings->IsAudioEnabled()) {
+                    btn->SwitchToNormalState();
+                } else {
+                    btn->SwitchToSelectedState();
+                }
+
+                btn->SetOnClickListener([=, this](QWidget* w) {
+                    if (settings->IsAudioEnabled()) {
+                        btn->SwitchToSelectedState();
+                        settings->SetTempAudioEnabled(false);
+                    } else {
+                        btn->SwitchToNormalState();
+                        settings->SetTempAudioEnabled(true);
+                    }
+                });
+            }
+            {
+                auto btn = new FloatIcon(ctx, this);
+                btn->setFixedSize(btn_size);
+                btn->SetIcons(":resources/image/ic_minimize.svg", "");
+                layout->addSpacing(border_spacing);
+                layout->addWidget(btn);
+                btn->SetOnClickListener([=, this](QWidget* w) {
+                    parent->showMinimized();
+                });
+            }
+            {
+                auto btn = new FloatIcon(ctx, this);
+                btn->setFixedSize(btn_size);
+                btn->SetIcons(":resources/image/ic_fullscreen.svg", ":resources/image/ic_fullscreen_exit.svg");
+                layout->addSpacing(border_spacing);
+                layout->addWidget(btn);
+                btn->SetOnClickListener([=, this](QWidget* w) {
+                    if (parent->isFullScreen()) {
+                        parent->showNormal();
+                        btn->SwitchToNormalState();
+                    } else {
+                        parent->showFullScreen();
+                        btn->SwitchToSelectedState();
+                    }
+                    this->hide();
+                });
+            }
+            {
+                auto btn = new FloatIcon(ctx, this);
+                btn->setFixedSize(btn_size);
+                btn->SetIcons(":resources/image/ic_close.svg", "");
+                layout->addSpacing(border_spacing);
+                layout->addWidget(btn);
+                btn->SetOnClickListener([=, this](QWidget* w) {
+                    auto msg_box = SizedMessageBox::MakeOkCancelBox(tr("Stop"), tr("Do you want to STOP the control of remote PC ?"));
+                    if (msg_box->exec() == 0) {
+                        context_->SendAppMessage(ExitAppMessage {});
+                    }
+                });
+            }
+            layout->addSpacing(border_spacing);
+            root_layout->addLayout(layout);
+        }
+        root_layout->addStretch();
+        setLayout(root_layout);
+
+        msg_listener_ = ctx->GetMessageNotifier()->CreateListener();
+        msg_listener_->Listen<MousePressedMessage>([=, this](const MousePressedMessage& msg) {
+            this->hide();
+        });
     }
 
     void FloatControllerPanel::paintEvent(QPaintEvent *event) {

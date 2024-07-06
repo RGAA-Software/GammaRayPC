@@ -55,11 +55,13 @@ set(SRCS_WS
         icon.rc ${RES}
         ui/switch_button.cpp
         ui/float_button.cpp
+        ui/float_icon.cpp
         ui/message_dialog.cpp
         ui/round_rect_widget.cpp
         ui/app_menu.cpp
         ui/app_color_theme.cpp
         ui/app_content.cpp
+        ui/sized_msg_box.cpp
         db/stream_db_manager.cpp
         db/stream_item.cpp
         settings.cpp

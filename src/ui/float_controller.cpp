@@ -18,7 +18,7 @@ namespace tc
         pixmap_ = QPixmap::fromImage(*image);
         pixmap_ = pixmap_.scaled(30, 30);
         setMouseTracking(true);
-
+        this->setStyleSheet("background:#00000000;");
         QTimer::singleShot(200, [=]() {
             QRect parent_rect = parentWidget()->geometry();
             float xpos = parent_rect.width() * std::atof(context_->GetValueByKey(kPosX).c_str());

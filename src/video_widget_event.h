@@ -51,7 +51,7 @@ namespace tc
         void SendMouseEvent(const MouseEventDesc& mouse_event);
 
     protected:
-		std::shared_ptr<ClientContext> context = nullptr;
+		std::shared_ptr<ClientContext> context_ = nullptr;
         std::shared_ptr<QtKeyConverter> key_converter_ = nullptr;
 		int width = 0;
 		int height = 0;

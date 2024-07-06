@@ -8,6 +8,7 @@
 #include <QWidget>
 #include <QMainWindow>
 #include "thunder_sdk.h"
+#include "theme/QtAdvancedStylesheet.h"
 
 namespace tc
 {
@@ -18,6 +19,8 @@ namespace tc
     class AudioPlayer;
     class FloatController;
     class FloatControllerPanel;
+    class MessageListener;
+    class Settings;
 
     class Workspace : public QMainWindow {
     public:
@@ -31,17 +34,19 @@ namespace tc
 
     private:
         void RegisterSdkMsgCallbacks();
+        void Exit();
 
     private:
-
         std::shared_ptr<ClientContext> context_ = nullptr;
         std::shared_ptr<ThunderSdk> sdk_ = nullptr;
         std::shared_ptr<AudioPlayer> audio_player_ = nullptr;
-
         OpenGLVideoWidget* video_widget_ = nullptr;
         FloatController* float_controller_ = nullptr;
         FloatControllerPanel* controller_panel_ = nullptr;
         bool is_window_active_ = false;
+        acss::QtAdvancedStylesheet* theme_{};
+        std::shared_ptr<MessageListener> msg_listener_ = nullptr;
+        Settings* settings_ = nullptr;
     };
 
 }

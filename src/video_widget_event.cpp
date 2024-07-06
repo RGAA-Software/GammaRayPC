@@ -6,6 +6,7 @@
 #include "tc_common_new/time_ext.h"
 #include "tc_client_sdk_new/thunder_sdk.h"
 #include "client_context.h"
+#include "app_message.h"
 
 #ifdef WIN32
 #include <Windows.h>
@@ -16,7 +17,7 @@ namespace tc
 {
 
 	VideoWidgetEvent::VideoWidgetEvent(const std::shared_ptr<ClientContext>& ctx, const std::shared_ptr<ThunderSdk>& sdk, int dup_idx) {
-		this->context = ctx;
+		this->context_ = ctx;
         this->dup_idx_ = dup_idx;
         this->key_converter_ = std::make_shared<QtKeyConverter>();
         this->sdk_ = sdk;
@@ -67,6 +68,10 @@ namespace tc
         mouse_event_desc.x_ratio = ((float)curr_pos.x()) / ((float)(widget_width));
         mouse_event_desc.y_ratio = ((float)curr_pos.y()) / ((float)(widget_height));
         SendMouseEvent(mouse_event_desc);
+
+        context_->SendAppMessage(MousePressedMessage {
+
+        });
 	}
 
 	void VideoWidgetEvent::OnMouseReleaseEvent(QMouseEvent* event, int widget_width, int widget_height) {

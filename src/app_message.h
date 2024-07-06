@@ -84,6 +84,10 @@ namespace tc
         bool on_ = false;
     };
 
+    class ExitAppMessage : public AppMessage {
+
+    };
+
 }
 
 #endif //SAILFISH_CLIENT_PC_APPMESSAGE_H

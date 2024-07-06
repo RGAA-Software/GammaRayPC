@@ -12,10 +12,13 @@
         <file>resources/image/ic_close.svg</file>
         <file>resources/image/ic_debug_on.svg</file>
         <file>resources/image/ic_debug_off.svg</file>
-        <file>resources/image/ic_exit_fullscreen.svg</file>
+        <file>resources/image/ic_fullscreen_exit.svg</file>
         <file>resources/image/ic_fullscreen.svg</file>
         <file>resources/image/ic_settings.svg</file>
         <file>resources/image/ic_stream.svg</file>
+        <file>resources/image/ic_minimize.svg</file>
+        <file>resources/image/ic_volume_on.svg</file>
+        <file>resources/image/ic_volume_off.svg</file>
         <file>resources/image/test_cover.jpg</file>
         <file>resources/image/tc_icon.png</file>
         <file>resources/image/tc_icon_raw.png</file>

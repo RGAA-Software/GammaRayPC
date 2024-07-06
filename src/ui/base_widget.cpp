@@ -11,4 +11,8 @@ namespace tc
 
     }
 
+    void BaseWidget::SetOnClickListener(OnClickListener&& l) {
+        click_listener_ = l;
+    }
+
 }
