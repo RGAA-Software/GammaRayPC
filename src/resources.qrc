@@ -19,6 +19,10 @@
         <file>resources/image/ic_minimize.svg</file>
         <file>resources/image/ic_volume_on.svg</file>
         <file>resources/image/ic_volume_off.svg</file>
+        <file>resources/image/ic_control.svg</file>
+        <file>resources/image/ic_desktop.svg</file>
+        <file>resources/image/ic_file_transfer.svg</file>
+        <file>resources/image/ic_mode.svg</file>
         <file>resources/image/test_cover.jpg</file>
         <file>resources/image/tc_icon.png</file>
         <file>resources/image/tc_icon_raw.png</file>

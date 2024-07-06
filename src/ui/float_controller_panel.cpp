@@ -9,13 +9,15 @@
 #include "app_message.h"
 #include "sized_msg_box.h"
 #include "settings.h"
+#include "no_margin_layout.h"
+#include "background_widget.h"
 
 namespace tc
 {
 
     FloatControllerPanel::FloatControllerPanel(const std::shared_ptr<ClientContext>& ctx, QWidget* parent) : BaseWidget(ctx, parent) {
         this->setWindowFlags(Qt::FramelessWindowHint);
-        this->setFixedSize(200, 300);
+        this->setFixedSize(200, 250);
         this->setStyleSheet("background:#00000000;");
         auto root_layout = new QVBoxLayout();
         WidgetHelper::ClearMargin(root_layout);
@@ -24,7 +26,7 @@ namespace tc
         root_layout->addSpacing(border_spacing);
         {
             auto layout = new QHBoxLayout();
-            layout->addStretch();
+            layout->addSpacing(20);
             WidgetHelper::ClearMargin(layout);
             {
                 auto btn = new FloatIcon(ctx, this);
@@ -89,8 +91,127 @@ namespace tc
                     }
                 });
             }
-            layout->addSpacing(border_spacing);
+            layout->addStretch();
             root_layout->addLayout(layout);
+        }
+
+        auto icon_size = QSize(40, 40);
+        int item_left_spacing = 10;
+        // work mode
+        {
+            auto layout = new NoMarginHLayout();
+            auto widget = new BackgroundWidget(ctx, this);
+            widget->setFixedSize(this->width(), icon_size.height());
+            widget->setLayout(layout);
+            root_layout->addSpacing(border_spacing);
+
+            auto icon = new QLabel(this);
+            icon->setFixedSize(icon_size);
+            icon->setStyleSheet(R"( background-image: url(:resources/image/ic_mode.svg);
+                                    background-repeat:no-repeat;
+                                    background-position: center center;)");
+            layout->addSpacing(item_left_spacing);
+            layout->addWidget(icon);
+
+            auto text = new QLabel();
+            text->setText(tr("Work Mode"));
+            //layout->addSpacing(border_spacing);
+            layout->addWidget(text);
+
+            layout->addStretch();
+            root_layout->addWidget(widget);
+        }
+        // control
+        {
+            auto layout = new NoMarginHLayout();
+            auto widget = new BackgroundWidget(ctx, this);
+            widget->setFixedSize(this->width(), icon_size.height());
+            widget->setLayout(layout);
+
+            auto icon = new QLabel(this);
+            icon->setFixedSize(icon_size);
+            icon->setStyleSheet(R"( background-image: url(:resources/image/ic_control.svg);
+                                    background-repeat:no-repeat;
+                                    background-position: center center;)");
+            layout->addSpacing(item_left_spacing);
+            layout->addWidget(icon);
+
+            auto text = new QLabel();
+            text->setText(tr("Control"));
+            //layout->addSpacing(border_spacing);
+            layout->addWidget(text);
+
+            layout->addStretch();
+            root_layout->addWidget(widget);
+        }
+        // Display
+        {
+            auto layout = new NoMarginHLayout();
+            auto widget = new BackgroundWidget(ctx, this);
+            widget->setFixedSize(this->width(), icon_size.height());
+            widget->setLayout(layout);
+
+            auto icon = new QLabel(this);
+            icon->setFixedSize(icon_size);
+            icon->setStyleSheet(R"( background-image: url(:resources/image/ic_desktop.svg);
+                                    background-repeat:no-repeat;
+                                    background-position: center center;)");
+            layout->addSpacing(item_left_spacing);
+            layout->addWidget(icon);
+
+            auto text = new QLabel();
+            text->setText(tr("Display"));
+            //layout->addSpacing(border_spacing);
+            layout->addWidget(text);
+
+            layout->addStretch();
+            root_layout->addWidget(widget);
+        }
+        // file transfer
+        {
+            auto layout = new NoMarginHLayout();
+            auto widget = new BackgroundWidget(ctx, this);
+            widget->setFixedSize(this->width(), icon_size.height());
+            widget->setLayout(layout);
+
+            auto icon = new QLabel(this);
+            icon->setFixedSize(icon_size);
+            icon->setStyleSheet(R"( background-image: url(:resources/image/ic_file_transfer.svg);
+                                    background-repeat:no-repeat;
+                                    background-position: center center;)");
+            layout->addSpacing(item_left_spacing);
+            layout->addWidget(icon);
+
+            auto text = new QLabel();
+            text->setText(tr("File Transfer"));
+            //layout->addSpacing(border_spacing);
+            layout->addWidget(text);
+
+            layout->addStretch();
+            root_layout->addWidget(widget);
+        }
+        // debug
+        {
+            auto layout = new NoMarginHLayout();
+            auto widget = new BackgroundWidget(ctx, this);
+            widget->setFixedSize(this->width(), icon_size.height());
+            widget->setLayout(layout);
+
+            auto icon = new QLabel(this);
+            icon->setFixedSize(icon_size);
+            icon->setStyleSheet(R"( background-image: url(:resources/image/ic_debug_off.svg);
+                                    background-repeat:no-repeat;
+                                    background-position: center center;)");
+            layout->addSpacing(item_left_spacing);
+            layout->addWidget(icon);
+
+            auto text = new QLabel();
+            text->setText(tr("Debug"));
+            //layout->addSpacing(border_spacing);
+            layout->addWidget(text);
+
+            layout->addStretch();
+            root_layout->addWidget(widget);
         }
         root_layout->addStretch();
         setLayout(root_layout);
