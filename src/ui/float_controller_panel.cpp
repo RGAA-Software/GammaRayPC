@@ -23,5 +23,4 @@ namespace tc
         painter.drawRoundedRect(offset, offset, this->width()-offset*2, this->height()-offset*2, radius, radius);
         BaseWidget::paintEvent(event);
     }
-
 }

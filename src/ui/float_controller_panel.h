@@ -14,6 +14,8 @@ namespace tc
     public:
         explicit FloatControllerPanel(const std::shared_ptr<ClientContext>& ctx, QWidget* parent = nullptr);
         void paintEvent(QPaintEvent *event) override;
+
+    private:
     };
 
 }

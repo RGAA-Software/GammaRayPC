@@ -19,20 +19,19 @@ namespace tc
 	public:
 
         explicit Sprite(const std::shared_ptr<Director>& director);
-		~Sprite();
+		~Sprite() override;
 
 		void Init();
-		void Render(float delta);
+		void Render(float delta) override;
 
-		void UpdateImage(std::shared_ptr<RawImage> image);
+		void UpdateImage(const std::shared_ptr<RawImage>& image);
 		void UpdateTranslation(int x, int y);
 		void UpdateTranslationPercentWindow(float x, float y);
 		void UpdateTranslationAdjuster(float x, float y);
 		void ForceImageSize(int width, int height);
 
 	private:
-		
-		std::shared_ptr<RawImage> image = nullptr;
+		std::shared_ptr<RawImage> image_ = nullptr;
 	
 		GLuint texture_id = 0;
 		GLuint vbo;

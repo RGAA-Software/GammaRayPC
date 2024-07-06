@@ -31,17 +31,17 @@ namespace tc
         resize(1515, 768);
         setWindowTitle(tr("GammaRay Client"));
 
-        d = new MainWindowPrivate(this);
+        theme_ = new MainWindowPrivate(this);
         QString app_dir = qApp->applicationDirPath();
         QString style_dir = app_dir + "/resources/";
-        d->AdvancedStyleSheet = new acss::QtAdvancedStylesheet(this);
-        d->AdvancedStyleSheet->setStylesDirPath(style_dir);
-        d->AdvancedStyleSheet->setOutputDirPath(app_dir + "/output");
-        d->AdvancedStyleSheet->setCurrentStyle("qt_material");
-        d->AdvancedStyleSheet->setCurrentTheme("light_blue");
-        d->AdvancedStyleSheet->updateStylesheet();
-        setWindowIcon(d->AdvancedStyleSheet->styleIcon());
-        qApp->setStyleSheet(d->AdvancedStyleSheet->styleSheet());
+        theme_->AdvancedStyleSheet = new acss::QtAdvancedStylesheet(this);
+        theme_->AdvancedStyleSheet->setStylesDirPath(style_dir);
+        theme_->AdvancedStyleSheet->setOutputDirPath(app_dir + "/output");
+        theme_->AdvancedStyleSheet->setCurrentStyle("qt_material");
+        theme_->AdvancedStyleSheet->setCurrentTheme("light_blue");
+        theme_->AdvancedStyleSheet->updateStylesheet();
+        setWindowIcon(theme_->AdvancedStyleSheet->styleIcon());
+        qApp->setStyleSheet(theme_->AdvancedStyleSheet->styleSheet());
 
         CreateLayout();
         Init();
@@ -49,7 +49,7 @@ namespace tc
     }
 
     Application::~Application() {
-
+        delete theme_;
     }
 
     void Application::CreateLayout() {

@@ -17,6 +17,7 @@ namespace tc
     class OpenGLVideoWidget;
     class AudioPlayer;
     class FloatController;
+    class FloatControllerPanel;
 
     class Workspace : public QMainWindow {
     public:
@@ -25,11 +26,10 @@ namespace tc
         ~Workspace() override;
 
         void closeEvent(QCloseEvent *event) override;
-        void changeEvent(QEvent* event);
-        bool IsActiveNow();
+        void changeEvent(QEvent* event) override;
+        [[nodiscard]] bool IsActiveNow() const;
 
     private:
-
         void RegisterSdkMsgCallbacks();
 
     private:
@@ -40,8 +40,8 @@ namespace tc
 
         OpenGLVideoWidget* video_widget_ = nullptr;
         FloatController* float_controller_ = nullptr;
+        FloatControllerPanel* controller_panel_ = nullptr;
         bool is_window_active_ = false;
-
     };
 
 }

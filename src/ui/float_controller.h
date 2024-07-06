@@ -24,6 +24,11 @@ namespace tc
         void SetOnClickListener(std::function<void()>&& l) {
             click_listener_ = l;
         }
+        void SetOnMoveListener(std::function<void()>&& l) {
+            move_listener_ = l;
+        }
+
+        bool HasMoved() const;
 
     private:
         QPixmap pixmap_;
@@ -31,6 +36,8 @@ namespace tc
         bool pressed_ = false;
         QPoint drag_position_;
         std::function<void()> click_listener_;
+        std::function<void()> move_listener_;
+        bool has_moved_ = false;
     };
 }
 

@@ -66,13 +66,12 @@ namespace tc
 		//functions->glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 32, 32, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
 		//functions->glGenerateMipmap(GL_TEXTURE_2D);
 
-		//std::cout << "shader_program : " << shader_program->GetProgramId() << " texLoc : " << texLoc << std::endl;
 		functions->glBindVertexArray(0);
 	}
 
-	void Sprite::UpdateImage(std::shared_ptr<RawImage> image) {
+	void Sprite::UpdateImage(const std::shared_ptr<RawImage>& image) {
 		std::lock_guard<std::mutex> guard(buf_mtx);
-		this->image = image;
+		this->image_ = image;
 	}
 
 	void Sprite::ForceImageSize(int width, int height) {
@@ -98,7 +97,7 @@ namespace tc
 	void Sprite::Render(float delta) {
 		{
 			std::lock_guard<std::mutex> guard(buf_mtx);
-			if (!image) {
+			if (!image_) {
 				return;
 			}
 		}
@@ -115,8 +114,8 @@ namespace tc
 		shader_program->SetUniformMatrix("view", director->GetView());
 		shader_program->SetUniformMatrix("projection", director->GetProjection());
 
-		int target_width = force_width > 0 ? force_width : image->img_width;
-		int target_height = force_height > 0 ? force_height : image->img_height;
+		int target_width = force_width > 0 ? force_width : image_->img_width;
+		int target_height = force_height > 0 ? force_height : image_->img_height;
 
 		float vertices[] = {
 			0.0f, 0.0f, 0.0f, 1.0f, 0, 0,  0, 0,
@@ -130,7 +129,7 @@ namespace tc
 
 		functions->glActiveTexture(GL_TEXTURE0);
 		functions->glBindTexture(GL_TEXTURE_2D, texture_id);
-		functions->glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image->img_width, image->img_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image->Data());
+		functions->glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image_->img_width, image_->img_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image_->Data());
 		functions->glUniform1i(functions->glGetUniformLocation(shader_program->GetProgramId(), "image1"), 0);
 		functions->glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 

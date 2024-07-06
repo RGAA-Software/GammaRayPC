@@ -405,34 +405,4 @@ namespace tc
         doneCurrent();
     }
 
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
-//
-//    void OpenGLWidgetWrapper::closeEvent(QCloseEvent *event) {
-//        event->ignore();
-//        emit OnCloseEvent();
-//    }
-//
-//    void OpenGLWidgetWrapper::dragEnterEvent(QDragEnterEvent *event) {
-//        if (event->mimeData()->hasUrls()) {
-//            event->acceptProposedAction();
-//        }
-//    }
-//
-//    void OpenGLWidgetWrapper::dragLeaveEvent(QDragLeaveEvent *event) {
-//
-//    }
-//
-//    void OpenGLWidgetWrapper::dropEvent(QDropEvent *event) {
-//        if (!event->mimeData()->hasUrls()) {
-//            return;
-//        }
-//
-//        auto urls = event->mimeData()->urls();
-//        for (auto& url : urls) {
-//            LOGI("URL : {}", url.toLocalFile().toStdString());
-//        }
-//    }
-
-
-
 }

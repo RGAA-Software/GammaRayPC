@@ -43,7 +43,7 @@ namespace tc
         AppMenu* app_menu_ = nullptr;
         QStackedWidget* content_widget_ = nullptr;
         StreamContent* stream_content_ = nullptr;
-        MainWindowPrivate* d;
+        MainWindowPrivate* theme_ = nullptr;
     };
 
 }

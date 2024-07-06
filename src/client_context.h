@@ -14,11 +14,10 @@
 
 namespace tc
 {
-
-    class StreamDBManager;
-    class SharedPreference;
     class AppMessage;
     class Thread;
+    class StreamDBManager;
+    class SharedPreference;
 
     class ClientContext : public QObject {
     public:

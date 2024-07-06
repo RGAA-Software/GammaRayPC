@@ -50,17 +50,13 @@ namespace tc
         void SetMultiDisplayMode(MultiDisplayMode mode);
 
     private:
-
         int ws_width_ = 1280;
         int ws_height_ = 768;
-
-        VideoRenderType render_type_ = VideoRenderType::kOpenGL;
-
         bool audio_on_ = false;
         bool clipboard_on_ = true;
         bool fix_at_top_ = true;
         MultiDisplayMode display_mode_ = MultiDisplayMode::kSeparated;
-
+        VideoRenderType render_type_ = VideoRenderType::kOpenGL;
         std::shared_ptr<SharedPreference> sp_ = nullptr;
 
     };

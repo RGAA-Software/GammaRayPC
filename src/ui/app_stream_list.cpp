@@ -171,8 +171,9 @@ namespace tc
     }
 
     void AppStreamList::StopStream(const StreamItem& item) {
-        auto msg = ClearWorkspace::Make(item);
-        context_->SendAppMessage(msg);
+        context_->SendAppMessage(ClearWorkspace {
+            .item_ = item,
+        });
     }
 
     void AppStreamList::EditStream(const StreamItem& item) {

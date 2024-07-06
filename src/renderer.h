@@ -15,7 +15,6 @@ namespace tc
 
 	class Renderer {
 	public:
-
 		explicit Renderer(const std::shared_ptr<Director>& director);
 		virtual ~Renderer();
 
@@ -27,7 +26,7 @@ namespace tc
 		QOpenGLFunctions_3_3_Core* functions = nullptr;
 		std::shared_ptr<Director> director = nullptr;
 		std::shared_ptr<ShaderProgram> shader_program = nullptr;
-		glm::mat4 model;
+		glm::mat4 model{};
 		GLuint render_vao = 0;
 
 		int width = 0;

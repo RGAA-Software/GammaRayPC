@@ -20,17 +20,14 @@ namespace tc
 
     class AudioPlayer {
     public:
-
         AudioPlayer();
         ~AudioPlayer();
 
         void Init(int samples, int channels);
         void Write(const char* data, int size);
-        void Write(std::shared_ptr<Data> data);
-        bool IsInit();
+        void Write(const std::shared_ptr<Data>& data);
 
     private:
-
         bool init = false;
         QIODevice* io = nullptr;
 

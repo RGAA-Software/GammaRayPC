@@ -44,7 +44,6 @@ set(SRCS_WS
         client_context.cpp
         workspace.cpp
         director.cpp
-        video_widget.cpp
         video_widget_event.cpp
         shader_program.cpp
         opengl_image_reader.cpp

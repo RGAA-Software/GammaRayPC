@@ -67,18 +67,21 @@ namespace tc
         if (click_listener_) {
             click_listener_();
         }
+
+        has_moved_ = false;
     }
 
     void FloatController::mouseMoveEvent(QMouseEvent *event) {
         if (pressed_) {
+            has_moved_ = true;
             QPoint new_top_left = event->globalPos() - drag_position_;
             QRect parent_rect = parentWidget()->geometry();
-
-            // Lock in parent region
             new_top_left.setX(new_top_left.x() < 0 ? 0 : new_top_left.x() > (parent_rect.width()-this->width()) ? parent_rect.width()-this->width() : new_top_left.x());
             new_top_left.setY(new_top_left.y() < 0 ? 0 : new_top_left.y() > (parent_rect.height()-this->height()) ? parent_rect.height()-this->height() : new_top_left.y());
-
             move(new_top_left);
+        }
+        if (move_listener_ && pressed_) {
+            move_listener_();
         }
     }
 
@@ -92,4 +95,7 @@ namespace tc
         repaint();
     }
 
+    bool FloatController::HasMoved() const {
+        return has_moved_;
+    }
 }

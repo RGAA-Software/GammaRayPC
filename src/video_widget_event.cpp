@@ -22,9 +22,7 @@ namespace tc
         this->sdk_ = sdk;
 	}
 
-	VideoWidgetEvent::~VideoWidgetEvent() {
-
-	}
+	VideoWidgetEvent::~VideoWidgetEvent() = default;
 
 	void VideoWidgetEvent::OnWidgetResize(int w, int h) {
 		this->width = w;
@@ -35,7 +33,6 @@ namespace tc
         auto curr_pos = event->pos();
         MouseEventDesc mouse_event_desc;
         mouse_event_desc.buttons = 0;
-        //mouse_event_desc.buttons |= MOUSEEVENTF_MOVE;
         mouse_event_desc.buttons |= ButtonFlag::kMouseMove;
         mouse_event_desc.x_ratio = ((float)curr_pos.x()) / ((float)(widget_width));
         mouse_event_desc.y_ratio = ((float)curr_pos.y()) / ((float)(widget_height));
@@ -56,15 +53,12 @@ namespace tc
         mouse_event_desc.buttons = 0;
         auto pressed_button = 0;
         if(event->button() == Qt::LeftButton) {
-            //mouse_event_desc.buttons |= MOUSEEVENTF_LEFTDOWN;
             pressed_button = ButtonFlag::kLeftMouseButtonDown;
         }
         if(event->button() == Qt::RightButton) {
-            //mouse_event_desc.buttons |= MOUSEEVENTF_RIGHTDOWN;
             pressed_button = ButtonFlag::kRightMouseButtonDown;
         }
         if(event->button() == Qt::MiddleButton) {
-            //mouse_event_desc.buttons |= MOUSEEVENTF_MIDDLEDOWN;
             pressed_button = ButtonFlag::kMiddleMouseButtonDown;
         }
 
@@ -80,15 +74,12 @@ namespace tc
         MouseEventDesc mouse_event_desc;
         auto released_button = 0;
         if (event->button() == Qt::LeftButton) {
-            //mouse_event_desc.buttons |= MOUSEEVENTF_LEFTUP;
             released_button = ButtonFlag::kLeftMouseButtonUp;
         }
         if (event->button() == Qt::RightButton) {
-            //mouse_event_desc.buttons |= MOUSEEVENTF_RIGHTUP;
             released_button = ButtonFlag::kRightMouseButtonUp;
         }
         if (event->button() == Qt::MiddleButton) {
-            //mouse_event_desc.buttons |= MOUSEEVENTF_MIDDLEUP;
             released_button = ButtonFlag::kMiddleMouseButtonUp;
         }
         mouse_event_desc.buttons = released_button;
@@ -109,14 +100,11 @@ namespace tc
         QPoint angle_delta = event->angleDelta();
         QPoint numDegrees = event->angleDelta() / 8;
         if (!numDegrees.isNull()) {
-            QPoint numSteps = numDegrees / 15;
             mouse_event_desc.buttons = ButtonFlag::kMouseEventWheel;
             if(angle_delta.x() != 0) {
-                //mouse_event_desc.buttons |= MOUSEEVENTF_HWHEEL;
                 mouse_event_desc.data = angle_delta.x();
             }
             if(angle_delta.y() != 0) {
-                //mouse_event_desc.buttons |= MOUSEEVENTF_WHEEL;
                 mouse_event_desc.data = angle_delta.y();
             }
             SendMouseEvent(mouse_event_desc);
@@ -146,7 +134,6 @@ namespace tc
     }
 
     void VideoWidgetEvent::SendKeyEvent(QKeyEvent* e, bool down) {
-        //int vk = key_converter_->ToVK(e->key());
         auto vk = e->nativeVirtualKey();
         short num_lock_state = -1;
         if (vk >= VK_NUMPAD0 && vk <= VK_DIVIDE || vk == VK_NUMLOCK   // 17个键
@@ -195,7 +182,7 @@ namespace tc
         mouse_event->set_button(mouse_event_desc.buttons);
         auto cur_time = GetCurrentTime();
         mouse_event->set_timestamp(cur_time);
-        mouse_event->set_monitor_index(0); //
+        mouse_event->set_monitor_index(0);
         mouse_event->set_data(mouse_event_desc.data);
         mouse_event->set_delta_x(mouse_event_desc.dx);
         mouse_event->set_delta_y(mouse_event_desc.dy);

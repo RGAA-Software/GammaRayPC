@@ -17,25 +17,21 @@ namespace tc
 
     using OnMouseKeyboardEventCallback = std::function<void(int dup_idx, const std::shared_ptr<NetMessage>& msg)>;
 
+    struct MouseEventDesc {
+        int monitor_index = 0;
+        float x_ratio = 0.0f;
+        float y_ratio = 0.0f;
+        int buttons = 0;
+        int data = 0;
+        int dx = 0;
+        int dy = 0;
+        bool pressed = false;
+        bool released = false;
+    };
+
 	class VideoWidgetEvent {
 	public:
-        //描述鼠标状态
-		struct MouseEventDesc {
-            // to do 当前鼠标事件对应的屏幕索引，目前主要针对游戏，只有主屏，后面要兼容多屏
-            int monitor_index = 0;
-            // 当前鼠标x值，占窗口宽度的比值
-            float x_ratio = 0.0f;
-            // 当前鼠标y值，占窗口高度的比值
-            float y_ratio = 0.0f;
-            // 摁键掩码, 用来表示摁下,抬起了什么按键
-            int buttons = 0;
-            // 滚轮数据
-            int data = 0;
-            int dx = 0;
-            int dy = 0;
-            bool pressed = false;
-            bool released = false;
-        };
+
 		VideoWidgetEvent(const std::shared_ptr<ClientContext>& ctx, const std::shared_ptr<ThunderSdk>& sdk, int dup_idx);
 		virtual ~VideoWidgetEvent();
 
@@ -47,7 +43,6 @@ namespace tc
 		void OnWheelEvent(QWheelEvent* event, int widget_width, int widget_height);
 		void OnKeyPressEvent(QKeyEvent* event);
 		void OnKeyReleaseEvent(QKeyEvent* event);
-
         void RegisterMouseKeyboardEventCallback(const OnMouseKeyboardEventCallback& cbk);
 
     private:
@@ -60,7 +55,6 @@ namespace tc
         std::shared_ptr<QtKeyConverter> key_converter_ = nullptr;
 		int width = 0;
 		int height = 0;
-		// mouse
 		int invalid_position = -10002200;
 		int last_cursor_x_ = invalid_position;
 		int last_cursor_y_ = invalid_position;

@@ -13,21 +13,10 @@
 namespace tc
 {
 	//VK : https://learn.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
-
     class QtKeyConverter {
     public:
-
         QtKeyConverter();
-
-        // deprecated
-        // int ToVK(int qt_key);
-
         static std::map<int, bool> GetSysKeyStatus();
-
-    private:
-
-        QMap<int, int> key_mapping_;
-
     };
 
 }

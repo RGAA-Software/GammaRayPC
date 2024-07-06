@@ -31,80 +31,14 @@ namespace tc
     class AppMessage {
     public:
 
-        explicit AppMessage(int c) : code(c) {
-
-        }
-        virtual ~AppMessage() {}
-
-        int code {0};
-
-
     };
 
-    class ExitMessage : public AppMessage {
-    public:
-
-        explicit ExitMessage(int c) : AppMessage(c) {}
-
-        static std::shared_ptr<ExitMessage> Make() {
-            return std::make_shared<ExitMessage>(kCodeExit);
-        }
-
-    };
-    ////
-
-    class Timeout1S : public AppMessage {
-    public:
-        static std::shared_ptr<Timeout1S> Make() {
-            return std::make_shared<Timeout1S>(kCodeTimeout1S);
-        }
-        explicit Timeout1S(int c) : AppMessage(c) {}
-    };
-
-    // Stream item will be added in to database
     class StreamItemAdded : public AppMessage {
     public:
-        static std::shared_ptr<StreamItemAdded> Make(const StreamItem& item) {
-            return std::make_shared<StreamItemAdded>(item);
-        }
-
-        StreamItemAdded() : AppMessage(kCodeStreamAdded) {
-        }
-        explicit StreamItemAdded(const StreamItem& item) : AppMessage(kCodeStreamAdded) {
-            this->item_ = item;
-        }
-
-    public:
-
         StreamItem item_;
     };
 
-    // Stream will be updated
     class StreamItemUpdated : public AppMessage {
-    public:
-        static std::shared_ptr<StreamItemUpdated> Make(const StreamItem& item) {
-            return std::make_shared<StreamItemUpdated>(item);
-        }
-
-        explicit StreamItemUpdated(const StreamItem& item) : AppMessage(kCodeStreamUpdated) {
-            this->item_ = item;
-        }
-
-    public:
-
-        StreamItem item_;
-    };
-
-    // Close workspace, close -> clear, with dialog
-    class CloseWorkspace : public AppMessage {
-    public:
-        static std::shared_ptr<CloseWorkspace> Make(const StreamItem& item) {
-            return std::make_shared<CloseWorkspace>(item);
-        }
-        explicit CloseWorkspace(const StreamItem& item) : AppMessage(kCodeCloseWorkspace) {
-            this->item_ = item;
-        }
-
     public:
         StreamItem item_;
     };
@@ -112,26 +46,11 @@ namespace tc
     // Close workspace
     class ClearWorkspace : public AppMessage {
     public:
-        static std::shared_ptr<ClearWorkspace> Make(const StreamItem& item) {
-            return std::make_shared<ClearWorkspace>(item);
-        }
-        explicit ClearWorkspace(const StreamItem& item) : AppMessage(kCodeClearWorkspace) {
-            this->item_ = item;
-        }
-
-    public:
         StreamItem item_;
     };
 
     // Clipboard
     class ClipboardMessage : public AppMessage {
-    public:
-        static std::shared_ptr<ClipboardMessage> Make(const std::string& msg) {
-            return std::make_shared<ClipboardMessage>(msg);
-        }
-
-        explicit ClipboardMessage(std::string  msg) : AppMessage(kCodeClipboard), msg_(std::move(msg)) {}
-
     public:
         std::string msg_;
     };
@@ -139,61 +58,30 @@ namespace tc
     // Mouse pressed
     class MousePressedMessage : public AppMessage {
     public:
-        static std::shared_ptr<MousePressedMessage> Make() {
-            return std::make_shared<MousePressedMessage>();
-        }
-
-        explicit MousePressedMessage() : AppMessage(kCodeMousePressed) {}
+        int global_x_;
+        int global_y_;
     };
 
     // Fullscreen
     class FullscreenMessage : public AppMessage {
     public:
-        static std::shared_ptr<FullscreenMessage> Make() {
-            return std::make_shared<FullscreenMessage>();
-        }
-
-        explicit FullscreenMessage() : AppMessage(kCodeFullscreen) {}
     };
 
     // Exit fullscreen
     class ExitFullscreenMessage : public AppMessage {
     public:
-        static std::shared_ptr<ExitFullscreenMessage> Make() {
-            return std::make_shared<ExitFullscreenMessage>();
-        }
-
-        explicit ExitFullscreenMessage() : AppMessage(kCodeExitFullscreen) {}
     };
 
     // Change clipboard status
     class ClipboardStatusMessage : public AppMessage {
     public:
-
-        static std::shared_ptr<ClipboardStatusMessage> Make(bool on) {
-            return std::make_shared<ClipboardStatusMessage>(on);
-        }
-
-        explicit ClipboardStatusMessage(bool on) : AppMessage (kCodeClipboardStatus) {
-            this->on = on;
-        };
-
-        bool on = false;
+        bool on_ = false;
     };
 
     // Change audio status
     class AudioStatusMessage : public AppMessage {
     public:
-
-        static std::shared_ptr<AudioStatusMessage> Make(bool on) {
-            return std::make_shared<AudioStatusMessage>(on);
-        }
-
-        explicit AudioStatusMessage(bool on) : AppMessage(kCodeAudioStatus) {
-            this->on = on;
-        }
-
-        bool on = false;
+        bool on_ = false;
     };
 
 }

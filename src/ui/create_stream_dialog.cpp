@@ -258,15 +258,16 @@ namespace tc
 
         if (stream_item_.IsValid()) {
             func_update_stream(stream_item_);
-            StreamItemUpdated msg(stream_item_);
-            context_->SendAppMessage(msg);
+            context_->SendAppMessage(StreamItemUpdated {
+                .item_ = stream_item_,
+            });
         }
         else {
             StreamItem item;
             func_update_stream(item);
-
-            StreamItemAdded msg(item);
-            context_->SendAppMessage(msg);
+            context_->SendAppMessage(StreamItemAdded {
+                .item_ = item,
+            });
         }
         return true;
     }

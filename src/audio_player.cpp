@@ -33,7 +33,6 @@ namespace tc
         format.setChannelCount(channels);
         format.setSampleFormat(QAudioFormat::Int16);
         // ChannelConfigStereo is 2, Int16 is 2
-
         LOGI("sampleRate: {}, channelCount: {}, sampleFormat: {}",
              format.sampleRate(), format.channelCount(), (int)format.sampleFormat()
         );
@@ -47,13 +46,9 @@ namespace tc
         this->Write(Data::Make(data, size));
     }
 
-    void AudioPlayer::Write(std::shared_ptr<Data> data) {
+    void AudioPlayer::Write(const std::shared_ptr<Data>& data) {
         if (io) {
             io->write(data->CStr(), data->Size());
         }
-    }
-
-    bool AudioPlayer::IsInit() {
-        return init;
     }
 }

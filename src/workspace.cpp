@@ -46,17 +46,31 @@ namespace tc
         shadow->setColor(shadow_color);
         float_controller_->setGraphicsEffect(shadow);
         float_controller_->SetOnClickListener([=, this]() {
-            auto panel = new FloatControllerPanel(ctx, this);
-            auto ps = new QGraphicsDropShadowEffect();
-            ps->setBlurRadius(15);
-            ps->setOffset(0, 0);
-            ps->setColor(shadow_color);
-            panel->setGraphicsEffect(ps);
+            if (!controller_panel_) {
+                controller_panel_ = new FloatControllerPanel(ctx, this);
+                auto ps = new QGraphicsDropShadowEffect();
+                ps->setBlurRadius(15);
+                ps->setOffset(0, 0);
+                ps->setColor(shadow_color);
+                controller_panel_->setGraphicsEffect(ps);
+            }
             QPoint point = float_controller_->mapToGlobal(QPoint(0, 0));
             point.setX(float_controller_->pos().x() + float_controller_->width() + 10);
             point.setY(float_controller_->pos().y());
-            panel->move(point);
-            panel->show();
+            controller_panel_->move(point);
+            if (controller_panel_->isHidden()) {
+                if (!float_controller_->HasMoved()) {
+                    controller_panel_->show();
+                }
+            } else {
+                controller_panel_->hide();
+            }
+        });
+        float_controller_->SetOnMoveListener([=, this]() {
+            if (!controller_panel_) {
+                return;
+            }
+            controller_panel_->hide();
         });
 
         // sdk
@@ -95,7 +109,7 @@ namespace tc
         qDebug() << "window state: " << is_window_active_;
     }
 
-    bool Workspace::IsActiveNow() {
+    bool Workspace::IsActiveNow() const {
         return is_window_active_;
     }
 
