@@ -5,7 +5,9 @@
 #include <QHBoxLayout>
 #include <QApplication>
 #include <QGraphicsDropShadowEffect>
-
+#include <QDragEnterEvent>
+#include <QDropEvent>
+#include <QMimeData>
 #include "workspace.h"
 #include "thunder_sdk.h"
 #include "opengl_video_widget.h"
@@ -25,6 +27,7 @@ namespace tc
     Workspace::Workspace(const std::shared_ptr<ClientContext>& ctx, const ThunderSdkParams& params, QWidget* parent) {
         this->context_ = ctx;
         this->settings_ = Settings::Instance();
+        setAcceptDrops(true);
         QString app_dir = qApp->applicationDirPath();
         QString style_dir = app_dir + "/resources/";
         theme_ = new acss::QtAdvancedStylesheet(this);
@@ -139,6 +142,29 @@ namespace tc
     void Workspace::closeEvent(QCloseEvent *event) {
         LOGI("closed event...");
         Exit();
+    }
+
+    void Workspace::dragEnterEvent(QDragEnterEvent *event) {
+        LOGI("DragEnter...");
+        event->accept();
+        if (event->mimeData()->hasUrls()) {
+            event->acceptProposedAction();
+        }
+    }
+
+    void Workspace::dragMoveEvent(QDragMoveEvent *event) {
+        event->accept();
+    }
+
+    void Workspace::dropEvent(QDropEvent *event) {
+        QList<QUrl> urls = event->mimeData()->urls();
+        if (urls.isEmpty()) {
+            LOGE("Don't have url!");
+            return;
+        }
+        for (const auto& url : urls) {
+            LOGI("File name: {}, path: {}", url.fileName().toStdString(), url.path().toStdString());
+        }
     }
 
     void Workspace::Exit() {

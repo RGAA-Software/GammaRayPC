@@ -28,10 +28,9 @@ namespace tc
             layout->addWidget(label);
 
             auto switch_btn = new SwitchButton(this);
-            switch_btn->SetStatus(settings_->IsFixAtTop());
             switch_btn->setFixedSize(55, 25);
             switch_btn->SetClickCallback([this](bool selected) {
-                settings_->SetFixAtTop(selected);
+                ;
             });
             layout->addSpacing(30);
             layout->addWidget(switch_btn);

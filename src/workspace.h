@@ -31,6 +31,9 @@ namespace tc
         void closeEvent(QCloseEvent *event) override;
         void changeEvent(QEvent* event) override;
         [[nodiscard]] bool IsActiveNow() const;
+        void dragEnterEvent(QDragEnterEvent *event) override;
+        void dragMoveEvent(QDragMoveEvent *event) override;
+        void dropEvent(QDropEvent *event) override;
 
     private:
         void RegisterSdkMsgCallbacks();

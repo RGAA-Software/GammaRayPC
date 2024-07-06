@@ -34,6 +34,7 @@ set(SRCS
         ui/about_content.cpp
         ui/sized_msg_box.cpp
         ui/background_widget.cpp
+        ui/base_widget.cpp
         db/stream_db_manager.cpp
         db/stream_item.cpp
         application.cpp
@@ -77,6 +78,8 @@ set(SRCS_WS
 
 qt_add_executable(${PROJECT_NAME} MANUAL_FINALIZATION ${SRCS})
 qt_add_executable(GammaRayClientInner MANUAL_FINALIZATION ${SRCS_WS})
+#SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES LINK_FLAGS "/MANIFESTUAC:\"level=\'requireAdministrator\' uiAccess=\'false\'\"")
+#SET_TARGET_PROPERTIES(GammaRayClientInner PROPERTIES LINK_FLAGS "/MANIFESTUAC:\"level=\'requireAdministrator\' uiAccess=\'false\'\"")
 if (APPLE)
     set_target_properties(${PROJECT_NAME} PROPERTIES
             MACOSX_BUNDLE_GUI_IDENTIFIER com.tc.client.client
