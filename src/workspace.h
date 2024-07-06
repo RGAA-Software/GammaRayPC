@@ -21,6 +21,8 @@ namespace tc
     class FloatControllerPanel;
     class MessageListener;
     class Settings;
+    class FloatNotificationHandle;
+    class NotificationPanel;
 
     class Workspace : public QMainWindow {
     public:
@@ -31,6 +33,7 @@ namespace tc
         void closeEvent(QCloseEvent *event) override;
         void changeEvent(QEvent* event) override;
         [[nodiscard]] bool IsActiveNow() const;
+        void resizeEvent(QResizeEvent *event) override;
         void dragEnterEvent(QDragEnterEvent *event) override;
         void dragMoveEvent(QDragMoveEvent *event) override;
         void dropEvent(QDropEvent *event) override;
@@ -38,6 +41,7 @@ namespace tc
     private:
         void RegisterSdkMsgCallbacks();
         void Exit();
+        void UpdateNotificationHandlePosition();
 
     private:
         std::shared_ptr<ClientContext> context_ = nullptr;
@@ -50,6 +54,8 @@ namespace tc
         acss::QtAdvancedStylesheet* theme_{};
         std::shared_ptr<MessageListener> msg_listener_ = nullptr;
         Settings* settings_ = nullptr;
+        FloatNotificationHandle* notification_handler_ = nullptr;
+        NotificationPanel* notification_panel_ = nullptr;
     };
 
 }

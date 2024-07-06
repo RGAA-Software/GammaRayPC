@@ -20,6 +20,8 @@
 #include "ui/float_controller_panel.h"
 #include "app_message.h"
 #include "settings.h"
+#include "ui/float_notification_handle.h"
+#include "ui/notification_panel.h"
 
 namespace tc
 {
@@ -90,6 +92,22 @@ namespace tc
             }
             controller_panel_->hide();
         });
+
+        // notification handle
+        notification_handler_ = new FloatNotificationHandle(context_, this);
+        notification_handler_->SetPixmap(":resources/image/ic_mail.svg");
+        notification_handler_->SetOnClickListener([=, this](QWidget* w) {
+            if (notification_panel_->isHidden()) {
+                notification_panel_->show();
+            } else {
+                notification_panel_->hide();
+            }
+            UpdateNotificationHandlePosition();
+        });
+
+        // notification panel
+        notification_panel_ = new NotificationPanel(ctx, this);
+        notification_panel_->hide();
 
         // sdk
         RegisterSdkMsgCallbacks();
@@ -165,6 +183,20 @@ namespace tc
         for (const auto& url : urls) {
             LOGI("File name: {}, path: {}", url.fileName().toStdString(), url.path().toStdString());
         }
+    }
+
+    void Workspace::resizeEvent(QResizeEvent *event) {
+        UpdateNotificationHandlePosition();
+    }
+
+    void Workspace::UpdateNotificationHandlePosition() {
+        int notification_panel_width = 0;
+        if (!notification_panel_->isHidden()) {
+            notification_panel_width = notification_panel_->width();
+        } else {
+            notification_panel_->setGeometry(this->width()-notification_panel_->width(), 0, notification_panel_->width(), this->height());
+        }
+        notification_handler_->setGeometry(this->width()-notification_handler_->width()/2 - notification_panel_width, 100, notification_handler_->width(), notification_handler_->height());
     }
 
     void Workspace::Exit() {

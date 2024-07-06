@@ -179,6 +179,10 @@ namespace tc
     }
 
     void VideoWidgetEvent::SendMouseEvent(const MouseEventDesc& mouse_event_desc) {
+
+        // test
+        if (true) return;
+
         auto msg = std::make_shared<Message>();
         msg->set_type(tc::kMouseEvent);
         auto mouse_event = new tc::MouseEvent();

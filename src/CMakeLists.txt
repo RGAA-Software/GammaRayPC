@@ -73,6 +73,9 @@ set(SRCS_WS
         ui/float_controller.cpp
         ui/base_widget.cpp
         ui/float_controller_panel.cpp
+        ui/float_notification_handle.cpp
+        ui/notification_panel.cpp
+        transfer/FileTransfer.cpp
 )
 
 
