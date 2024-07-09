@@ -9,6 +9,9 @@
 #include "tc_common_new/shared_preference.h"
 #include "tc_common_new/thread.h"
 #include "db/stream_db_manager.h"
+#include "transfer/file_transfer.h"
+
+#include <QTimer>
 
 namespace tc
 {
@@ -16,8 +19,16 @@ namespace tc
     ClientContext::ClientContext(const std::string& name, QObject* parent) : QObject(parent) {
         this->name_ = name;
         this->msg_notifier_ = std::make_shared<MessageNotifier>();
+
+    }
+
+    ClientContext::~ClientContext() {
+        Exit();
+    }
+
+    void ClientContext::Init() {
         sp_ = std::make_shared<SharedPreference>();
-        sp_->Init("", std::format("app.{}.dat", name));
+        sp_->Init("", std::format("app.{}.dat", this->name_));
 
         auto settings = Settings::Instance();
         settings->SetSharedPreference(sp_);
@@ -27,10 +38,18 @@ namespace tc
 
         task_thread_ = Thread::Make("context_thread", 128);
         task_thread_->Poll();
-    }
 
-    ClientContext::~ClientContext() {
-        Exit();
+        io_ctx_thread_ = std::make_shared<Thread>([=, this]() {
+            boost_io_ctx_ = std::make_shared<boost::asio::io_context>();
+            work_guard_ = std::make_unique<boost::asio::executor_work_guard<boost::asio::io_context::executor_type>>(boost::asio::make_work_guard(*boost_io_ctx_));
+            boost_io_ctx_->run();
+        }, "", false);
+
+        QTimer::singleShot(100, [=, this](){
+            file_transfer_ = std::make_shared<FileTransfer>(shared_from_this());
+            file_transfer_->Start();
+        });
+
     }
 
     void ClientContext::PostTask(std::function<void()>&& task) {
@@ -55,9 +74,22 @@ namespace tc
         return db_mgr_;
     }
 
+    std::shared_ptr<boost::asio::io_context> ClientContext::GetBoostIoContext() {
+        return boost_io_ctx_;
+    }
+
+    std::shared_ptr<FileTransfer> ClientContext::GetFileTransfer() {
+        return file_transfer_;
+    }
+
     void ClientContext::Exit() {
         if (task_thread_ && task_thread_->IsJoinable()) {
             task_thread_->Exit();
+        }
+        work_guard_->reset();
+        boost_io_ctx_->stop();
+        if (io_ctx_thread_->IsJoinable()) {
+            io_ctx_thread_->Join();
         }
     }
 

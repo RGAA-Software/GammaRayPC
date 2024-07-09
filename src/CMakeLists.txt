@@ -5,7 +5,6 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
 find_package(Qt6 REQUIRED COMPONENTS Widgets Core OpenGL OpenGLWidgets Multimedia Svg)
-find_package(gflags CONFIG REQUIRED)
 
 include_directories(${CMAKE_SOURCE_DIR})
 include_directories(${CMAKE_SOURCE_DIR}/src)
@@ -75,7 +74,8 @@ set(SRCS_WS
         ui/float_controller_panel.cpp
         ui/float_notification_handle.cpp
         ui/notification_panel.cpp
-        transfer/FileTransfer.cpp
+        transfer/file_transfer.cpp
+        transfer/file_transfer_channel.cpp
 )
 
 
@@ -104,13 +104,13 @@ target_link_libraries(${PROJECT_NAME} PRIVATE Qt6::Widgets
         Qt6::Core Qt6::OpenGL Qt6::OpenGLWidgets Qt6::Multimedia Qt6::Svg
 )
 target_link_libraries(${PROJECT_NAME} PRIVATE tc_common_new tc_message tc_sdk tc_qt_widget)
-target_link_libraries(${PROJECT_NAME} PRIVATE sqlite_orm::sqlite_orm gflags::gflags)
+target_link_libraries(${PROJECT_NAME} PRIVATE sqlite_orm::sqlite_orm ${Boost_LIBRARIES})
 
 target_link_libraries(GammaRayClientInner PRIVATE Qt6::Widgets
         Qt6::Core Qt6::OpenGL Qt6::OpenGLWidgets Qt6::Multimedia Qt6::Svg
 )
 target_link_libraries(GammaRayClientInner PRIVATE tc_common_new tc_message tc_sdk tc_qt_widget)
-target_link_libraries(GammaRayClientInner PRIVATE sqlite_orm::sqlite_orm gflags::gflags)
+target_link_libraries(GammaRayClientInner PRIVATE sqlite_orm::sqlite_orm ${Boost_LIBRARIES})
 
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(GammaRayClient})

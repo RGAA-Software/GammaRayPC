@@ -6,23 +6,42 @@
 #include <QSurfaceFormat>
 #include <QFontDatabase>
 #include <QMessageBox>
+#include <QCoreApplication>
+#include <QCommandLineParser>
+#include <QDebug>
 
 #include "thunder_sdk.h"
 #include "client_context.h"
 #include "workspace.h"
 #include "application.h"
-#include "gflags/gflags.h"
 #include "tc_common_new/md5.h"
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
 using namespace tc;
 
-DEFINE_string(host, "", "remote host");
-DEFINE_int32(port, 0, "remote port");
+std::string g_host_;
+int g_port_ = 0;
+
+void ParseCommandLine(QApplication& app) {
+    QCommandLineParser parser;
+    parser.setApplicationDescription("GammaRay Client");
+    parser.addHelpOption();
+    parser.addVersionOption();
+
+    QCommandLineOption opt_host("host", "Host", "xx.xx.xx.xx", "");
+    parser.addOption(opt_host);
+
+    QCommandLineOption opt_port("port", "Port", "9999", "0");
+    parser.addOption(opt_port);
+
+    parser.process(app);
+
+    g_host_ = parser.value(opt_host).toStdString();
+    g_port_ = parser.value(opt_port).toInt();
+}
 
 int main(int argc, char** argv) {
-    gflags::ParseCommandLineFlags(&argc, &argv, true);
 #ifdef WIN32
     //CaptureDump();
 #endif
@@ -37,7 +56,7 @@ int main(int argc, char** argv) {
 #endif
 
     QApplication app(argc, argv);
-
+    ParseCommandLine(app);
     // font
 #if 0
     auto id = QFontDatabase::addApplicationFont(":/resources/font/quixotic-1.otf");
@@ -48,8 +67,8 @@ int main(int argc, char** argv) {
     qApp->setFont(font);
 #endif
 
-    auto host = FLAGS_host;
-    auto port = FLAGS_port;
+    auto host = g_host_;
+    auto port = g_port_;
     if (host.empty() || port <= 0 || port >= 65535) {
         QMessageBox::critical(nullptr, "Error Params", "You must give HOST & PORT");
         return -1;
@@ -57,6 +76,7 @@ int main(int argc, char** argv) {
 
     auto name = MD5::Hex(host).substr(0, 10);
     auto ctx = std::make_shared<ClientContext>(name);
+    ctx->Init();
     static Workspace ws(ctx, ThunderSdkParams {
             .ssl_ = false,
             .enable_audio_ = true,

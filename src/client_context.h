@@ -9,7 +9,7 @@
 
 #include <QObject>
 #include <QWidget>
-
+#include <boost/asio.hpp>
 #include "tc_common_new/message_notifier.h"
 
 namespace tc
@@ -18,13 +18,14 @@ namespace tc
     class Thread;
     class StreamDBManager;
     class SharedPreference;
+    class FileTransfer;
 
-    class ClientContext : public QObject {
+    class ClientContext : public QObject, public std::enable_shared_from_this<ClientContext> {
     public:
 
         explicit ClientContext(const std::string& name, QObject* parent = nullptr);
         ~ClientContext() override;
-
+        void Init();
         void PostTask(std::function<void()>&& task);
         void PostUITask(std::function<void()>&& task);
         std::shared_ptr<MessageNotifier> GetMessageNotifier();
@@ -32,6 +33,8 @@ namespace tc
         std::shared_ptr<StreamDBManager> GetDBManager();
         void SaveKeyValue(const std::string& k, const std::string& v);
         std::string GetValueByKey(const std::string& k);
+        std::shared_ptr<boost::asio::io_context> GetBoostIoContext();
+        std::shared_ptr<FileTransfer> GetFileTransfer();
 
         template<class T>
         void SendAppMessage(const T& msg) {
@@ -46,6 +49,10 @@ namespace tc
         std::shared_ptr<SharedPreference> sp_ = nullptr;
         std::shared_ptr<Thread> task_thread_ = nullptr;
         std::string name_;
+        std::shared_ptr<Thread> io_ctx_thread_ = nullptr;
+        std::shared_ptr<boost::asio::io_context> boost_io_ctx_ = nullptr;
+        std::unique_ptr<boost::asio::executor_work_guard<boost::asio::io_context::executor_type>> work_guard_;
+        std::shared_ptr<FileTransfer> file_transfer_ = nullptr;
     };
 
 }

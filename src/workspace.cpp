@@ -191,12 +191,14 @@ namespace tc
 
     void Workspace::UpdateNotificationHandlePosition() {
         int notification_panel_width = 0;
+        int offset_border = 5;
+        int handle_offset = 0;
         if (!notification_panel_->isHidden()) {
             notification_panel_width = notification_panel_->width();
-        } else {
-            notification_panel_->setGeometry(this->width()-notification_panel_->width(), 0, notification_panel_->width(), this->height());
+            handle_offset = offset_border;
         }
-        notification_handler_->setGeometry(this->width()-notification_handler_->width()/2 - notification_panel_width, 100, notification_handler_->width(), notification_handler_->height());
+        notification_panel_->setGeometry(this->width()-notification_panel_->width() - offset_border, offset_border, notification_panel_->width(), this->height() - 2*offset_border);
+        notification_handler_->setGeometry(this->width()-notification_handler_->width()/2 - notification_panel_width-handle_offset, 100, notification_handler_->width(), notification_handler_->height());
     }
 
     void Workspace::Exit() {

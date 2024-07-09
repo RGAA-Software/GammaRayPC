@@ -15,6 +15,9 @@ namespace tc
     class NotificationPanel : public BaseWidget {
     public:
         explicit NotificationPanel(const std::shared_ptr<ClientContext>& ctx, QWidget* parent = nullptr);
+        void paintEvent(QPaintEvent *event) override;
+
+    private:
 
     };
 
