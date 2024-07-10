@@ -45,13 +45,15 @@ namespace tc
         void SetClipboardEnabled(bool enabled);
         void SetMultiDisplayMode(MultiDisplayMode mode);
 
-    private:
+    public:
         bool audio_on_ = false;
         bool clipboard_on_ = true;
         MultiDisplayMode display_mode_ = MultiDisplayMode::kSeparated;
         VideoRenderType render_type_ = VideoRenderType::kOpenGL;
         std::shared_ptr<SharedPreference> sp_ = nullptr;
-
+        std::string remote_address_;
+        int file_transfer_port_ = 20372;
+        std::string file_transfer_path_ = "/file/transfer";
     };
 
 }

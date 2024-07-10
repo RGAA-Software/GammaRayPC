@@ -18,7 +18,6 @@ namespace tc
     class Thread;
     class StreamDBManager;
     class SharedPreference;
-    class FileTransfer;
 
     class ClientContext : public QObject, public std::enable_shared_from_this<ClientContext> {
     public:
@@ -34,7 +33,6 @@ namespace tc
         void SaveKeyValue(const std::string& k, const std::string& v);
         std::string GetValueByKey(const std::string& k);
         std::shared_ptr<boost::asio::io_context> GetBoostIoContext();
-        std::shared_ptr<FileTransfer> GetFileTransfer();
 
         template<class T>
         void SendAppMessage(const T& msg) {
@@ -52,7 +50,6 @@ namespace tc
         std::shared_ptr<Thread> io_ctx_thread_ = nullptr;
         std::shared_ptr<boost::asio::io_context> boost_io_ctx_ = nullptr;
         std::unique_ptr<boost::asio::executor_work_guard<boost::asio::io_context::executor_type>> work_guard_;
-        std::shared_ptr<FileTransfer> file_transfer_ = nullptr;
     };
 
 }

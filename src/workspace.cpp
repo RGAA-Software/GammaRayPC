@@ -8,6 +8,7 @@
 #include <QDragEnterEvent>
 #include <QDropEvent>
 #include <QMimeData>
+#include <QTimer>
 #include "workspace.h"
 #include "thunder_sdk.h"
 #include "opengl_video_widget.h"
@@ -22,6 +23,7 @@
 #include "settings.h"
 #include "ui/float_notification_handle.h"
 #include "ui/notification_panel.h"
+#include "transfer/file_transfer.h"
 
 namespace tc
 {
@@ -118,6 +120,10 @@ namespace tc
             this->Exit();
         });
 
+        QTimer::singleShot(100, [=, this](){
+            file_transfer_ = std::make_shared<FileTransferChannel>(context_);
+            file_transfer_->Start();
+        });
     }
 
     Workspace::~Workspace() {

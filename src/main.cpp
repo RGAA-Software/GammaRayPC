@@ -41,6 +41,7 @@ int main(int argc, char** argv) {
 #endif
 
     auto ctx = std::make_shared<ClientContext>("ui");
+    ctx->Init();
     Application application(ctx);
     application.show();
 

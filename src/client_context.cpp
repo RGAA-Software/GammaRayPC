@@ -9,7 +9,6 @@
 #include "tc_common_new/shared_preference.h"
 #include "tc_common_new/thread.h"
 #include "db/stream_db_manager.h"
-#include "transfer/file_transfer.h"
 
 #include <QTimer>
 
@@ -44,12 +43,6 @@ namespace tc
             work_guard_ = std::make_unique<boost::asio::executor_work_guard<boost::asio::io_context::executor_type>>(boost::asio::make_work_guard(*boost_io_ctx_));
             boost_io_ctx_->run();
         }, "", false);
-
-        QTimer::singleShot(100, [=, this](){
-            file_transfer_ = std::make_shared<FileTransfer>(shared_from_this());
-            file_transfer_->Start();
-        });
-
     }
 
     void ClientContext::PostTask(std::function<void()>&& task) {
@@ -76,10 +69,6 @@ namespace tc
 
     std::shared_ptr<boost::asio::io_context> ClientContext::GetBoostIoContext() {
         return boost_io_ctx_;
-    }
-
-    std::shared_ptr<FileTransfer> ClientContext::GetFileTransfer() {
-        return file_transfer_;
     }
 
     void ClientContext::Exit() {

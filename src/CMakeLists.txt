@@ -75,7 +75,8 @@ set(SRCS_WS
         ui/float_notification_handle.cpp
         ui/notification_panel.cpp
         transfer/file_transfer.cpp
-        transfer/file_transfer_channel.cpp
+        transfer/send_file.cpp
+        transfer/file_writer.cpp
 )
 
 

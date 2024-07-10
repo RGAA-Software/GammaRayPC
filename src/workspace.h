@@ -23,6 +23,7 @@ namespace tc
     class Settings;
     class FloatNotificationHandle;
     class NotificationPanel;
+    class FileTransferChannel;
 
     class Workspace : public QMainWindow {
     public:
@@ -56,6 +57,7 @@ namespace tc
         Settings* settings_ = nullptr;
         FloatNotificationHandle* notification_handler_ = nullptr;
         NotificationPanel* notification_panel_ = nullptr;
+        std::shared_ptr<FileTransferChannel> file_transfer_ = nullptr;
     };
 
 }

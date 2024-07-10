@@ -15,6 +15,7 @@
 #include "workspace.h"
 #include "application.h"
 #include "tc_common_new/md5.h"
+#include "settings.h"
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
@@ -39,6 +40,8 @@ void ParseCommandLine(QApplication& app) {
 
     g_host_ = parser.value(opt_host).toStdString();
     g_port_ = parser.value(opt_port).toInt();
+
+    tc::Settings::Instance()->remote_address_ = g_host_;
 }
 
 int main(int argc, char** argv) {
