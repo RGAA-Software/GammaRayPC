@@ -7,6 +7,7 @@
 #include "tc_common_new/log.h"
 #include "tc_common_new/thread.h"
 #include "settings.h"
+#include "send_file.h"
 
 namespace tc
 {
@@ -56,12 +57,38 @@ namespace tc
         }
     }
 
-    void FileTransferChannel::SendFiles(const std::vector<QString>& files) {
+    bool FileTransferChannel::IsConnected() {
+        return client_ && client_->is_started();
+    }
+
+    void FileTransferChannel::SendFiles(const std::vector<QString>& files_path) {
         sender_thread_->Post([=, this]() {
+            std::queue<std::shared_ptr<SendFile>> file_queue;
             // 1. read file info
+            for (const auto& path : files_path) {
+                auto send_file = std::make_shared<SendFile>(path, 4096);
+                file_queue.push(send_file);
+            }
 
             // 2. send one by one
+            while(!file_queue.empty() && !stop_sending_) {
+                auto send_file = file_queue.front();
+                file_queue.pop();
+                // 2.1 request to send the file
+                // 2.2 ready to send or error
 
+                send_file->Send([=, this](const std::string& proto_msg, uint64_t total_size, uint64_t offset) {
+                    // 2.3 sending
+                    if (!IsConnected()) {
+                        LOGE("Client disconnected when sending file.");
+                        return;
+                    }
+                    auto send_size = client_->send(proto_msg);
+                    LOGI("Send size: {}, msg size: {}", send_size, proto_msg.size());
+                    // 2.4 checking
+
+                });
+            }
         });
     }
 

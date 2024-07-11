@@ -186,8 +186,12 @@ namespace tc
             LOGE("Don't have url!");
             return;
         }
+        std::vector<QString> files;
         for (const auto& url : urls) {
-            LOGI("File name: {}, path: {}", url.fileName().toStdString(), url.path().toStdString());
+            files.push_back(url.toLocalFile());
+        }
+        if (file_transfer_) {
+            file_transfer_->SendFiles(files);
         }
     }
 
