@@ -10,6 +10,8 @@
 #include <chrono>
 #include <memory>
 #include <queue>
+#include <mutex>
+#include <condition_variable>
 #include <asio2/websocket/ws_client.hpp>
 #include <QString>
 
@@ -27,12 +29,18 @@ namespace tc
         void Exit();
         bool IsConnected();
         void SendFiles(const std::vector<QString>& files_path);
+    private:
+        void RequestSendingFile(const std::shared_ptr<SendFile>& file);
+        void ParseRespMessage(std::string_view data);
 
     private:
         std::shared_ptr<ClientContext> context_ = nullptr;
         std::shared_ptr<asio2::ws_client> client_ = nullptr;
         std::shared_ptr<Thread> sender_thread_ = nullptr;
         bool stop_sending_ = false;
+        std::mutex send_mtx_;
+        std::condition_variable send_cv_;
+        std::atomic_bool continue_sending_;
     };
 
 }
