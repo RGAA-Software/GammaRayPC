@@ -11,7 +11,7 @@ namespace tc
 {
     class File;
 
-    using SendTask = std::function<void(const std::string& proto_msg, uint64_t total_size, uint64_t offset_size)>;
+    using SendTask = std::function<bool(const std::string& proto_msg, uint64_t total_size, uint64_t offset_size)>;
     class SendFile {
     public:
         explicit SendFile(const QString& file_path, int read_block_size);

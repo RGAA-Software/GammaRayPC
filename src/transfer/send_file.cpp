@@ -23,9 +23,9 @@ namespace tc
         if (!this->file_->IsOpen()) {
             return false;
         }
-        this->file_->ReadAll([=, this](uint64_t offset, DataPtr&& data) {
+        this->file_->ReadAll([=, this](uint64_t offset, DataPtr&& data) -> bool {
             auto msg = MakeTransferMessage(offset, std::move(data));
-            task(msg, this->file_size_, offset);
+            return task(msg, this->file_size_, offset);
         });
         return true;
     }

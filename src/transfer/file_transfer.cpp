@@ -9,6 +9,7 @@
 #include "settings.h"
 #include "send_file.h"
 #include "tc_message.pb.h"
+#include <QMessageBox>
 
 namespace tc
 {
@@ -86,25 +87,36 @@ namespace tc
 
                 // 2.2 ready to send or error
                 std::unique_lock<std::mutex> lk(send_mtx_);
-//                send_cv_.wait(lk);
-//                if (!continue_sending_) {
-//                    LOGW("Ignore sending : {}", send_file->file_path_.toStdString());
-//                    continue;
-//                }
+                send_cv_.wait_for(lk, std::chrono::seconds(10));
+                if (!continue_sending_) {
+                    LOGW("Ignore sending : {}", send_file->file_path_.toStdString());
+                    continue;
+                }
                 LOGI("Sending: {}, file size: {}", send_file->file_path_.toStdString(), send_file->file_size_);
 
-                send_file->Send([=, this](const std::string& proto_msg, uint64_t total_size, uint64_t offset) {
+                bool send_failed = false;
+                send_file->Send([&](const std::string& proto_msg, uint64_t total_size, uint64_t offset) -> bool {
                     // 2.3 sending
                     if (!IsConnected()) {
                         LOGE("Client disconnected when sending file.");
-                        return;
+                        // break the reading cycle
+                        send_failed = true;
+                        return true;
                     }
                     client_->async_send(proto_msg);
                     // 2.4 checking
 //                    if (send_size != proto_msg.size()) {
 //                        LOGE("Send failed, send_size({}) != proto_msg.size({})", send_size, proto_msg.size());
 //                    }
+                    return false;
                 });
+
+                if (send_failed) {
+                    LOGE("Send failed!");
+                } else {
+                    CompleteSending(send_file);
+
+                }
             }
         });
     }
@@ -115,16 +127,26 @@ namespace tc
         auto fs = msg.mutable_file_transfer();
         fs->set_state(FileTransfer_FileTransferState_kRequestFileTransfer);
         fs->set_file_type(FileTransfer_FileType_kFile);
-        fs->set_relative_path("");
         fs->set_filename(file->file_->FileName());
-        fs->set_data("");
         fs->set_filesize(file->file_size_);
-        fs->set_transferred_size(0);
-        fs->set_file_md5("");
         auto proto_msg = msg.SerializeAsString();
         client_->async_send(proto_msg);
 
         LOGI("Send request file transfer.");
+    }
+
+    void FileTransferChannel::CompleteSending(const std::shared_ptr<SendFile>& file) {
+        tc::Message msg;
+        msg.set_type(MessageType::kFileTransfer);
+        auto fs = msg.mutable_file_transfer();
+        fs->set_state(FileTransfer_FileTransferState_kTransferOver);
+        fs->set_file_type(FileTransfer_FileType_kFile);
+        fs->set_filename(file->file_->FileName());
+        fs->set_filesize(file->file_size_);
+        auto proto_msg = msg.SerializeAsString();
+        client_->async_send(proto_msg);
+
+        LOGI("Complete sending.");
     }
 
     void FileTransferChannel::ParseRespMessage(std::string_view _data) {
@@ -141,8 +163,19 @@ namespace tc
             if (rft.state() == RespFileTransfer_FileTransferRespState_kTransferReady) {
                 continue_sending_ = true;
                 LOGI("Continue to send file");
+                send_cv_.notify_one();
+            } else if (rft.state() == RespFileTransfer_FileTransferRespState_kFileDeleteFailed) {
+                LOGE("Remote is not ready, file can't be deleted.");
+                context_->PostUITask([=]() {
+                    QMessageBox::critical(nullptr, "Error", std::format("Can't delete in remote").c_str());
+                });
+                continue_sending_ = false;
+                send_cv_.notify_one();
+            } else if (rft.state() == RespFileTransfer_FileTransferRespState_kTransferSuccess) {
+                context_->PostUITask([=]() {
+                    QMessageBox::information(nullptr, "Info", std::format("Transfer success").c_str());
+                });
             }
-            send_cv_.notify_one();
         }
     }
 

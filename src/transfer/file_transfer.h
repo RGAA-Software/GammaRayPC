@@ -32,6 +32,7 @@ namespace tc
     private:
         void RequestSendingFile(const std::shared_ptr<SendFile>& file);
         void ParseRespMessage(std::string_view data);
+        void CompleteSending(const std::shared_ptr<SendFile>& file);
 
     private:
         std::shared_ptr<ClientContext> context_ = nullptr;
