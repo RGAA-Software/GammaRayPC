@@ -9,6 +9,7 @@
 #include "settings.h"
 #include "send_file.h"
 #include "tc_message.pb.h"
+#include "ui/sized_msg_box.h"
 #include <QMessageBox>
 
 namespace tc
@@ -82,6 +83,12 @@ namespace tc
             while(!file_queue.empty() && !stop_sending_) {
                 auto send_file = file_queue.front();
                 file_queue.pop();
+
+                if (!send_file->IsOpen()) {
+                    ErrorDialog(std::format("Can't open file: {}", send_file->file_path_.toStdString()).c_str());
+                    continue;
+                }
+
                 // 2.1 request to send the file
                 this->RequestSendingFile(send_file);
 
@@ -103,19 +110,18 @@ namespace tc
                         send_failed = true;
                         return true;
                     }
-                    client_->async_send(proto_msg);
-                    // 2.4 checking
-//                    if (send_size != proto_msg.size()) {
-//                        LOGE("Send failed, send_size({}) != proto_msg.size({})", send_size, proto_msg.size());
-//                    }
+                    client_->async_send(proto_msg, [=](size_t send_size) {
+                        if (send_size != proto_msg.size()) {
+                            LOGE("Send failed, expect: {}, but only {} send", proto_msg.size(), send_size);
+                        }
+                    });
                     return false;
                 });
 
                 if (send_failed) {
-                    LOGE("Send failed!");
+                    ErrorDialog(std::format("Send file: {} failed, please check your network.", send_file->file_path_.toStdString()).c_str());
                 } else {
                     CompleteSending(send_file);
-
                 }
             }
         });
@@ -129,6 +135,7 @@ namespace tc
         fs->set_file_type(FileTransfer_FileType_kFile);
         fs->set_filename(file->file_->FileName());
         fs->set_filesize(file->file_size_);
+        fs->set_local_filepath(file->file_path_.toStdString());
         auto proto_msg = msg.SerializeAsString();
         client_->async_send(proto_msg);
 
@@ -143,6 +150,7 @@ namespace tc
         fs->set_file_type(FileTransfer_FileType_kFile);
         fs->set_filename(file->file_->FileName());
         fs->set_filesize(file->file_size_);
+        fs->set_local_filepath(file->file_path_.toStdString());
         auto proto_msg = msg.SerializeAsString();
         client_->async_send(proto_msg);
 
@@ -157,26 +165,41 @@ namespace tc
             return;
         }
 
-        LOGI("Resp type: {}", (int)msg->type());
         if (msg->type() == MessageType::kRespFileTransfer) {
             auto rft = msg->resp_file_transfer();
             if (rft.state() == RespFileTransfer_FileTransferRespState_kTransferReady) {
                 continue_sending_ = true;
-                LOGI("Continue to send file");
                 send_cv_.notify_one();
+
             } else if (rft.state() == RespFileTransfer_FileTransferRespState_kFileDeleteFailed) {
-                LOGE("Remote is not ready, file can't be deleted.");
-                context_->PostUITask([=]() {
-                    QMessageBox::critical(nullptr, "Error", std::format("Can't delete in remote").c_str());
-                });
+                ErrorDialog(std::format("Can't delete file: {} in remote!", rft.filename()).c_str());
                 continue_sending_ = false;
                 send_cv_.notify_one();
+
             } else if (rft.state() == RespFileTransfer_FileTransferRespState_kTransferSuccess) {
-                context_->PostUITask([=]() {
-                    QMessageBox::information(nullptr, "Info", std::format("Transfer success").c_str());
-                });
+                InfoDialog(std::format("Transfer file: {} success", rft.filename()).c_str());
+
+            } else if (rft.state() == RespFileTransfer_FileTransferRespState_kTransferFailed) {
+                ErrorDialog(std::format("Transfer failed: {}", rft.filename()).c_str());
+
+            } else if (rft.state() == RespFileTransfer_FileTransferRespState_kTransferring) {
+                LOGI("Transferring file {} , progress: {}", rft.filename(), (int)(rft.progress()*100));
             }
         }
+    }
+
+    void FileTransferChannel::InfoDialog(const QString& msg) {
+        context_->PostUITask([=]() {
+            auto dialog = SizedMessageBox::MakeInfoOkBox("Info", msg);
+            dialog->exec();
+        });
+    }
+
+    void FileTransferChannel::ErrorDialog(const QString& msg) {
+        context_->PostUITask([=]() {
+            auto dialog = SizedMessageBox::MakeErrorOkBox("Error", msg);
+            dialog->exec();
+        });
     }
 
 }

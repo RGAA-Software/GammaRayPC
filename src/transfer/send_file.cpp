@@ -30,7 +30,11 @@ namespace tc
         return true;
     }
 
-    std::string SendFile::MakeTransferMessage(uint64_t offset, std::shared_ptr<Data>&& data) {
+    bool SendFile::IsOpen() const {
+        return file_ && file_->IsOpen();
+    }
+
+    std::string SendFile::MakeTransferMessage(uint64_t offset, std::shared_ptr<Data>&& data) const {
         tc::Message msg;
         msg.set_type(MessageType::kFileTransfer);
         auto fs = msg.mutable_file_transfer();
