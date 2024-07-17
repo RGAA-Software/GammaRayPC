@@ -6,11 +6,12 @@
 #include "client_context.h"
 #include "tc_common_new/log.h"
 #include "tc_common_new/thread.h"
+#include "tc_common_new/time_ext.h"
 #include "settings.h"
 #include "send_file.h"
 #include "tc_message.pb.h"
 #include "ui/sized_msg_box.h"
-#include <QMessageBox>
+#include "file_transfer_events.h"
 
 namespace tc
 {
@@ -131,7 +132,8 @@ namespace tc
         tc::Message msg;
         msg.set_type(MessageType::kFileTransfer);
         auto fs = msg.mutable_file_transfer();
-        fs->set_state(FileTransfer_FileTransferState_kRequestFileTransfer);
+        fs->set_id(file->id_);
+        fs->set_state(FileTransfer::kRequestFileTransfer);
         fs->set_file_type(FileTransfer_FileType_kFile);
         fs->set_filename(file->file_->FileName());
         fs->set_filesize(file->file_size_);
@@ -146,7 +148,8 @@ namespace tc
         tc::Message msg;
         msg.set_type(MessageType::kFileTransfer);
         auto fs = msg.mutable_file_transfer();
-        fs->set_state(FileTransfer_FileTransferState_kTransferOver);
+        fs->set_id(file->id_);
+        fs->set_state(FileTransfer::kTransferOver);
         fs->set_file_type(FileTransfer_FileType_kFile);
         fs->set_filename(file->file_->FileName());
         fs->set_filesize(file->file_size_);
@@ -167,23 +170,62 @@ namespace tc
 
         if (msg->type() == MessageType::kRespFileTransfer) {
             auto rft = msg->resp_file_transfer();
-            if (rft.state() == RespFileTransfer_FileTransferRespState_kTransferReady) {
+            if (rft.state() == RespFileTransfer::kTransferReady) {
+                LOGI("Transfer ready for : {}", rft.filename());
                 continue_sending_ = true;
                 send_cv_.notify_one();
 
-            } else if (rft.state() == RespFileTransfer_FileTransferRespState_kFileDeleteFailed) {
+                context_->SendAppMessage(EvtFileTransferReady {
+                    .id_ = rft.id(),
+                    .name_ = rft.filename(),
+                    .path_ = rft.local_filepath(),
+                    .total_size_ = rft.filesize(),
+                    .timestamp_ = TimeExt::GetCurrentTimestamp(),
+                });
+
+            } else if (rft.state() == RespFileTransfer::kFileDeleteFailed) {
                 ErrorDialog(std::format("Can't delete file: {} in remote!", rft.filename()).c_str());
                 continue_sending_ = false;
                 send_cv_.notify_one();
 
-            } else if (rft.state() == RespFileTransfer_FileTransferRespState_kTransferSuccess) {
+                context_->SendAppMessage(EvtFileTransferDeleteFailed {
+                    .id_ = rft.id(),
+                    .name_ = rft.filename(),
+                    .path_ = rft.local_filepath(),
+                    .timestamp_ = TimeExt::GetCurrentTimestamp(),
+                });
+
+            } else if (rft.state() == RespFileTransfer::kTransferSuccess) {
                 InfoDialog(std::format("Transfer file: {} success", rft.filename()).c_str());
 
-            } else if (rft.state() == RespFileTransfer_FileTransferRespState_kTransferFailed) {
+                context_->SendAppMessage(EvtFileTransferSuccess {
+                    .id_ = rft.id(),
+                    .name_ = rft.filename(),
+                    .path_ = rft.local_filepath(),
+                    .timestamp_ = TimeExt::GetCurrentTimestamp(),
+                });
+
+            } else if (rft.state() == RespFileTransfer::kTransferFailed) {
                 ErrorDialog(std::format("Transfer failed: {}", rft.filename()).c_str());
 
-            } else if (rft.state() == RespFileTransfer_FileTransferRespState_kTransferring) {
-                LOGI("Transferring file {} , progress: {}", rft.filename(), (int)(rft.progress()*100));
+                context_->SendAppMessage(EvtFileTransferFailed {
+                        .id_ = rft.id(),
+                        .name_ = rft.filename(),
+                        .path_ = rft.local_filepath(),
+                        .timestamp_ = TimeExt::GetCurrentTimestamp(),
+                });
+
+            } else if (rft.state() == RespFileTransfer::kTransferring) {
+                //LOGI("Transferring file {} , progress: {}", rft.filename(), (int)(rft.progress()*100));
+                context_->SendAppMessage(EvtFileTransferring {
+                        .id_ = rft.id(),
+                        .name_ = rft.filename(),
+                        .path_ = rft.local_filepath(),
+                        .progress_ = rft.progress(),
+                        .total_size_ = rft.filesize(),
+                        .transferred_size_ = rft.transferred_size(),
+                        .timestamp_ = TimeExt::GetCurrentTimestamp(),
+                });
             }
         }
     }
@@ -201,5 +243,4 @@ namespace tc
             dialog->exec();
         });
     }
-
 }

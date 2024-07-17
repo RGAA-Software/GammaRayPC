@@ -16,12 +16,13 @@ namespace tc
     public:
         explicit SendFile(const QString& file_path, int read_block_size);
         bool Send(SendTask && task);
-        bool IsOpen() const;
+        [[nodiscard]] bool IsOpen() const;
 
     private:
         std::string MakeTransferMessage(uint64_t offset, std::shared_ptr<Data>&& data) const;
 
     public:
+        std::string id_;
         QString file_path_;
         QString file_name_;
         std::shared_ptr<File> file_ = nullptr;

@@ -3,6 +3,11 @@
 //
 
 #include "notification_panel.h"
+#include "no_margin_layout.h"
+#include "notification_item.h"
+#include "client_context.h"
+#include "tc_common_new/message_notifier.h"
+
 #include <QGraphicsDropShadowEffect>
 
 namespace tc
@@ -16,6 +21,31 @@ namespace tc
         ps->setOffset(0, 0);
         ps->setColor(0x999999);
         this->setGraphicsEffect(ps);
+
+        list_ = new QListWidget(this);
+        list_->setResizeMode(QListView::ResizeMode::Fixed);
+        list_->setMovement(QListView::Movement::Static);
+        list_->setFlow(QListView::Flow::TopToBottom);
+        list_->setHorizontalScrollBarPolicy(Qt::ScrollBarPolicy::ScrollBarAlwaysOff);
+
+        auto root_layout = new NoMarginVLayout();
+        root_layout->addWidget(list_);
+        setLayout(root_layout);
+
+        msg_listener_ = context_->ObtainMessageListener();
+        msg_listener_->Listen<EvtFileTransferReady>([=, this](const EvtFileTransferReady& evt) {
+            context_->PostUITask([=, this]() {
+                AddItem(evt);
+            });
+        });
+    }
+
+    void NotificationPanel::AddItem(const EvtFileTransferReady& evt) {
+        auto widget = new NotificationItem(this);
+        auto item = new QListWidgetItem();
+        item->setSizeHint(QSize(this->width(), 90));
+        list_->addItem(item);
+        list_->setItemWidget(item, widget);
     }
 
     void NotificationPanel::paintEvent(QPaintEvent *event) {

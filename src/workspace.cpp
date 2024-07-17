@@ -201,7 +201,7 @@ namespace tc
 
     void Workspace::UpdateNotificationHandlePosition() {
         int notification_panel_width = 0;
-        int offset_border = 5;
+        int offset_border = 8;
         int handle_offset = 0;
         if (!notification_panel_->isHidden()) {
             notification_panel_width = notification_panel_->width();

@@ -5,6 +5,8 @@
 #include "send_file.h"
 #include "tc_common_new/file.h"
 #include "tc_message.pb.h"
+#include "tc_common_new/md5.h"
+#include "tc_common_new/time_ext.h"
 
 namespace tc
 {
@@ -17,6 +19,7 @@ namespace tc
             this->file_size_ = this->file_->Size();
             this->file_name_ = QString::fromStdString(this->file_->FileName());
         }
+        this->id_ = MD5::Hex(this->file_path_.toStdString() + std::to_string(TimeExt::GetCurrentTimestamp()));
     }
 
     bool SendFile::Send(SendTask&& task) {
