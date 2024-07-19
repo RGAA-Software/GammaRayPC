@@ -27,6 +27,7 @@ namespace tc
         list_->setMovement(QListView::Movement::Static);
         list_->setFlow(QListView::Flow::TopToBottom);
         list_->setHorizontalScrollBarPolicy(Qt::ScrollBarPolicy::ScrollBarAlwaysOff);
+        list_->setStyleSheet("QListWidget::item:selected { background-color: transparent; }");
 
         auto root_layout = new NoMarginVLayout();
         root_layout->addWidget(list_);
@@ -38,6 +39,10 @@ namespace tc
                 AddItem(evt);
             });
         });
+
+        for (int i = 0; i < 10; i++) {
+            AddItem(EvtFileTransferReady{});
+        }
     }
 
     void NotificationPanel::AddItem(const EvtFileTransferReady& evt) {

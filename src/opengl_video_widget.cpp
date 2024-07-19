@@ -123,7 +123,7 @@ namespace tc
 	}
 
 	void OpenGLVideoWidget::RefreshRGBBuffer(const char* buf, int width, int height, int channel) {
-		//std::lock_guard<std::mutex> guard(buf_mtx);
+		std::lock_guard<std::mutex> guard(buf_mtx);
 		int size = width * height * channel;
 		if (!rgb_buffer) {
 			rgb_buffer = (char*)malloc(size);
@@ -138,6 +138,7 @@ namespace tc
 	}
 
 	void OpenGLVideoWidget::RefreshI420Image(const std::shared_ptr<RawImage>& image) {
+        std::lock_guard<std::mutex> guard(buf_mtx);
 		int y_buf_size = image->img_width * image->img_height;
 		int uv_buf_size = y_buf_size / 4;
 		char* buf = image->Data();
@@ -181,6 +182,7 @@ namespace tc
 	}
 
 	void OpenGLVideoWidget::paintGL() {
+        std::lock_guard<std::mutex> guard(buf_mtx);
 		if (!shader_program) {
 			return;
 		}
@@ -197,7 +199,6 @@ namespace tc
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
 		if (raw_image_format == RawImageFormat::kRGBA || raw_image_format == RawImageFormat::kRGB) {
-
 			if (rgb_buffer && need_create_texture) {
 				need_create_texture = false;
 				InitRGBATexture();
@@ -209,7 +210,6 @@ namespace tc
 			}
 		}
 		else if (raw_image_format == RawImageFormat::kI420) {
-
 			if (y_buffer && u_buffer && v_buffer && need_create_texture) {
 				need_create_texture = false;
 				InitI420Texture();
