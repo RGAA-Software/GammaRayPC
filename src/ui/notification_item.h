@@ -9,13 +9,17 @@
 #include <QPainter>
 #include <QLabel>
 #include <QProgressBar>
+#include <string>
+#include <QPixmap>
 
 namespace tc
 {
 
+    class ClientContext;
+
     class NotificationItem : public QWidget {
     public:
-        NotificationItem(QWidget* parent = nullptr);
+        explicit NotificationItem(const std::shared_ptr<ClientContext>& ctx, const std::string& nid, const std::string& icon_path = "", QWidget* parent = nullptr);
 
         void paintEvent(QPaintEvent *event) override;
         void enterEvent(QEnterEvent *event) override;
@@ -23,13 +27,20 @@ namespace tc
         void mousePressEvent(QMouseEvent *event) override;
         void mouseReleaseEvent(QMouseEvent *event) override;
 
+        void UpdateTitle(const std::string& title);
+        void UpdateProgress(int progress);
+
     private:
+        std::shared_ptr<ClientContext> context_ = nullptr;
         bool enter_ = false;
         bool pressed_ = false;
         QLabel* icon_ = nullptr;
         QLabel* title_ = nullptr;
         QLabel* sub_title_ = nullptr;
+        QLabel* progress_info_ = nullptr;
         QProgressBar* progress_ = nullptr;
+        std::string nid_;
+        QPixmap icon_pixmap_;
     };
 
 }

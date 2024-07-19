@@ -41,6 +41,7 @@ namespace tc
         tc::Message msg;
         msg.set_type(MessageType::kFileTransfer);
         auto fs = msg.mutable_file_transfer();
+        fs->set_id(this->id_);
         fs->set_state(FileTransfer_FileTransferState_kTransferring);
         fs->set_file_type(FileTransfer_FileType_kFile);
         fs->set_relative_path("");

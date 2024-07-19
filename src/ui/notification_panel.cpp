@@ -7,6 +7,7 @@
 #include "notification_item.h"
 #include "client_context.h"
 #include "tc_common_new/message_notifier.h"
+#include "tc_common_new/log.h"
 
 #include <QGraphicsDropShadowEffect>
 
@@ -36,21 +37,43 @@ namespace tc
         msg_listener_ = context_->ObtainMessageListener();
         msg_listener_->Listen<EvtFileTransferReady>([=, this](const EvtFileTransferReady& evt) {
             context_->PostUITask([=, this]() {
+                LOGI("----> ready: {}", evt.id_);
                 AddItem(evt);
+                notifications_[evt.id_]->UpdateTitle(evt.name_.c_str());
             });
         });
 
-        for (int i = 0; i < 10; i++) {
-            AddItem(EvtFileTransferReady{});
-        }
+        msg_listener_->Listen<EvtFileTransferring>([=, this](const EvtFileTransferring& evt) {
+            if (notifications_.contains(evt.id_)) {
+                notifications_[evt.id_]->UpdateProgress(evt.progress_*100);
+            }
+        });
+
+        msg_listener_->Listen<EvtFileTransferFailed>([=, this](const EvtFileTransferFailed& evt) {
+
+        });
+
+        msg_listener_->Listen<EvtFileTransferSuccess>([=, this](const EvtFileTransferSuccess& evt) {
+            context_->PostUITask([=, this]() {
+                if (notifications_.contains(evt.id_)) {
+                    notifications_[evt.id_]->UpdateProgress(100);
+                }
+            });
+        });
+
+        msg_listener_->Listen<EvtFileTransferDeleteFailed>([=, this](const EvtFileTransferDeleteFailed& evt) {
+
+        });
     }
 
     void NotificationPanel::AddItem(const EvtFileTransferReady& evt) {
-        auto widget = new NotificationItem(this);
+        auto widget = new NotificationItem(context_, evt.id_, ":resources/image/ic_transfer.png", this);
         auto item = new QListWidgetItem();
         item->setSizeHint(QSize(this->width(), 90));
-        list_->addItem(item);
+        //list_->addItem(item);
+        list_->insertItem(0, item);
         list_->setItemWidget(item, widget);
+        notifications_.insert({evt.id_, widget});
     }
 
     void NotificationPanel::paintEvent(QPaintEvent *event) {

@@ -171,7 +171,7 @@ namespace tc
         if (msg->type() == MessageType::kRespFileTransfer) {
             auto rft = msg->resp_file_transfer();
             if (rft.state() == RespFileTransfer::kTransferReady) {
-                LOGI("Transfer ready for : {}", rft.filename());
+                LOGI("Transfer ready for : {}, id: {}", rft.filename(), rft.id());
                 continue_sending_ = true;
                 send_cv_.notify_one();
 
@@ -196,6 +196,7 @@ namespace tc
                 });
 
             } else if (rft.state() == RespFileTransfer::kTransferSuccess) {
+                LOGI("Transfer success: {}, id: {}", rft.filename(), rft.id());
                 InfoDialog(std::format("Transfer file: {} success", rft.filename()).c_str());
 
                 context_->SendAppMessage(EvtFileTransferSuccess {
@@ -206,6 +207,7 @@ namespace tc
                 });
 
             } else if (rft.state() == RespFileTransfer::kTransferFailed) {
+                LOGE("Transfer failed: {}, id: {}", rft.filename(), rft.id());
                 ErrorDialog(std::format("Transfer failed: {}", rft.filename()).c_str());
 
                 context_->SendAppMessage(EvtFileTransferFailed {
@@ -216,7 +218,7 @@ namespace tc
                 });
 
             } else if (rft.state() == RespFileTransfer::kTransferring) {
-                //LOGI("Transferring file {} , progress: {}", rft.filename(), (int)(rft.progress()*100));
+                //LOGI("Transferring file {}, progress: {}, id: {}", rft.filename(), (int)(rft.progress()*100), rft.id());
                 context_->SendAppMessage(EvtFileTransferring {
                         .id_ = rft.id(),
                         .name_ = rft.filename(),
