@@ -52,6 +52,7 @@ namespace tc
         std::string name_;
         std::string path_;
         uint64_t timestamp_;
+        uint64_t total_size_;
     };
 
 }

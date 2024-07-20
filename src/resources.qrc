@@ -31,6 +31,6 @@
         <file>resources/image/tc_icon_raw.png</file>
         <file>resources/font/blade.ttf</file>
         <file>resources/font/quixotic-1.otf</file>
-        <file>resources/image/ic_transfer.png</file>
+        <file>resources/image/ic_transfer.svg</file>
     </qresource>
 </RCC>

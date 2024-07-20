@@ -10,6 +10,7 @@
 #include "tc_common_new/log.h"
 
 #include <QGraphicsDropShadowEffect>
+#include <QPushButton>
 
 namespace tc
 {
@@ -31,46 +32,81 @@ namespace tc
         list_->setStyleSheet("QListWidget::item:selected { background-color: transparent; }");
 
         auto root_layout = new NoMarginVLayout();
+        {
+            auto layout = new NoMarginHLayout();
+            layout->addStretch();
+            auto btn = new QPushButton(this);
+            btn->setFixedSize(170, 35);
+            btn->setText(tr("Clear Notifications"));
+            btn->setStyleSheet("font-size: 12px;");
+            btn->setProperty("flat", true);
+            btn->setProperty("class", "danger");
+            connect(btn, &QPushButton::clicked, this, [=, this]() {
+                this->ClearCompletedNotifications();
+            });
+            layout->addWidget(btn);
+            layout->addSpacing(0);
+            root_layout->addSpacing(3);
+            root_layout->addLayout(layout);
+        }
         root_layout->addWidget(list_);
         setLayout(root_layout);
 
         msg_listener_ = context_->ObtainMessageListener();
         msg_listener_->Listen<EvtFileTransferReady>([=, this](const EvtFileTransferReady& evt) {
             context_->PostUITask([=, this]() {
-                LOGI("----> ready: {}", evt.id_);
                 AddItem(evt);
-                notifications_[evt.id_]->UpdateTitle(evt.name_.c_str());
+                auto item = notifications_[evt.id_];
+                item->UpdateProgressUpdateTime(evt.timestamp_);
+                item->UpdateTitle(evt.name_);
             });
         });
 
         msg_listener_->Listen<EvtFileTransferring>([=, this](const EvtFileTransferring& evt) {
             if (notifications_.contains(evt.id_)) {
-                notifications_[evt.id_]->UpdateProgress(evt.progress_*100);
+                auto item = notifications_[evt.id_];
+                item->UpdateProgressDataSize(evt.transferred_size_);
+                item->UpdateProgressUpdateTime(evt.timestamp_);
+                item->UpdateProgress(evt.progress_*100);
             }
         });
 
         msg_listener_->Listen<EvtFileTransferFailed>([=, this](const EvtFileTransferFailed& evt) {
-
+            context_->PostUITask([=, this]() {
+                if (notifications_.contains(evt.id_)) {
+                    auto item = notifications_[evt.id_];
+                    item->SetState(NotificationState::kNotificationFailed);
+                }
+            });
         });
 
         msg_listener_->Listen<EvtFileTransferSuccess>([=, this](const EvtFileTransferSuccess& evt) {
             context_->PostUITask([=, this]() {
                 if (notifications_.contains(evt.id_)) {
-                    notifications_[evt.id_]->UpdateProgress(100);
+                    auto item = notifications_[evt.id_];
+                    item->UpdateProgressDataSize(evt.total_size_);
+                    item->UpdateProgressUpdateTime(evt.timestamp_);
+                    item->UpdateProgress(100);
+                    item->SetState(NotificationState::kNotificationSuccess);
                 }
             });
         });
 
         msg_listener_->Listen<EvtFileTransferDeleteFailed>([=, this](const EvtFileTransferDeleteFailed& evt) {
-
+            context_->PostUITask([=, this]() {
+                if (notifications_.contains(evt.id_)) {
+                    auto item = notifications_[evt.id_];
+                    item->SetState(NotificationState::kNotificationFailed);
+                }
+            });
         });
     }
 
     void NotificationPanel::AddItem(const EvtFileTransferReady& evt) {
-        auto widget = new NotificationItem(context_, evt.id_, ":resources/image/ic_transfer.png", this);
+        auto widget = new NotificationItem(context_, evt.id_, ":resources/image/ic_transfer.svg", this);
         auto item = new QListWidgetItem();
         item->setSizeHint(QSize(this->width(), 90));
-        //list_->addItem(item);
+        widget->SetBelongToItem(item);
         list_->insertItem(0, item);
         list_->setItemWidget(item, widget);
         notifications_.insert({evt.id_, widget});
@@ -83,6 +119,19 @@ namespace tc
         painter.setBrush(QBrush(0xffffff));
         int border_radius = 7;
         painter.drawRoundedRect(this->rect(), border_radius, border_radius);
+    }
+
+    void NotificationPanel::ClearCompletedNotifications() {
+        auto it = notifications_.begin();
+        while (it != notifications_.end()) {
+            auto widget = (*it).second;
+            if (widget->IsProgressOver()) {
+                it = notifications_.erase(it);
+                list_->removeItemWidget(widget->BelongToItem());
+            } else {
+                it++;
+            }
+        }
     }
 
 }

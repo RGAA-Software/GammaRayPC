@@ -180,7 +180,7 @@ namespace tc
                     .name_ = rft.filename(),
                     .path_ = rft.local_filepath(),
                     .total_size_ = rft.filesize(),
-                    .timestamp_ = TimeExt::GetCurrentTimestamp(),
+                    .timestamp_ = rft.timestamp(),
                 });
 
             } else if (rft.state() == RespFileTransfer::kFileDeleteFailed) {
@@ -192,18 +192,19 @@ namespace tc
                     .id_ = rft.id(),
                     .name_ = rft.filename(),
                     .path_ = rft.local_filepath(),
-                    .timestamp_ = TimeExt::GetCurrentTimestamp(),
+                    .timestamp_ = rft.timestamp(),
                 });
 
             } else if (rft.state() == RespFileTransfer::kTransferSuccess) {
                 LOGI("Transfer success: {}, id: {}", rft.filename(), rft.id());
-                InfoDialog(std::format("Transfer file: {} success", rft.filename()).c_str());
+                //InfoDialog(std::format("Transfer file: {} success", rft.filename()).c_str());
 
                 context_->SendAppMessage(EvtFileTransferSuccess {
                     .id_ = rft.id(),
                     .name_ = rft.filename(),
                     .path_ = rft.local_filepath(),
-                    .timestamp_ = TimeExt::GetCurrentTimestamp(),
+                    .timestamp_ = rft.timestamp(),
+                    .total_size_ = rft.filesize(),
                 });
 
             } else if (rft.state() == RespFileTransfer::kTransferFailed) {
@@ -214,7 +215,7 @@ namespace tc
                         .id_ = rft.id(),
                         .name_ = rft.filename(),
                         .path_ = rft.local_filepath(),
-                        .timestamp_ = TimeExt::GetCurrentTimestamp(),
+                        .timestamp_ = rft.timestamp(),
                 });
 
             } else if (rft.state() == RespFileTransfer::kTransferring) {

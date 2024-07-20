@@ -5,6 +5,8 @@
 #include"notification_item.h"
 #include "no_margin_layout.h"
 #include "client_context.h"
+#include "tc_common_new/log.h"
+#include "tc_common_new/num_formatter.h"
 #include <QLabel>
 #include <QGraphicsDropShadowEffect>
 
@@ -35,7 +37,7 @@ namespace tc
                 QImage image;
                 image.load(icon_path.c_str());
                 icon_pixmap_ = QPixmap::fromImage(image);
-                icon_pixmap_ = icon_pixmap_.scaled(lbl->width(), lbl->height());
+                icon_pixmap_ = icon_pixmap_.scaled(lbl->width(), lbl->height(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
                 lbl->setPixmap(icon_pixmap_);
             }
 
@@ -50,12 +52,23 @@ namespace tc
             info_layout->addSpacing(13);
             info_layout->addWidget(title_);
 
-            progress_info_ = new QLabel(this);
-            progress_info_->setAlignment(Qt::AlignRight);
-            progress_info_->setFixedWidth(210);
-            progress_info_->setText("0/100");
-            info_layout->addSpacing(4);
-            info_layout->addWidget(progress_info_);
+            {
+                auto layout = new QHBoxLayout();
+
+                transfer_info_ = new QLabel();
+                transfer_info_->setText("0KB/s  0MB");
+                layout->addWidget(transfer_info_);
+
+                layout->addStretch();
+
+                progress_info_ = new QLabel(this);
+                progress_info_->setAlignment(Qt::AlignRight);
+                progress_info_->setFixedWidth(80);
+                progress_info_->setText("0/100");
+                layout->addWidget(progress_info_);
+                info_layout->addSpacing(4);
+                info_layout->addLayout(layout);
+            }
 
             progress_ = new QProgressBar();
             progress_->setMaximum(100);
@@ -87,6 +100,18 @@ namespace tc
         int offset = 15;
         float radius = 7;
         painter.drawRoundedRect(offset-4, 0, this->width()-offset*2, this->height(), radius, radius);
+
+        if (state_ == NotificationState::kNotificationSuccess) {
+            painter.setBrush(QBrush(QColor(0x00bb00)));
+            painter.drawRoundedRect(offset+5, 5, 6, 6, 3, 3);
+            painter.drawRoundedRect(offset+15, 5, 6, 6, 3, 3);
+            painter.drawRoundedRect(offset+25, 5, 6, 6, 3, 3);
+        } else if (state_ == NotificationState::kNotificationFailed) {
+            painter.setBrush(QBrush(QColor(0xbb0000)));
+            painter.drawRoundedRect(offset+5, 5, 6, 6, 3, 3);
+            painter.drawRoundedRect(offset+15, 5, 6, 6, 3, 3);
+            painter.drawRoundedRect(offset+25, 5, 6, 6, 3, 3);
+        }
     }
 
     void NotificationItem::enterEvent(QEnterEvent *event) {
@@ -111,15 +136,66 @@ namespace tc
 
     void NotificationItem::UpdateTitle(const std::string& title) {
         context_->PostUITask([=, this]() {
-            title_->setText(title.c_str());
+            //title_->setText(title.c_str());
+            QFontMetrics fontWidth(title_->font());
+            QString elideNote = fontWidth.elidedText(title.c_str(), Qt::ElideRight, 210);
+            title_->setText(elideNote);
+            title_->setToolTip(title.c_str());
         });
     }
 
     void NotificationItem::UpdateProgress(int progress) {
         context_->PostUITask([=, this]() {
+            if (last_progress_update_time_ == 0) {
+                last_progress_update_time_ = progress_update_time_;
+            }
+            auto diff_time = progress_update_time_ - last_progress_update_time_;
+            if (diff_time > 1000) {
+                auto diff_data_size = progress_data_size_ - last_progress_data_size_;
+                auto diff_time_in_seconds = diff_time / 1000.0f;
+                auto speed = (uint64_t)(diff_data_size / diff_time_in_seconds);
+                last_speed_str_ = NumFormatter::FormatStorageSize(speed);
+                last_progress_data_size_ = progress_data_size_;
+                last_progress_update_time_ = progress_update_time_;
+                transfer_info_->setText(std::format("{}/s  {}", last_speed_str_, NumFormatter::FormatStorageSize(progress_data_size_)).c_str());
+            }
+
+            if (progress == 100) {
+                transfer_info_->setText(std::format("{}/s  {}", last_speed_str_.empty() ? "0" : last_speed_str_, NumFormatter::FormatStorageSize(progress_data_size_)).c_str());
+                progress_over_ = true;
+            }
+
             progress_->setValue(progress);
             progress_info_->setText(std::format("{}/100", progress).c_str());
         });
+    }
+
+    void NotificationItem::UpdateProgressUpdateTime(uint64_t time) {
+        progress_update_time_ = time;
+    }
+
+    void NotificationItem::UpdateProgressDataSize(uint64_t size) {
+        progress_data_size_ = size;
+    }
+
+    void NotificationItem::SetState(const NotificationState& state) {
+        state_ = state;
+        repaint();
+        if (state == NotificationState::kNotificationFailed) {
+            progress_over_ = true;
+        }
+    }
+
+    bool NotificationItem::IsProgressOver() {
+        return progress_over_;
+    }
+
+    void NotificationItem::SetBelongToItem(QListWidgetItem* item) {
+        belong_to_ = item;
+    }
+
+    QListWidgetItem* NotificationItem::BelongToItem() {
+        return belong_to_;
     }
 
 }

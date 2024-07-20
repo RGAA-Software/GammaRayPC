@@ -183,7 +183,6 @@ namespace tc
     void Workspace::dropEvent(QDropEvent *event) {
         QList<QUrl> urls = event->mimeData()->urls();
         if (urls.isEmpty()) {
-            LOGE("Don't have url!");
             return;
         }
         std::vector<QString> files;

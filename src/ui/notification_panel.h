@@ -25,7 +25,9 @@ namespace tc
         explicit NotificationPanel(const std::shared_ptr<ClientContext>& ctx, QWidget* parent = nullptr);
         void paintEvent(QPaintEvent *event) override;
 
+    private:
         void AddItem(const EvtFileTransferReady& evt);
+        void ClearCompletedNotifications();
 
     private:
         QListWidget* list_ = nullptr;
