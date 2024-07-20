@@ -15,12 +15,19 @@
 #include <QPen>
 #include <QBrush>
 #include <QResizeEvent>
+#include <QGraphicsDropShadowEffect>
 
 namespace tc
 {
 
     AddButton::AddButton(QWidget* parent) : QLabel(parent) {
         setFixedSize(50, 50);
+        setStyleSheet("background:#00000000;");
+        auto ps = new QGraphicsDropShadowEffect();
+        ps->setBlurRadius(15);
+        ps->setOffset(0, 0);
+        ps->setColor(0x999999);
+        this->setGraphicsEffect(ps);
     }
 
     void AddButton::paintEvent(QPaintEvent *) {
