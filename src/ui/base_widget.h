@@ -1,5 +1,5 @@
 //
-// Created by hy on 3/07/2024.
+// Created by RGAA on 3/07/2024.
 //
 
 #ifndef GAMMARAYPC_BASE_WIDGET_H

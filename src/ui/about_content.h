@@ -1,5 +1,5 @@
 //
-// Created by hy on 2024/5/21.
+// Created by RGAA on 2024/5/21.
 //
 
 #ifndef GAMMARAYPC_ABOUT_CONTENT_H

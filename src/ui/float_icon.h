@@ -1,5 +1,5 @@
 //
-// Created by hy on 6/07/2024.
+// Created by RGAA on 6/07/2024.
 //
 
 #ifndef GAMMARAYPC_FLOAT_ICON_H
