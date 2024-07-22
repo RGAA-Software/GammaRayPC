@@ -24,6 +24,7 @@
 #include "ui/float_notification_handle.h"
 #include "ui/notification_panel.h"
 #include "transfer/file_transfer.h"
+#include "ui/sized_msg_box.h"
 
 namespace tc
 {
@@ -165,7 +166,12 @@ namespace tc
 
     void Workspace::closeEvent(QCloseEvent *event) {
         LOGI("closed event...");
-        Exit();
+        auto msg_box = SizedMessageBox::MakeOkCancelBox(tr("Stop"), tr("Do you want to STOP the control of remote PC ?"));
+        if (msg_box->exec() == 0) {
+            Exit();
+        } else {
+            event->ignore();
+        }
     }
 
     void Workspace::dragEnterEvent(QDragEnterEvent *event) {
