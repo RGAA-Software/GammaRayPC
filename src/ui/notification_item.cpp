@@ -17,6 +17,9 @@ namespace tc
         context_ = ctx;
         nid_ = nid;
 
+        this->setObjectName("notification_item");
+        this->setStyleSheet(R"(#notification_item {background-color:#00000000;}")");
+
         auto ps = new QGraphicsDropShadowEffect();
         ps->setBlurRadius(5);
         ps->setOffset(0, 0);
