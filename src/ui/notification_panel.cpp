@@ -16,7 +16,8 @@ namespace tc
 {
 
     NotificationPanel::NotificationPanel(const std::shared_ptr<ClientContext>& ctx, QWidget* parent) : BaseWidget(ctx, parent) {
-        this->setStyleSheet(R"(background-color:#00000000;)");
+        this->setObjectName("notification_panel");
+        this->setStyleSheet(R"(#notification_panel {background-color:#00000000;}")");
         this->setFixedWidth(350);
         auto ps = new QGraphicsDropShadowEffect();
         ps->setBlurRadius(15);
@@ -29,7 +30,8 @@ namespace tc
         list_->setMovement(QListView::Movement::Static);
         list_->setFlow(QListView::Flow::TopToBottom);
         list_->setHorizontalScrollBarPolicy(Qt::ScrollBarPolicy::ScrollBarAlwaysOff);
-        list_->setStyleSheet("QListWidget::item:selected { background-color: transparent; }");
+        list_->setStyleSheet("QListWidget {background: #ffffff;}"
+                             "QListWidget::item:selected { background-color: transparent; }");
 
         auto root_layout = new NoMarginVLayout();
         {
@@ -45,8 +47,8 @@ namespace tc
                 this->ClearCompletedNotifications();
             });
             layout->addWidget(btn);
-            layout->addSpacing(0);
-            root_layout->addSpacing(3);
+            layout->addSpacing(5);
+            root_layout->addSpacing(5);
             root_layout->addLayout(layout);
         }
         root_layout->addWidget(list_);
