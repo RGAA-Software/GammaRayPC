@@ -46,6 +46,7 @@ namespace tc
         void SetMultiDisplayMode(MultiDisplayMode mode);
 
     public:
+        std::string version_ = "V 1.1.3";
         bool audio_on_ = false;
         bool clipboard_on_ = true;
         MultiDisplayMode display_mode_ = MultiDisplayMode::kSeparated;

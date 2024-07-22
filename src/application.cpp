@@ -22,6 +22,8 @@
 #include "ui/stream_content.h"
 #include "ui/settings_content.h"
 #include "ui/about_content.h"
+#include "ui/no_margin_layout.h"
+#include "settings.h"
 
 namespace tc
 {
@@ -73,10 +75,18 @@ namespace tc
         app_menu_->SetOnItemClickedCallback([this](const QString& name, int idx) {
             content_widget_->setCurrentIndex(idx);
         });
-        root_layout->addWidget(app_menu_);
 
-//        CreateStreamDialog dialog(context_);
-//        dialog.exec();
+        auto menu_layout = new NoMarginVLayout();
+        menu_layout->addWidget(app_menu_);
+        menu_layout->addStretch();
+
+        auto lbl_version = new QLabel();
+        lbl_version->setFixedWidth(app_menu_->width());
+        lbl_version->setAlignment(Qt::AlignCenter);
+        lbl_version->setText(Settings::Instance()->version_.c_str());
+        menu_layout->addWidget(lbl_version);
+
+        root_layout->addLayout(menu_layout);
 
         // 2. stream list
 

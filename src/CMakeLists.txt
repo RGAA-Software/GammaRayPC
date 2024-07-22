@@ -34,6 +34,7 @@ set(SRCS
         ui/sized_msg_box.cpp
         ui/background_widget.cpp
         ui/base_widget.cpp
+        ui/multi_display_mode_widget.cpp
         db/stream_db_manager.cpp
         db/stream_item.cpp
         application.cpp

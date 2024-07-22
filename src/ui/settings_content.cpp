@@ -7,6 +7,8 @@
 #include "switch_button.h"
 #include "widget_helper.h"
 #include "Settings.h"
+#include "no_margin_layout.h"
+#include "multi_display_mode_widget.h"
 
 namespace tc
 {
@@ -14,23 +16,40 @@ namespace tc
     SettingsContent::SettingsContent(const std::shared_ptr<ClientContext>& ctx, QWidget* parent) : AppContent(ctx, parent) {
         settings_ = Settings::Instance();
 
-        auto root_layout = new QVBoxLayout();
-        root_layout->addSpacing(20);
+        // segment encoder
+        auto tips_label_width = 220;
+        auto tips_label_height = 35;
+        auto tips_label_size = QSize(tips_label_width, tips_label_height);
+        auto input_size = QSize(240, tips_label_height);
+        auto item_margin_left = 20;
+
+        auto root_layout = new NoMarginVLayout();
         {
-            auto layout = new QHBoxLayout();
-            WidgetHelper::ClearMargin(layout);
-            layout->addSpacing(50);
+            // title
+            auto layout = new NoMarginHLayout();
+            auto label = new QLabel(this);
+            label->setText(tr("Settings"));
+            label->setStyleSheet("font-size: 16px; font-weight: 700;");
+            layout->addSpacing(item_margin_left);
+            layout->addWidget(label);
+            root_layout->addSpacing(10);
+            root_layout->addLayout(layout);
+        }
+
+        {
+            auto layout = new NoMarginHLayout();
+            layout->addSpacing(item_margin_left);
 
             auto label = new QLabel(this);
-            label->setFixedSize(330, 40);
-            label->setText(tr("fix the menu at top"));
-            label->setStyleSheet("font-size:12pt;");
+            label->setFixedSize(tips_label_size);
+            label->setText(tr("Audio Enabled"));
+            label->setStyleSheet("font-size:14px;");
             layout->addWidget(label);
 
-            auto switch_btn = new SwitchButton(this);
-            switch_btn->setFixedSize(55, 25);
-            switch_btn->SetClickCallback([this](bool selected) {
-                ;
+            auto switch_btn = new QCheckBox(this);
+            switch_btn->setChecked(settings_->IsAudioEnabled());
+            connect(switch_btn, &QCheckBox::clicked, this, [=, this](bool checked) {
+                settings_->SetAudioEnabled(checked);
             });
             layout->addSpacing(30);
             layout->addWidget(switch_btn);
@@ -39,21 +58,19 @@ namespace tc
             root_layout->addLayout(layout);
         }
         {
-            auto layout = new QHBoxLayout();
-            WidgetHelper::ClearMargin(layout);
-            layout->addSpacing(50);
+            auto layout = new NoMarginHLayout();
+            layout->addSpacing(item_margin_left);
 
             auto label = new QLabel(this);
-            label->setFixedSize(330, 40);
-            label->setText(tr("audio enabled"));
-            label->setStyleSheet("font-size:12pt;");
+            label->setFixedSize(tips_label_size);
+            label->setText(tr("Clipboard Enabled"));
+            label->setStyleSheet("font-size:14px;");
             layout->addWidget(label);
 
-            auto switch_btn = new SwitchButton(this);
-            switch_btn->SetStatus(settings_->IsAudioEnabled());
-            switch_btn->setFixedSize(55, 25);
-            switch_btn->SetClickCallback([this](bool selected) {
-                settings_->SetAudioEnabled(selected);
+            auto switch_btn = new QCheckBox(this);
+            switch_btn->setChecked(settings_->IsClipboardEnabled());
+            connect(switch_btn, &QCheckBox::clicked, this, [=, this](bool checked) {
+                settings_->SetClipboardEnabled(checked);
             });
             layout->addSpacing(30);
             layout->addWidget(switch_btn);
@@ -62,54 +79,29 @@ namespace tc
             root_layout->addLayout(layout);
         }
         {
-            auto layout = new QHBoxLayout();
-            WidgetHelper::ClearMargin(layout);
-            layout->addSpacing(50);
+            auto layout = new NoMarginHLayout();
+            layout->addSpacing(item_margin_left);
 
             auto label = new QLabel(this);
-            label->setFixedSize(330, 40);
-            label->setText(tr("clipboard enabled"));
-            label->setStyleSheet("font-size:12pt;");
-            layout->addWidget(label);
-
-            auto switch_btn = new SwitchButton(this);
-            switch_btn->SetStatus(settings_->IsClipboardEnabled());
-            switch_btn->setFixedSize(55, 25);
-            switch_btn->SetClickCallback([=](bool selected) {
-                settings_->SetClipboardEnabled(selected);
-            });
-            layout->addSpacing(30);
-            layout->addWidget(switch_btn);
-            layout->addStretch();
-
-            root_layout->addLayout(layout);
-        }
-        {
-            auto layout = new QHBoxLayout();
-            WidgetHelper::ClearMargin(layout);
-            layout->addSpacing(50);
-
-            auto label = new QLabel(this);
-            label->setFixedSize(330, 40);
-            label->setText(tr("multiple monitors display mode"));
-            label->setStyleSheet("font-size:12pt;");
+            label->setFixedSize(tips_label_size);
+            label->setText(tr("Multiple Monitors Display Mode"));
+            label->setStyleSheet("font-size:14px;");
             layout->addWidget(label);
             layout->addStretch();
             root_layout->addLayout(layout);
         }
 
         {
-            root_layout->addSpacing(15);
+            root_layout->addSpacing(7);
             auto layout = new QHBoxLayout();
             WidgetHelper::ClearMargin(layout);
-            layout->addSpacing(50);
+            layout->addSpacing(item_margin_left);
 
-#if 0
             // separated
             separated_ = new MultiDisplayModeWidget(MultiDisplayMode::kSeparated, this);
             separated_->SetSelected(settings_->GetMultiDisplayMode() == MultiDisplayMode::kSeparated);
             separated_->setFixedSize(250, 150);
-            separated_->SetOnClickCallback([=]() {
+            separated_->SetOnClickCallback([=, this]() {
                 combined_->SetSelected(false);
                 settings_->SetMultiDisplayMode(MultiDisplayMode::kSeparated);
             });
@@ -120,12 +112,12 @@ namespace tc
             combined_ = new MultiDisplayModeWidget(MultiDisplayMode::kCombined, this);
             combined_->SetSelected(settings_->GetMultiDisplayMode() == MultiDisplayMode::kCombined);
             combined_->setFixedSize(250, 150);
-            combined_->SetOnClickCallback([=]() {
+            combined_->SetOnClickCallback([=, this]() {
                 separated_->SetSelected(false);
                 settings_->SetMultiDisplayMode(MultiDisplayMode::kCombined);
             });
             layout->addWidget(combined_);
-#endif
+
             layout->addStretch();
 
             root_layout->addLayout(layout);
