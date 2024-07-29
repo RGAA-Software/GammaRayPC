@@ -1,4 +1,17 @@
 ### GammaRay Client for PC platform
+#### !!! Please visit the repos !!!
+**[Server](https://github.com/RGAA-Software/GammaRay)**  
+**[Android Client](https://github.com/RGAA-Software/GammaRayAndroid)**
+
+#### 1 Run a PC Client
+#### 1.1 Just double-clicked the GammaRayClient.exe in PC client folder
+![](docs/images/client_main.png)
+
+#### 1.2 Add a remote
+![](docs/images/client_add_remote.png)
+
+#### 1.3 Double-click to connect it and operate it, you can also transfer files
+![](docs/images/client_file_transfer.png)
 
 #### How to build
 #### 1. Clone the repo
@@ -6,8 +19,8 @@
     git clone --recursive ...
 ```
 
-#### 2. Install dependences by VCPKG *OR* use the libraries in [GammaRay]()
-##### 2.1 Install in this repo, please see [GammaRay]()
+#### 2. Install dependencies by VCPKG *OR* use the libraries in [GammaRay]()
+##### 2.1 Installing in this repo, please see [GammaRay]()
 ```c++
     cd {your-project-folder}/deps/tc_3rdparty/vcpkg
 ```
