@@ -9,9 +9,9 @@
 #include <QFile>
 #include <QDebug>
 #include <QIODevice>
-#include <QMediaDevices>
-#include <QAudioFormat>
-#include <QAudioSink>
+//#include <QMediaDevices>
+//#include <QAudioFormat>
+//#include <QAudioSink>
 
 namespace tc
 {
@@ -31,8 +31,8 @@ namespace tc
         bool init = false;
         QIODevice* io = nullptr;
 
-        QMediaDevices* devices_ = nullptr;
-        QAudioSink* sink_ = nullptr;
+//        QMediaDevices* devices_ = nullptr;
+//        QAudioSink* sink_ = nullptr;
     };
 }
 

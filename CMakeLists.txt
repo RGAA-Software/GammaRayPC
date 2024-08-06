@@ -45,7 +45,14 @@ include_directories(${CMAKE_SOURCE_DIR}/deps/tc_3rdparty/asio2/include)
 include_directories(${CMAKE_SOURCE_DIR}/deps/tc_3rdparty/asio2/3rd)
 include_directories(${CMAKE_SOURCE_DIR}/deps/tc_qt_widget)
 include_directories(${CMAKE_BINARY_DIR}/deps/tc_message_new)
-
+if (WIN32)
+    include_directories(${CMAKE_SOURCE_DIR}/deps/tc_3rdparty/ffmpeg/include)
+    link_directories(${CMAKE_SOURCE_DIR}/deps/tc_3rdparty/ffmpeg/lib/x64)
+    include_directories(${CMAKE_SOURCE_DIR}/deps/tc_3rdparty/webrtc/include)
+    link_directories(${CMAKE_SOURCE_DIR}/deps/tc_3rdparty/webrtc/x64)
+    include_directories(${CMAKE_SOURCE_DIR}/deps/tc_3rdparty/openssl/include)
+    link_directories(${CMAKE_SOURCE_DIR}/deps/tc_3rdparty/openssl/x64/lib/VC)
+endif ()
 # 执行的时候就Copy一下，方便测试
 #file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/settings.toml" DESTINATION ${CMAKE_BINARY_DIR})
 
@@ -54,8 +61,8 @@ add_subdirectory(deps)
 
 add_custom_target(tc_build_all COMMENT "Build all targets")
 add_dependencies(tc_build_all GammaRayClient tc_rtc GammaRayClientInner)
-add_custom_command(TARGET tc_build_all POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy
-            "${CMAKE_CURRENT_BINARY_DIR}/deps/tc_webrtc_client/tc_rtc.dll"
-            "${CMAKE_CURRENT_BINARY_DIR}/src/"
-)
+#add_custom_command(TARGET tc_build_all POST_BUILD
+#        COMMAND ${CMAKE_COMMAND} -E copy
+#            "${CMAKE_CURRENT_BINARY_DIR}/deps/tc_webrtc_client/tc_rtc.dll"
+#            "${CMAKE_CURRENT_BINARY_DIR}/src/"
+#)

@@ -4,7 +4,7 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-find_package(Qt6 REQUIRED COMPONENTS Widgets Core OpenGL OpenGLWidgets Multimedia Svg)
+find_package(Qt6 REQUIRED COMPONENTS Widgets Core OpenGL OpenGLWidgets Svg)
 
 include_directories(${CMAKE_SOURCE_DIR})
 include_directories(${CMAKE_SOURCE_DIR}/src)
@@ -104,16 +104,16 @@ if (APPLE)
 endif()
 
 target_link_libraries(${PROJECT_NAME} PRIVATE Qt6::Widgets
-        Qt6::Core Qt6::OpenGL Qt6::OpenGLWidgets Qt6::Multimedia Qt6::Svg
+        Qt6::Core Qt6::OpenGL Qt6::OpenGLWidgets Qt6::Svg
 )
 target_link_libraries(${PROJECT_NAME} PRIVATE tc_common_new tc_message tc_sdk tc_qt_widget)
 target_link_libraries(${PROJECT_NAME} PRIVATE sqlite_orm::sqlite_orm ${Boost_LIBRARIES})
 
 target_link_libraries(GammaRayClientInner PRIVATE Qt6::Widgets
-        Qt6::Core Qt6::OpenGL Qt6::OpenGLWidgets Qt6::Multimedia Qt6::Svg
+        Qt6::Core Qt6::OpenGL Qt6::OpenGLWidgets Qt6::Svg
 )
 target_link_libraries(GammaRayClientInner PRIVATE tc_common_new tc_message tc_sdk tc_qt_widget)
-target_link_libraries(GammaRayClientInner PRIVATE sqlite_orm::sqlite_orm ${Boost_LIBRARIES})
+target_link_libraries(GammaRayClientInner PRIVATE sqlite_orm::sqlite_orm ${Boost_LIBRARIES} libssl64MT.lib libcrypto64MT.lib)
 
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(GammaRayClient})
@@ -124,8 +124,16 @@ if (WIN32)
     add_custom_command(TARGET GammaRayClientInner POST_BUILD
             COMMAND ${QT_ROOT}/bin/windeployqt.exe $<TARGET_FILE:GammaRayClientInner> --no-translations --release
             COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/resources/qt_material"  "${CMAKE_CURRENT_BINARY_DIR}/resources/qt_material"
-            #COMMAND ${CMAKE_COMMAND} -E copy_directory "${VLC_ROOT}/plugins"  "${CMAKE_BINARY_DIR}/plugins"
+            COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_SOURCE_DIR}/deps/tc_3rdparty/ffmpeg/lib/x64/avcodec-59.dll"  "${CMAKE_BINARY_DIR}/src"
+            COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_SOURCE_DIR}/deps/tc_3rdparty/ffmpeg/lib/x64/avdevice-59.dll"  "${CMAKE_BINARY_DIR}/src"
+            COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_SOURCE_DIR}/deps/tc_3rdparty/ffmpeg/lib/x64/avfilter-8.dll"  "${CMAKE_BINARY_DIR}/src"
+            COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_SOURCE_DIR}/deps/tc_3rdparty/ffmpeg/lib/x64/avutil-57.dll"  "${CMAKE_BINARY_DIR}/src"
+            COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_SOURCE_DIR}/deps/tc_3rdparty/ffmpeg/lib/x64/avformat-59.dll"  "${CMAKE_BINARY_DIR}/src"
+            COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_SOURCE_DIR}/deps/tc_3rdparty/ffmpeg/lib/x64/postproc-56.dll"  "${CMAKE_BINARY_DIR}/src"
+            COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_SOURCE_DIR}/deps/tc_3rdparty/ffmpeg/lib/x64/swresample-4.dll"  "${CMAKE_BINARY_DIR}/src"
+            COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_SOURCE_DIR}/deps/tc_3rdparty/ffmpeg/lib/x64/swscale-6.dll"  "${CMAKE_BINARY_DIR}/src"
     )
+
 elseif (APPLE)
 #    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
 #            COMMAND ${QT_ROOT}/bin/macdeployqt $<TARGET_FILE:${PROJECT_NAME}> --no-translations
