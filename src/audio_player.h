@@ -8,10 +8,9 @@
 #include <QMainWindow>
 #include <QFile>
 #include <QDebug>
-#include <QIODevice>
-//#include <QMediaDevices>
-//#include <QAudioFormat>
-//#include <QAudioSink>
+#include <SDL2/SDL.h>
+#include <queue>
+#include <mutex>
 
 namespace tc
 {
@@ -22,17 +21,14 @@ namespace tc
     public:
         AudioPlayer();
         ~AudioPlayer();
-
-        void Init(int samples, int channels);
+        int Init(int freq/*samples eg: 48k*/, int channels);
         void Write(const char* data, int size);
         void Write(const std::shared_ptr<Data>& data);
+        void AudioCallback(void* userdata, Uint8* stream, int len);
 
     private:
-        bool init = false;
-        QIODevice* io = nullptr;
-
-//        QMediaDevices* devices_ = nullptr;
-//        QAudioSink* sink_ = nullptr;
+        std::queue<Uint8> pcm_queue_;
+        std::mutex queue_mutex_;
     };
 }
 

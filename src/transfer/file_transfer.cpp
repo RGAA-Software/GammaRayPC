@@ -65,6 +65,10 @@ namespace tc
         if (client_) {
             client_->stop();
         }
+        sender_thread_->Exit();
+        if (sender_thread_->IsJoinable()) {
+            sender_thread_->Join();
+        }
     }
 
     bool FileTransferChannel::IsConnected() {

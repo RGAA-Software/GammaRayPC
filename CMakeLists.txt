@@ -34,6 +34,7 @@ if(Boost_FOUND)
     MESSAGE(STATUS "Boost_LIBRARIES = ${Boost_LIBRARIES}.")
     MESSAGE(STATUS "Boost_LIB_VERSION = ${Boost_LIB_VERSION}.")
 endif()
+find_package(SDL2 CONFIG REQUIRED)
 
 ## include directories
 include_directories(${CMAKE_SOURCE_DIR}/src)
