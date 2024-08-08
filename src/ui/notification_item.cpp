@@ -7,6 +7,7 @@
 #include "client_context.h"
 #include "tc_common_new/log.h"
 #include "tc_common_new/num_formatter.h"
+#include "tc_common_new/time_ext.h"
 #include <QLabel>
 #include <QGraphicsDropShadowEffect>
 
@@ -33,7 +34,6 @@ namespace tc
             auto lbl = new QLabel(this);
             icon_ = lbl;
             lbl->setFixedSize(45, 45);
-            //lbl->setStyleSheet("background:#909090;");
             root_layout->addWidget(lbl);
 
             if (!icon_path.empty()) {
@@ -80,6 +80,18 @@ namespace tc
             info_layout->addSpacing(1);
             info_layout->addWidget(progress_);
 
+            {
+                auto layout = new NoMarginHLayout();
+                info_layout->addSpacing(5);
+                info_layout->addLayout(layout);
+
+                layout->addStretch();
+                auto lbl = new QLabel();
+                layout->addWidget(lbl);
+                layout->addSpacing(0);
+                lbl->setText(TimeExt::FormatTimestamp(TimeExt::GetCurrentTimestamp()).c_str());
+            }
+
             info_layout->addStretch();
             root_layout->addSpacing(10);
             root_layout->addLayout(info_layout);
@@ -106,14 +118,14 @@ namespace tc
 
         if (state_ == NotificationState::kNotificationSuccess) {
             painter.setBrush(QBrush(QColor(0x00bb00)));
-            painter.drawRoundedRect(offset+5, 5, 6, 6, 3, 3);
-            painter.drawRoundedRect(offset+15, 5, 6, 6, 3, 3);
-            painter.drawRoundedRect(offset+25, 5, 6, 6, 3, 3);
+            painter.drawRoundedRect(offset+5, 5, 4, 4, 2, 2);
+            painter.drawRoundedRect(offset+15, 5, 4, 4, 2, 2);
+            painter.drawRoundedRect(offset+25, 5, 4, 4, 2, 2);
         } else if (state_ == NotificationState::kNotificationFailed) {
             painter.setBrush(QBrush(QColor(0xbb0000)));
-            painter.drawRoundedRect(offset+5, 5, 6, 6, 3, 3);
-            painter.drawRoundedRect(offset+15, 5, 6, 6, 3, 3);
-            painter.drawRoundedRect(offset+25, 5, 6, 6, 3, 3);
+            painter.drawRoundedRect(offset+5, 5, 4, 4, 2, 2);
+            painter.drawRoundedRect(offset+15, 5, 4, 4, 2, 2);
+            painter.drawRoundedRect(offset+25, 5, 4, 4, 2, 2);
         }
     }
 

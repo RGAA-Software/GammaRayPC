@@ -1,34 +1,36 @@
 //
-// Created by RGAA on 10/07/2024.
+// Created by hy on 8/08/2024.
 //
 
-#ifndef GAMMARAYPC_SEND_FILE_H
-#define GAMMARAYPC_SEND_FILE_H
+#ifndef GAMMARAYPC_FS_FILE_H
+#define GAMMARAYPC_FS_FILE_H
 
 #include "tc_common_new/file.h"
 
 namespace tc
 {
-    class File;
 
     using SendTask = std::function<bool(const std::string& proto_msg, uint64_t total_size, uint64_t offset_size)>;
-    class SendFile {
+
+    class FsFile {
     public:
-        explicit SendFile(const QString& file_path, int read_block_size);
+        FsFile(const QString& path, int read_block_size);
         bool Send(SendTask && task);
-        [[nodiscard]] bool IsOpen() const;
+        bool IsOpen() const;
 
     private:
         std::string MakeTransferMessage(uint64_t offset, std::shared_ptr<Data>&& data) const;
 
     public:
-        std::string id_;
+        std::string file_id_;
         QString file_path_;
         QString file_name_;
+        QString ref_path_; // xx/xx/xx.zip
         std::shared_ptr<File> file_ = nullptr;
         int read_block_size_ = 0;
         uint64_t file_size_ = -1;
     };
 
 }
-#endif //GAMMARAYPC_SEND_FILE_H
+
+#endif //GAMMARAYPC_FS_FILE_H

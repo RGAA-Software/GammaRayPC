@@ -15,6 +15,7 @@
 #include "workspace.h"
 #include "application.h"
 #include "tc_common_new/md5.h"
+#include "tc_common_new/log.h"
 #include "settings.h"
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
@@ -57,6 +58,8 @@ int main(int argc, char** argv) {
     QSurfaceFormat::setDefaultFormat(fmt);
     QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts);
 #endif
+
+    Logger::InitLog("GammaRayClientInner.log", true);
 
     QApplication app(argc, argv);
     ParseCommandLine(app);

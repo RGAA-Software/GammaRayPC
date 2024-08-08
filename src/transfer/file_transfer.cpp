@@ -8,7 +8,7 @@
 #include "tc_common_new/thread.h"
 #include "tc_common_new/time_ext.h"
 #include "settings.h"
-#include "send_file.h"
+#include "fs_object.h"
 #include "tc_message.pb.h"
 #include "ui/sized_msg_box.h"
 #include "file_transfer_events.h"
@@ -77,66 +77,76 @@ namespace tc
 
     void FileTransferChannel::SendFiles(const std::vector<QString>& files_path) {
         sender_thread_->Post([=, this]() {
-            std::queue<std::shared_ptr<SendFile>> file_queue;
+            std::queue<std::shared_ptr<FileSystemObject>> fs_queue;
             // 1. read file info
             for (const auto& path : files_path) {
-                auto send_file = std::make_shared<SendFile>(path, 4096);
-                file_queue.push(send_file);
+                auto fs_obj = std::make_shared<FileSystemObject>(path, 4096);
+                fs_queue.push(fs_obj);
             }
 
             // 2. send one by one
-            while(!file_queue.empty() && !stop_sending_) {
-                auto send_file = file_queue.front();
-                file_queue.pop();
+            while(!fs_queue.empty() && !stop_sending_) {
+                auto fs_obj = fs_queue.front();
+                fs_queue.pop();
 
-                if (!send_file->IsOpen()) {
-                    ErrorDialog(std::format("Can't open file: {}", send_file->file_path_.toStdString()).c_str());
-                    continue;
-                }
-
-                // 2.1 request to send the file
-                this->RequestSendingFile(send_file);
-
-                // 2.2 ready to send or error
-                std::unique_lock<std::mutex> lk(send_mtx_);
-                send_cv_.wait_for(lk, std::chrono::seconds(10));
-                if (!continue_sending_) {
-                    LOGW("Ignore sending : {}", send_file->file_path_.toStdString());
-                    continue;
-                }
-                LOGI("Sending: {}, file size: {}", send_file->file_path_.toStdString(), send_file->file_size_);
-
-                bool send_failed = false;
-                send_file->Send([&](const std::string& proto_msg, uint64_t total_size, uint64_t offset) -> bool {
-                    // 2.3 sending
-                    if (!IsConnected()) {
-                        LOGE("Client disconnected when sending file.");
-                        // break the reading cycle
-                        send_failed = true;
-                        return true;
+                if (fs_obj->IsFolder()) {
+                    for (const auto& file : fs_obj->fs_files_) {
+                        SendFile(file);
                     }
-                    client_->async_send(proto_msg, [=](size_t send_size) {
-                        if (send_size != proto_msg.size()) {
-                            LOGE("Send failed, expect: {}, but only {} send", proto_msg.size(), send_size);
-                        }
-                    });
-                    return false;
-                });
-
-                if (send_failed) {
-                    ErrorDialog(std::format("Send file: {} failed, please check your network.", send_file->file_path_.toStdString()).c_str());
                 } else {
-                    CompleteSending(send_file);
+                    SendFile(fs_obj->fs_file_);
                 }
             }
         });
     }
 
-    void FileTransferChannel::RequestSendingFile(const std::shared_ptr<SendFile>& file) {
+    void FileTransferChannel::SendFile(const std::shared_ptr<FsFile>& fs_file) {
+        if (!fs_file || !fs_file->IsOpen()) {
+            ErrorDialog(std::format("Can't open file: {}", fs_file->file_path_.toStdString()).c_str());
+            return;
+        }
+
+        // 2.1 request to send the file
+        this->RequestSendingFile(fs_file);
+
+        // 2.2 ready to send or error
+        std::unique_lock<std::mutex> lk(send_mtx_);
+        send_cv_.wait_for(lk, std::chrono::seconds(10));
+        if (!continue_sending_) {
+            LOGW("Ignore sending : {}", fs_file->file_path_.toStdString());
+            return;
+        }
+        LOGI("Sending: {}, file size: {}", fs_file->file_path_.toStdString(), fs_file->file_size_);
+
+        bool send_failed = false;
+        fs_file->Send([&](const std::string& proto_msg, uint64_t total_size, uint64_t offset) -> bool {
+            // 2.3 sending
+            if (!IsConnected()) {
+                LOGE("Client disconnected when sending file.");
+                // break the reading cycle
+                send_failed = true;
+                return true;
+            }
+            client_->async_send(proto_msg, [=](size_t send_size) {
+                if (send_size != proto_msg.size()) {
+                    LOGE("Send failed, expect: {}, but only {} send", proto_msg.size(), send_size);
+                }
+            });
+            return false;
+        });
+
+        if (send_failed) {
+            ErrorDialog(std::format("Send file: {} failed, please check your network.", fs_file->file_path_.toStdString()).c_str());
+        } else {
+            CompleteSending(fs_file);
+        }
+    }
+
+    void FileTransferChannel::RequestSendingFile(const std::shared_ptr<FsFile>& file) {
         tc::Message msg;
         msg.set_type(MessageType::kFileTransfer);
         auto fs = msg.mutable_file_transfer();
-        fs->set_id(file->id_);
+        fs->set_id(file->file_id_);
         fs->set_state(FileTransfer::kRequestFileTransfer);
         fs->set_file_type(FileTransfer_FileType_kFile);
         fs->set_filename(file->file_->FileName());
@@ -148,11 +158,11 @@ namespace tc
         LOGI("Send request file transfer.");
     }
 
-    void FileTransferChannel::CompleteSending(const std::shared_ptr<SendFile>& file) {
+    void FileTransferChannel::CompleteSending(const std::shared_ptr<FsFile>& file) {
         tc::Message msg;
         msg.set_type(MessageType::kFileTransfer);
         auto fs = msg.mutable_file_transfer();
-        fs->set_id(file->id_);
+        fs->set_id(file->file_id_);
         fs->set_state(FileTransfer::kTransferOver);
         fs->set_file_type(FileTransfer_FileType_kFile);
         fs->set_filename(file->file_->FileName());

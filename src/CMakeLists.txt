@@ -77,8 +77,10 @@ set(SRCS_WS
         ui/notification_panel.cpp
         ui/notification_item.cpp
         transfer/file_transfer.cpp
-        transfer/send_file.cpp
+        transfer/fs_object.cpp
         transfer/file_writer.cpp
+        transfer/fs_file.cpp
+        transfer/fs_folder.cpp
 )
 
 
