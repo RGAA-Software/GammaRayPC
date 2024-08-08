@@ -118,7 +118,6 @@ target_link_libraries(GammaRayClientInner PRIVATE tc_common_new tc_message tc_sd
 target_link_libraries(GammaRayClientInner PRIVATE sqlite_orm::sqlite_orm ${Boost_LIBRARIES} libssl64MT.lib libcrypto64MT.lib)
 target_link_libraries(GammaRayClientInner
         PRIVATE
-        $<TARGET_NAME_IF_EXISTS:SDL2::SDL2main>
         $<IF:$<TARGET_EXISTS:SDL2::SDL2>,SDL2::SDL2,SDL2::SDL2-static>
 )
 
