@@ -18,9 +18,11 @@
 namespace tc
 {
 
+    class FsFile;
+    class FsFolder;
     class Thread;
     class ClientContext;
-    class SendFile;
+    class FileSystemObject;
 
     class FileTransferChannel {
     public:
@@ -30,9 +32,10 @@ namespace tc
         bool IsConnected();
         void SendFiles(const std::vector<QString>& files_path);
     private:
-        void RequestSendingFile(const std::shared_ptr<SendFile>& file);
+        void SendFile(const std::shared_ptr<FsFile>& file);
+        void RequestSendingFile(const std::shared_ptr<FsFile>& file);
         void ParseRespMessage(std::string_view data);
-        void CompleteSending(const std::shared_ptr<SendFile>& file);
+        void CompleteSending(const std::shared_ptr<FsFile>& file);
         void InfoDialog(const QString& msg);
         void ErrorDialog(const QString& msg);
 

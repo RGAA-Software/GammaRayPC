@@ -225,6 +225,9 @@ namespace tc
             context_->Exit();
             context_ = nullptr;
         }
+        if (file_transfer_) {
+            file_transfer_->Exit();
+        }
         qApp->exit(0);
     }
 
