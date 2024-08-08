@@ -152,6 +152,8 @@ namespace tc
         fs->set_filename(file->file_->FileName());
         fs->set_filesize(file->file_size_);
         fs->set_local_filepath(file->file_path_.toStdString());
+        fs->set_ref_folder(file->ref_folder_.toStdString());
+        fs->set_ref_path(file->ref_path_.toStdString());
         auto proto_msg = msg.SerializeAsString();
         client_->async_send(proto_msg);
 
@@ -168,6 +170,8 @@ namespace tc
         fs->set_filename(file->file_->FileName());
         fs->set_filesize(file->file_size_);
         fs->set_local_filepath(file->file_path_.toStdString());
+        fs->set_ref_folder(file->ref_folder_.toStdString());
+        fs->set_ref_path(file->ref_path_.toStdString());
         auto proto_msg = msg.SerializeAsString();
         client_->async_send(proto_msg);
 

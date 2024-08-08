@@ -16,7 +16,7 @@ namespace tc
     class FileSystemObject {
     public:
         explicit FileSystemObject(const QString& file_path, int read_block_size);
-        bool IsFolder();
+        bool IsFolder() const;
 
     public:
         // file

@@ -17,13 +17,19 @@ namespace tc
         if (File::IsFolder(file_path.toStdString())) {
             is_folder_ = true;
             folder_path_ = file_path;
-            LOGI("Path: {}", folder_path_.toStdString());
+            auto dir_name = QDir(folder_path_).dirName();
+            LOGI("** Folder Path: {}", folder_path_.toStdString());
             FolderUtil::VisitAllByQt(file_path.toStdString(), [=, this](VisitResult&& result) {
                 auto abs_file_path = QString::fromStdWString(result.path_);
+                auto filename = QString::fromStdWString(result.name_);
                 auto file = std::make_shared<FsFile>(abs_file_path, read_block_size);
-                file->ref_path_ = abs_file_path.mid(folder_path_.size()+1);
+                auto start_idx = folder_path_.size()+1;
+                file->ref_path_ = dir_name + "/" + abs_file_path.mid(start_idx);
+                file->ref_folder_ = dir_name + "/" + abs_file_path.mid(start_idx, abs_file_path.size()-filename.size()-start_idx).trimmed();
+                file->base_folder_name_ = dir_name;
                 fs_files_.push_back(file);
-                LOGI("Name: {}, Path: {}, folder path: {}", QString::fromStdWString(result.name_).toStdString(), abs_file_path.toStdString(), file->ref_path_.toStdString());
+                LOGI("Name: {}, Path: {}", QString::fromStdWString(result.name_).toStdString(), abs_file_path.toStdString());
+                LOGI("Ref path: {}, Ref folder: {}", file->ref_path_.toStdString(), file->ref_folder_.toStdString());
             });
 
         } else {
@@ -31,7 +37,7 @@ namespace tc
         }
     }
 
-    bool FileSystemObject::IsFolder() {
+    bool FileSystemObject::IsFolder() const {
         return is_folder_;
     }
 

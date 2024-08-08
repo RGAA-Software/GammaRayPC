@@ -7,6 +7,7 @@
 #include "tc_message.pb.h"
 #include "tc_common_new/md5.h"
 #include "tc_common_new/time_ext.h"
+#include "tc_common_new/log.h"
 
 namespace tc
 {
@@ -50,6 +51,9 @@ namespace tc
         fs->set_filesize(this->file_size_);
         fs->set_transferred_size(offset);
         fs->set_file_md5("");
+        fs->set_ref_folder(this->ref_folder_.toStdString());
+        fs->set_ref_path(this->ref_path_.toStdString());
+        LOGI("Send, ref folder: {}, ref path: {}", this->ref_folder_.toStdString(), this->ref_path_.toStdString());
         return msg.SerializeAsString();
     }
 }
