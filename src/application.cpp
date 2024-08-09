@@ -30,6 +30,7 @@ namespace tc
 
     Application::Application(const std::shared_ptr<ClientContext>& ctx, QWidget* parent) {
         context_ = ctx;
+        settings_ = Settings::Instance();
         resize(1515, 768);
         setWindowTitle(tr("GammaRay Client"));
 
@@ -121,7 +122,8 @@ namespace tc
         auto process = new QProcess(this);
         QStringList arguments;
         arguments << std::format("--host={}", item.stream_host).c_str()
-            << std::format("--port={}", item.stream_port).c_str();
+            << std::format("--port={}", item.stream_port).c_str()
+            << std::format("--audio={}", settings_->IsAudioEnabled() ? 1 : 0).c_str();
         qDebug() << "args: " << arguments;
         process->start("./GammaRayClientInner.exe", arguments);
     }

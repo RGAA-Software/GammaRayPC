@@ -25,13 +25,16 @@ namespace tc
         Exit();
     }
 
-    void ClientContext::Init() {
+    void ClientContext::Init(bool render) {
+        render_ = render;
         sp_ = std::make_shared<SharedPreference>();
         sp_->Init("", std::format("app.{}.dat", this->name_));
 
         auto settings = Settings::Instance();
         settings->SetSharedPreference(sp_);
-        settings->LoadSettings();
+        if (!render) {
+            settings->LoadSettings();
+        }
 
         db_mgr_ = std::make_shared<StreamDBManager>();
 
@@ -90,5 +93,8 @@ namespace tc
         return sp_->Get(k);
     }
 
+    bool ClientContext::IsRender() {
+        return render_;
+    }
 
 }

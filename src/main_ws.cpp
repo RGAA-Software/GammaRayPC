@@ -37,12 +37,21 @@ void ParseCommandLine(QApplication& app) {
     QCommandLineOption opt_port("port", "Port", "9999", "0");
     parser.addOption(opt_port);
 
+    QCommandLineOption opt_audio("audio", "Audio enabled", "value", "0");
+    parser.addOption(opt_audio);
+
     parser.process(app);
 
     g_host_ = parser.value(opt_host).toStdString();
     g_port_ = parser.value(opt_port).toInt();
 
-    tc::Settings::Instance()->remote_address_ = g_host_;
+    auto settings = tc::Settings::Instance();
+    settings->remote_address_ = g_host_;
+    auto audio_on = parser.value(opt_audio).toInt();
+    settings->audio_on_ = (audio_on == 1);
+    LOGI("host: {}", g_host_);
+    LOGI("port: {}", g_port_);
+    LOGI("audio on: {}", settings->audio_on_);
 }
 
 int main(int argc, char** argv) {
@@ -82,7 +91,7 @@ int main(int argc, char** argv) {
 
     auto name = MD5::Hex(host).substr(0, 10);
     auto ctx = std::make_shared<ClientContext>(name);
-    ctx->Init();
+    ctx->Init(true);
     static Workspace ws(ctx, ThunderSdkParams {
             .ssl_ = false,
             .enable_audio_ = true,

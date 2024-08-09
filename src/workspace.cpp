@@ -138,7 +138,10 @@ namespace tc
         });
 
         sdk_->SetOnAudioFrameDecodedCallback([=, this](const std::shared_ptr<Data>& data, int samples, int channels, int bits) {
-            //LOGI("data size: {}, samples: {}, channel: {}, bits: {}", data->Size(), samples, channels, bits);
+            LOGI("data size: {}, samples: {}, channel: {}, bits: {}, audio on: {}", data->Size(), samples, channels, bits, settings_->IsAudioEnabled());
+            if (!settings_->IsAudioEnabled()) {
+                return;
+            }
             if (!audio_player_) {
                 audio_player_ = std::make_shared<AudioPlayer>();
                 context_->PostUITask([=, this]() {
@@ -146,12 +149,7 @@ namespace tc
                 });
                 return;
             }
-            if (!settings_->IsAudioEnabled()) {
-                return;
-            }
-            context_->PostUITask([=, this]() {
-                audio_player_->Write(data);
-            });
+            audio_player_->Write(data);
         });
     }
 

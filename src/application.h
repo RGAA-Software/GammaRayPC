@@ -25,6 +25,7 @@ namespace tc
     class ClientContext;
     class StreamContent;
     class MessageListener;
+    class Settings;
 
     class Application : public QMainWindow {
     public:
@@ -44,6 +45,7 @@ namespace tc
         QStackedWidget* content_widget_ = nullptr;
         StreamContent* stream_content_ = nullptr;
         MainWindowPrivate* theme_ = nullptr;
+        Settings* settings_ = nullptr;
     };
 
 }

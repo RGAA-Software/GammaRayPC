@@ -30,9 +30,6 @@ namespace tc
             clipboard_on_ = std::atoi(sp_->Get(kKeyClipboardStatus).c_str());
             display_mode_ = (MultiDisplayMode)std::atoi(sp_->Get(kKeyDisplayMode).c_str());
         }
-
-        // test
-        audio_on_ = true;
     }
 
     VideoRenderType Settings::GetVideoRenderType() {

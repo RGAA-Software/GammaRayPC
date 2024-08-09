@@ -24,7 +24,7 @@ namespace tc
 
         explicit ClientContext(const std::string& name, QObject* parent = nullptr);
         ~ClientContext() override;
-        void Init();
+        void Init(bool render);
         void PostTask(std::function<void()>&& task);
         void PostUITask(std::function<void()>&& task);
         std::shared_ptr<MessageNotifier> GetMessageNotifier();
@@ -33,6 +33,7 @@ namespace tc
         void SaveKeyValue(const std::string& k, const std::string& v);
         std::string GetValueByKey(const std::string& k);
         std::shared_ptr<boost::asio::io_context> GetBoostIoContext();
+        bool IsRender();
 
         template<class T>
         void SendAppMessage(const T& msg) {
@@ -50,6 +51,7 @@ namespace tc
         std::shared_ptr<Thread> io_ctx_thread_ = nullptr;
         std::shared_ptr<boost::asio::io_context> boost_io_ctx_ = nullptr;
         std::unique_ptr<boost::asio::executor_work_guard<boost::asio::io_context::executor_type>> work_guard_;
+        bool render_ = false;
     };
 
 }
