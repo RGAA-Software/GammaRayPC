@@ -44,10 +44,10 @@ namespace tc
 		void OnKeyPressEvent(QKeyEvent* event);
 		void OnKeyReleaseEvent(QKeyEvent* event);
         void RegisterMouseKeyboardEventCallback(const OnMouseKeyboardEventCallback& cbk);
+        void SendKeyEvent(quint32 vk, bool down);
 
     private:
         void SendCallback(const std::shared_ptr<NetMessage>& msg);
-        void SendKeyEvent(QKeyEvent* event, bool down);
         void SendMouseEvent(const MouseEventDesc& mouse_event);
 
     protected:

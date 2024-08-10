@@ -206,6 +206,12 @@ namespace tc
         }
     }
 
+    void Workspace::SendWindowsKey(unsigned long vk, bool down) {
+        if (video_widget_) {
+           video_widget_->SendKeyEvent(vk, down);
+        }
+    }
+
     void Workspace::resizeEvent(QResizeEvent *event) {
         UpdateNotificationHandlePosition();
     }
@@ -223,7 +229,6 @@ namespace tc
     }
 
     void Workspace::UpdateLocalCursor(uint32_t type) {
-        LOGI("cursor type: {}", type);
         if (cursor_type_ == type) {
             return;
         }

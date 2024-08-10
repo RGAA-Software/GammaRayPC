@@ -118,13 +118,13 @@ namespace tc
 
 	void VideoWidgetEvent::OnKeyPressEvent(QKeyEvent* e) {
 #ifdef WIN32
-        SendKeyEvent(e, true);
+        SendKeyEvent(e->nativeVirtualKey(), true);
 #endif
 	}
 
 	void VideoWidgetEvent::OnKeyReleaseEvent(QKeyEvent* e) {
 #ifdef WIN32
-        SendKeyEvent(e, false);
+        SendKeyEvent(e->nativeVirtualKey(), false);
 #endif
 	}
 
@@ -138,8 +138,8 @@ namespace tc
         }
     }
 
-    void VideoWidgetEvent::SendKeyEvent(QKeyEvent* e, bool down) {
-        auto vk = e->nativeVirtualKey();
+    void VideoWidgetEvent::SendKeyEvent(quint32 vk, bool down) {
+        LOGI("*VK: 0x{:x}, down: {}", vk, down);
         short num_lock_state = -1;
         if (vk >= VK_NUMPAD0 && vk <= VK_DIVIDE || vk == VK_NUMLOCK   // 17个键
             || vk == VK_HOME || vk == VK_END		// HOME(7) END(1)

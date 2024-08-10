@@ -38,6 +38,7 @@ namespace tc
         void dragEnterEvent(QDragEnterEvent *event) override;
         void dragMoveEvent(QDragMoveEvent *event) override;
         void dropEvent(QDropEvent *event) override;
+        void SendWindowsKey(unsigned long vk, bool down);
 
     private:
         void RegisterSdkMsgCallbacks();

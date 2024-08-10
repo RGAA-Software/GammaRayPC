@@ -111,13 +111,18 @@ int main(int argc, char** argv) {
     ws.show();
 
     HHOOK keyboardHook = SetWindowsHookExA(WH_KEYBOARD_LL, [](int code, WPARAM wParam, LPARAM lParam) -> LRESULT {
+        auto kbd_struct = (KBDLLHOOKSTRUCT *)lParam;
         if (code >= 0 && ws.IsActiveNow()) {
-            if (wParam == WM_KEYDOWN || wParam == WM_KEYUP) {
-                // 检查按下的键是否是需要屏蔽的键
-                auto kbdStruct = (KBDLLHOOKSTRUCT *)lParam;
-                if (kbdStruct->vkCode == VK_LWIN || kbdStruct->vkCode == VK_RWIN) {
-                    return 1;  // 不传递按键消息
-                }
+            bool down = (wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN);
+            if (kbd_struct->vkCode == VK_LWIN || kbd_struct->vkCode == VK_RWIN) {
+                ws.SendWindowsKey(kbd_struct->vkCode, down);
+                return 1; // ignore it , send to remote
+            }
+
+            // Tab was sent in video_widget_event.cpp, and the ALT + TAB are pressed together, sending the TAB here.
+            if (kbd_struct->vkCode == VK_TAB && (GetKeyState(VK_LMENU) < 0 || GetKeyState(VK_RMENU) < 0)) {
+                ws.SendWindowsKey(kbd_struct->vkCode, down);
+                return 1;
             }
         }
         return CallNextHookEx(nullptr, code, wParam, lParam);
