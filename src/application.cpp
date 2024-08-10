@@ -24,6 +24,7 @@
 #include "ui/about_content.h"
 #include "ui/no_margin_layout.h"
 #include "settings.h"
+#include "ui/sized_msg_box.h"
 
 namespace tc
 {
@@ -131,6 +132,15 @@ namespace tc
     void Application::changeEvent(QEvent* event) {
         if (event->type() == QEvent::ActivationChange) {
             qDebug() << "window state: " << isActiveWindow();
+        }
+    }
+
+    void Application::closeEvent(QCloseEvent* event) {
+        auto msg_box = SizedMessageBox::MakeOkCancelBox(tr("Stop"), tr("Do you want to exit GammaRayClient ?"));
+        if (msg_box->exec() == 0) {
+            event->accept();
+        } else {
+            event->ignore();
         }
     }
 

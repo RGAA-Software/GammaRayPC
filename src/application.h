@@ -37,6 +37,7 @@ namespace tc
         void Init();
         void StartStreaming(const StreamItem& item);
         void changeEvent(QEvent *) override;
+        void closeEvent(QCloseEvent *event) override;
 
     private:
         std::shared_ptr<ClientContext> context_ = nullptr;
