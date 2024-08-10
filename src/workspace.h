@@ -43,6 +43,7 @@ namespace tc
         void RegisterSdkMsgCallbacks();
         void Exit();
         void UpdateNotificationHandlePosition();
+        void UpdateLocalCursor(uint32_t type);
 
     private:
         std::shared_ptr<ClientContext> context_ = nullptr;
@@ -58,6 +59,7 @@ namespace tc
         FloatNotificationHandle* notification_handler_ = nullptr;
         NotificationPanel* notification_panel_ = nullptr;
         std::shared_ptr<FileTransferChannel> file_transfer_ = nullptr;
+        uint32_t cursor_type_ = 100000;
     };
 
 }

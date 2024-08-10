@@ -138,7 +138,7 @@ namespace tc
         });
 
         sdk_->SetOnAudioFrameDecodedCallback([=, this](const std::shared_ptr<Data>& data, int samples, int channels, int bits) {
-            LOGI("data size: {}, samples: {}, channel: {}, bits: {}, audio on: {}", data->Size(), samples, channels, bits, settings_->IsAudioEnabled());
+            //LOGI("data size: {}, samples: {}, channel: {}, bits: {}, audio on: {}", data->Size(), samples, channels, bits, settings_->IsAudioEnabled());
             if (!settings_->IsAudioEnabled()) {
                 return;
             }
@@ -150,6 +150,14 @@ namespace tc
                 return;
             }
             audio_player_->Write(data);
+        });
+
+        sdk_->SetOnAudioSpectrumCallback([=](const tc::ServerAudioSpectrum& spectrum) {
+
+        });
+
+        sdk_->SetOnCursorInfoCallback([=, this](const CursorInfoSync& cursor_info) {
+            this->UpdateLocalCursor(cursor_info.type());
         });
     }
 
@@ -212,6 +220,47 @@ namespace tc
         }
         notification_panel_->setGeometry(this->width()-notification_panel_->width() - offset_border, offset_border, notification_panel_->width(), this->height() - 2*offset_border);
         notification_handler_->setGeometry(this->width()-notification_handler_->width()/2 - notification_panel_width-handle_offset, 100, notification_handler_->width(), notification_handler_->height());
+    }
+
+    void Workspace::UpdateLocalCursor(uint32_t type) {
+        LOGI("cursor type: {}", type);
+        if (cursor_type_ == type) {
+            return;
+        }
+        cursor_type_ = type;
+        context_->PostUITask([=, this]() {
+            if (cursor_type_ == CursorInfoSync::kIdcArrow) {
+                this->setCursor(Qt::ArrowCursor);
+            } else if (cursor_type_ == CursorInfoSync::kIdcIBeam) {
+                this->setCursor(Qt::IBeamCursor);
+            } else if (cursor_type_ == CursorInfoSync::kIdcWait) {
+                this->setCursor(Qt::WaitCursor);
+            } else if (cursor_type_ == CursorInfoSync::kIdcCross) {
+                this->setCursor(Qt::CrossCursor);
+            } else if (cursor_type_ == CursorInfoSync::kIdcUpArrow) {
+                this->setCursor(Qt::UpArrowCursor);
+            } else if (cursor_type_ == CursorInfoSync::kIdcSize) {
+                this->setCursor(Qt::SizeAllCursor);
+            } else if (cursor_type_ == CursorInfoSync::kIdcIcon) {
+                this->setCursor(Qt::ArrowCursor);
+            } else if (cursor_type_ == CursorInfoSync::kIdcSizeNWSE) {
+                this->setCursor(Qt::SizeFDiagCursor);
+            } else if (cursor_type_ == CursorInfoSync::kIdcSizeNESW) {
+                this->setCursor(Qt::SizeBDiagCursor);
+            } else if (cursor_type_ == CursorInfoSync::kIdcSizeWE) {
+                this->setCursor(Qt::SizeHorCursor);
+            } else if (cursor_type_ == CursorInfoSync::kIdcSizeNS)  {
+                this->setCursor(Qt::SizeVerCursor);
+            } else if (cursor_type_ == CursorInfoSync::kIdcSizeAll) {
+                this->setCursor(Qt::SizeAllCursor);
+            } else if (cursor_type_ == CursorInfoSync::kIdcHand) {
+                this->setCursor(Qt::PointingHandCursor);
+            } else if (cursor_type_ == CursorInfoSync::kIdcPin) {
+                this->setCursor(Qt::PointingHandCursor);
+            } else if (cursor_type_ == CursorInfoSync::kIdcHelp) {
+                this->setCursor(Qt::WhatsThisCursor);
+            }
+        });
     }
 
     void Workspace::Exit() {
