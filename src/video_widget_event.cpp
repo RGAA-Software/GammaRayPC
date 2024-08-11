@@ -139,7 +139,7 @@ namespace tc
     }
 
     void VideoWidgetEvent::SendKeyEvent(quint32 vk, bool down) {
-        LOGI("*VK: 0x{:x}, down: {}", vk, down);
+        //LOGI("*VK: 0x{:x}, down: {}", vk, down);
         short num_lock_state = -1;
         if (vk >= VK_NUMPAD0 && vk <= VK_DIVIDE || vk == VK_NUMLOCK   // 17个键
             || vk == VK_HOME || vk == VK_END		// HOME(7) END(1)
@@ -181,7 +181,7 @@ namespace tc
     void VideoWidgetEvent::SendMouseEvent(const MouseEventDesc& mouse_event_desc) {
 
         // test to ignore events
-        //if (true) return;
+        if (true) return;
 
         auto msg = std::make_shared<Message>();
         msg->set_type(tc::kMouseEvent);

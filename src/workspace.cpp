@@ -159,6 +159,10 @@ namespace tc
         sdk_->SetOnCursorInfoCallback([=, this](const CursorInfoSync& cursor_info) {
             this->UpdateLocalCursor(cursor_info.type());
         });
+
+        sdk_->SetOnHeartBeatCallback([=, this](const OnHeartBeat& hb) {
+
+        });
     }
 
     void Workspace::changeEvent(QEvent* event) {
