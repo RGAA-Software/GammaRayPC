@@ -46,6 +46,9 @@ namespace tc
     void BackgroundWidget::mouseReleaseEvent(QMouseEvent *event) {
         pressed_ = false;
         repaint();
+        if (click_listener_) {
+            click_listener_(this);
+        }
     }
 
     void BackgroundWidget::SetColors(int normal_color, int enter_color, int pressed_color) {

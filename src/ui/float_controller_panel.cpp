@@ -212,6 +212,12 @@ namespace tc
 
             layout->addStretch();
             root_layout->addWidget(widget);
+
+            widget->SetOnClickListener([=, this](QWidget* w) {
+                if (debug_listener_) {
+                    debug_listener_(widget);
+                }
+            });
         }
         root_layout->addStretch();
         setLayout(root_layout);

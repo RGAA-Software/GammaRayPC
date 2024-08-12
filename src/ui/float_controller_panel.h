@@ -15,7 +15,10 @@ namespace tc
         explicit FloatControllerPanel(const std::shared_ptr<ClientContext>& ctx, QWidget* parent = nullptr);
         void paintEvent(QPaintEvent *event) override;
 
+        void SetOnDebugListener(OnClickListener&& l) { debug_listener_ = l; }
+
     private:
+        OnClickListener debug_listener_;
     };
 
 }

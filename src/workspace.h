@@ -24,6 +24,7 @@ namespace tc
     class FloatNotificationHandle;
     class NotificationPanel;
     class FileTransferChannel;
+    class DebugPanel;
 
     class Workspace : public QMainWindow {
     public:
@@ -45,6 +46,8 @@ namespace tc
         void Exit();
         void UpdateNotificationHandlePosition();
         void UpdateLocalCursor(uint32_t type);
+        void RegisterControllerPanelListeners();
+        void UpdateDebugPanelPosition();
 
     private:
         std::shared_ptr<ClientContext> context_ = nullptr;
@@ -61,6 +64,7 @@ namespace tc
         NotificationPanel* notification_panel_ = nullptr;
         std::shared_ptr<FileTransferChannel> file_transfer_ = nullptr;
         uint32_t cursor_type_ = 100000;
+        DebugPanel* debug_panel_ = nullptr;
     };
 
 }

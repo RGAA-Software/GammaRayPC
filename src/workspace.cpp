@@ -25,6 +25,7 @@
 #include "ui/notification_panel.h"
 #include "transfer/file_transfer.h"
 #include "ui/sized_msg_box.h"
+#include "ui/debug_panel.h"
 
 namespace tc
 {
@@ -59,23 +60,21 @@ namespace tc
 
         setCentralWidget(root_widget);
 
+        // debug panel
+        debug_panel_ = new DebugPanel(context_, this);
+        WidgetHelper::AddShadow(debug_panel_);
+        debug_panel_->hide();
+
         // float controller
         float_controller_ = new FloatController(ctx, this);
         float_controller_->setFixedSize(55, 55);
         int shadow_color = 0x999999;
-        auto shadow = new QGraphicsDropShadowEffect();
-        shadow->setBlurRadius(15);
-        shadow->setOffset(0, 0);
-        shadow->setColor(shadow_color);
-        float_controller_->setGraphicsEffect(shadow);
+        WidgetHelper::AddShadow(float_controller_, shadow_color);
         float_controller_->SetOnClickListener([=, this]() {
             if (!controller_panel_) {
                 controller_panel_ = new FloatControllerPanel(ctx, this);
-                auto ps = new QGraphicsDropShadowEffect();
-                ps->setBlurRadius(15);
-                ps->setOffset(0, 0);
-                ps->setColor(shadow_color);
-                controller_panel_->setGraphicsEffect(ps);
+                WidgetHelper::AddShadow(controller_panel_, shadow_color);
+                RegisterControllerPanelListeners();
             }
             QPoint point = float_controller_->mapToGlobal(QPoint(0, 0));
             point.setX(float_controller_->pos().x() + float_controller_->width() + 10);
@@ -161,7 +160,9 @@ namespace tc
         });
 
         sdk_->SetOnHeartBeatCallback([=, this](const OnHeartBeat& hb) {
-
+            if (debug_panel_) {
+                debug_panel_->UpdateOnHeartBeat(hb);
+            }
         });
     }
 
@@ -175,7 +176,6 @@ namespace tc
     }
 
     void Workspace::closeEvent(QCloseEvent *event) {
-        LOGI("closed event...");
         auto msg_box = SizedMessageBox::MakeOkCancelBox(tr("Stop"), tr("Do you want to STOP the control of remote PC ?"));
         if (msg_box->exec() == 0) {
             Exit();
@@ -185,7 +185,6 @@ namespace tc
     }
 
     void Workspace::dragEnterEvent(QDragEnterEvent *event) {
-        LOGI("DragEnter...");
         event->accept();
         if (event->mimeData()->hasUrls()) {
             event->acceptProposedAction();
@@ -218,6 +217,7 @@ namespace tc
 
     void Workspace::resizeEvent(QResizeEvent *event) {
         UpdateNotificationHandlePosition();
+        UpdateDebugPanelPosition();
     }
 
     void Workspace::UpdateNotificationHandlePosition() {
@@ -270,6 +270,19 @@ namespace tc
                 this->setCursor(Qt::WhatsThisCursor);
             }
         });
+    }
+
+    void Workspace::RegisterControllerPanelListeners() {
+        controller_panel_->SetOnDebugListener([=, this](QWidget* w) {
+            controller_panel_->hide();
+            debug_panel_->setHidden(!debug_panel_->isHidden());
+        });
+    }
+
+    void Workspace::UpdateDebugPanelPosition() {
+        int offset = 140;
+        debug_panel_->resize(this->width()-offset, this->height()-offset);
+        debug_panel_->move(offset/2, offset/2);
     }
 
     void Workspace::Exit() {
