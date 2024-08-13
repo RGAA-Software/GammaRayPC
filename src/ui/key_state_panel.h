@@ -19,11 +19,13 @@ namespace tc
         void paintEvent(QPaintEvent *event) override;
         void UpdateText(const QString& txt);
         void UpdateState(bool pressed);
+        void UpdateIndicator(bool pressed);
 
     private:
         int color_;
         QString txt_;
         bool pressed_ = false;
+        bool indicator_ = false;
     };
 
     class KeyStatePanel : public BaseWidget {
@@ -32,6 +34,11 @@ namespace tc
 
     public:
         KeyItem* alt_item_ = nullptr;
+        KeyItem* shift_item_ = nullptr;
+        KeyItem* control_item_ = nullptr;
+        KeyItem* win_item_ = nullptr;
+        KeyItem* caps_lock_item_ = nullptr;
+        KeyItem* num_lock_item_ = nullptr;
 
     };
 

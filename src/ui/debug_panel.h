@@ -18,6 +18,7 @@ namespace tc
         explicit DebugPanel(const std::shared_ptr<ClientContext>& ctx, QWidget* parent = nullptr);
 
         void resizeEvent(QResizeEvent *event) override;
+        void paintEvent(QPaintEvent *event) override;
 
         void UpdateOnHeartBeat(const OnHeartBeat& hb);
 

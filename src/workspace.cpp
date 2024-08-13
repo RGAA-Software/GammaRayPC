@@ -62,7 +62,7 @@ namespace tc
 
         // debug panel
         debug_panel_ = new DebugPanel(context_, this);
-        WidgetHelper::AddShadow(debug_panel_);
+        WidgetHelper::AddShadow(debug_panel_, 0x999999);
         debug_panel_->hide();
 
         // float controller
@@ -280,7 +280,7 @@ namespace tc
     }
 
     void Workspace::UpdateDebugPanelPosition() {
-        int offset = 140;
+        int offset = 120;
         debug_panel_->resize(this->width()-offset, this->height()-offset);
         debug_panel_->move(offset/2, offset/2);
     }
