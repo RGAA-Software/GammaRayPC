@@ -55,6 +55,7 @@ set(SRCS_WS
         opengl_video_widget.cpp
         qt_key_converter.cpp
         audio_player.cpp
+        clipboard_manager.cpp
         icon.rc ${RES}
         ui/switch_button.cpp
         ui/float_button.cpp
@@ -87,7 +88,7 @@ set(SRCS_WS
 
 
 qt_add_executable(${PROJECT_NAME} WIN32 MANUAL_FINALIZATION ${SRCS})
-qt_add_executable(GammaRayClientInner WIN32 MANUAL_FINALIZATION ${SRCS_WS})
+qt_add_executable(GammaRayClientInner  MANUAL_FINALIZATION ${SRCS_WS}) #WIN32
 #SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES LINK_FLAGS "/MANIFESTUAC:\"level=\'requireAdministrator\' uiAccess=\'false\'\"")
 #SET_TARGET_PROPERTIES(GammaRayClientInner PROPERTIES LINK_FLAGS "/MANIFESTUAC:\"level=\'requireAdministrator\' uiAccess=\'false\'\"")
 if (APPLE)

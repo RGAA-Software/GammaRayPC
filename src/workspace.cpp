@@ -26,6 +26,7 @@
 #include "transfer/file_transfer.h"
 #include "ui/sized_msg_box.h"
 #include "ui/debug_panel.h"
+#include "clipboard_manager.h"
 
 namespace tc
 {
@@ -124,6 +125,10 @@ namespace tc
             file_transfer_ = std::make_shared<FileTransferChannel>(context_);
             file_transfer_->Start();
         });
+
+        // clipboard manager
+        clipboard_mgr_ = std::make_shared<ClipboardManager>(context_);
+        clipboard_mgr_->Monitor();
     }
 
     Workspace::~Workspace() {

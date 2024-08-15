@@ -25,6 +25,7 @@ namespace tc
     class NotificationPanel;
     class FileTransferChannel;
     class DebugPanel;
+    class ClipboardManager;
 
     class Workspace : public QMainWindow {
     public:
@@ -65,6 +66,7 @@ namespace tc
         std::shared_ptr<FileTransferChannel> file_transfer_ = nullptr;
         uint32_t cursor_type_ = 100000;
         DebugPanel* debug_panel_ = nullptr;
+        std::shared_ptr<ClipboardManager> clipboard_mgr_ = nullptr;
     };
 
 }
