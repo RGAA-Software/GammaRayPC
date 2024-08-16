@@ -131,8 +131,10 @@ namespace tc
         });
 
         // clipboard manager
-        clipboard_mgr_ = std::make_shared<ClipboardManager>(context_);
-        clipboard_mgr_->Monitor();
+        if (settings_->clipboard_on_) {
+            clipboard_mgr_ = std::make_shared<ClipboardManager>(context_);
+            clipboard_mgr_->Monitor();
+        }
     }
 
     Workspace::~Workspace() {
@@ -175,7 +177,7 @@ namespace tc
         });
 
         sdk_->SetOnClipboardCallback([=, this](const ClipboardInfo& clipboard) {
-            if (clipboard_mgr_) {
+            if (settings_->clipboard_on_ && clipboard_mgr_) {
                 clipboard_mgr_->UpdateRemoteInfo(QString::fromStdString(clipboard.msg()));
             }
         });

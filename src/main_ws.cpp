@@ -40,6 +40,9 @@ void ParseCommandLine(QApplication& app) {
     QCommandLineOption opt_audio("audio", "Audio enabled", "value", "0");
     parser.addOption(opt_audio);
 
+    QCommandLineOption opt_clipboard("clipboard", "Clipboard", "value", "0" );
+    parser.addOption(opt_clipboard);
+
     parser.process(app);
 
     g_host_ = parser.value(opt_host).toStdString();
@@ -49,9 +52,13 @@ void ParseCommandLine(QApplication& app) {
     settings->remote_address_ = g_host_;
     auto audio_on = parser.value(opt_audio).toInt();
     settings->audio_on_ = (audio_on == 1);
+
+    auto clipboard_on = parser.value(opt_clipboard).toInt();
+    settings->clipboard_on_ = (clipboard_on == 1);
     LOGI("host: {}", g_host_);
     LOGI("port: {}", g_port_);
     LOGI("audio on: {}", settings->audio_on_);
+    LOGI("clipboard on: {}", settings->clipboard_on_);
 }
 
 int main(int argc, char** argv) {

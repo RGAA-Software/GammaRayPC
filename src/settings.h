@@ -48,7 +48,7 @@ namespace tc
     public:
         std::string version_ = "V 1.1.5";
         bool audio_on_ = false;
-        bool clipboard_on_ = true;
+        bool clipboard_on_ = false;
         MultiDisplayMode display_mode_ = MultiDisplayMode::kSeparated;
         VideoRenderType render_type_ = VideoRenderType::kOpenGL;
         std::shared_ptr<SharedPreference> sp_ = nullptr;
