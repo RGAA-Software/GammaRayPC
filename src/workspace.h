@@ -49,6 +49,7 @@ namespace tc
         void UpdateLocalCursor(uint32_t type);
         void RegisterControllerPanelListeners();
         void UpdateDebugPanelPosition();
+        void SendClipboardMessage(const std::string& msg);
 
     private:
         std::shared_ptr<ClientContext> context_ = nullptr;

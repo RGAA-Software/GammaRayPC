@@ -17,9 +17,11 @@ namespace tc
     public:
         explicit ClipboardManager(const std::shared_ptr<ClientContext>& ctx);
         void Monitor();
+        void UpdateRemoteInfo(const QString& info);
 
     private:
         std::shared_ptr<ClientContext> context_ = nullptr;
+        QString remote_info_;
     };
 
 }

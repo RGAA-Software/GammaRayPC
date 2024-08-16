@@ -121,6 +121,10 @@ namespace tc
             this->Exit();
         });
 
+        msg_listener_->Listen<ClipboardMessage>([=, this](const ClipboardMessage& msg) {
+            this->SendClipboardMessage(msg.msg_);
+        });
+
         QTimer::singleShot(100, [=, this](){
             file_transfer_ = std::make_shared<FileTransferChannel>(context_);
             file_transfer_->Start();
@@ -167,6 +171,12 @@ namespace tc
         sdk_->SetOnHeartBeatCallback([=, this](const OnHeartBeat& hb) {
             if (debug_panel_) {
                 debug_panel_->UpdateOnHeartBeat(hb);
+            }
+        });
+
+        sdk_->SetOnClipboardCallback([=, this](const ClipboardInfo& clipboard) {
+            if (clipboard_mgr_) {
+                clipboard_mgr_->UpdateRemoteInfo(QString::fromStdString(clipboard.msg()));
             }
         });
     }
@@ -288,6 +298,16 @@ namespace tc
         int offset = 120;
         debug_panel_->resize(this->width()-offset, this->height()-offset);
         debug_panel_->move(offset/2, offset/2);
+    }
+
+    void Workspace::SendClipboardMessage(const std::string& msg) {
+        if (!sdk_) {
+            return;
+        }
+        tc::Message m;
+        m.set_type(tc::kClipboardInfo);
+        m.mutable_clipboard_info()->set_msg(msg);
+        sdk_->PostBinaryMessage(m.SerializeAsString());
     }
 
     void Workspace::Exit() {
