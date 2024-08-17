@@ -12,6 +12,7 @@ namespace tc
 {
 
     class KeyStatePanel;
+    class FloatIcon;
 
     class DebugPanel : public BaseWidget {
     public:
@@ -24,7 +25,7 @@ namespace tc
 
     private:
         KeyStatePanel* key_state_panel_ = nullptr;
-
+        FloatIcon* close_btn_ = nullptr;
     };
 
 }

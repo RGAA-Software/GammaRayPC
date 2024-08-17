@@ -86,14 +86,14 @@ namespace tc
                     controller_panel_->show();
                 }
             } else {
-                controller_panel_->hide();
+                controller_panel_->Hide();
             }
         });
         float_controller_->SetOnMoveListener([=, this]() {
             if (!controller_panel_) {
                 return;
             }
-            controller_panel_->hide();
+            controller_panel_->Hide();
         });
 
         // notification handle
@@ -131,10 +131,8 @@ namespace tc
         });
 
         // clipboard manager
-        if (settings_->clipboard_on_) {
-            clipboard_mgr_ = std::make_shared<ClipboardManager>(context_);
-            clipboard_mgr_->Monitor();
-        }
+        clipboard_mgr_ = std::make_shared<ClipboardManager>(context_);
+        clipboard_mgr_->Monitor();
     }
 
     Workspace::~Workspace() {
@@ -291,7 +289,7 @@ namespace tc
 
     void Workspace::RegisterControllerPanelListeners() {
         controller_panel_->SetOnDebugListener([=, this](QWidget* w) {
-            controller_panel_->hide();
+            controller_panel_->Hide();
             debug_panel_->setHidden(!debug_panel_->isHidden());
         });
     }

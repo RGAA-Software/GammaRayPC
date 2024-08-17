@@ -78,7 +78,7 @@ namespace tc
 
             root_layout->addLayout(layout);
         }
-        {
+        if (0) {
             auto layout = new NoMarginHLayout();
             layout->addSpacing(item_margin_left);
 
@@ -91,7 +91,7 @@ namespace tc
             root_layout->addLayout(layout);
         }
 
-        {
+        if (0) {
             root_layout->addSpacing(7);
             auto layout = new QHBoxLayout();
             WidgetHelper::ClearMargin(layout);

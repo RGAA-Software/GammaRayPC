@@ -16,29 +16,20 @@ namespace tc
     class SwitchButton : public QWidget {
     public:
         explicit SwitchButton(QWidget *parent = nullptr);
-
         ~SwitchButton() override;
 
         void paintEvent(QPaintEvent *event) override;
-
         void enterEvent(QEnterEvent *event) override;
-
         void leaveEvent(QEvent *event) override;
-
         void mouseReleaseEvent(QMouseEvent *event) override;
-
         void resizeEvent(QResizeEvent *event) override;
-
         void SetStatus(bool enabled);
-
         void SetClickCallback(std::function<void(bool)> &&cbk) { click_cbk_ = cbk; }
 
     private:
-
         void ExecAnimation(bool selected);
 
     private:
-
         int border_color = 0x999999;
         int border_width = 1;
         int normal_bg_color_ = 0xffffff;

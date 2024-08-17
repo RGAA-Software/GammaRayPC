@@ -141,11 +141,10 @@ namespace tc
     void VideoWidgetEvent::SendKeyEvent(quint32 vk, bool down) {
         //LOGI("*VK: 0x{:x}, down: {}", vk, down);
         short num_lock_state = -1;
-        if (vk >= VK_NUMPAD0 && vk <= VK_DIVIDE || vk == VK_NUMLOCK   // 17个键
-            || vk == VK_HOME || vk == VK_END		// HOME(7) END(1)
-            || vk == VK_PRIOR || vk == VK_NEXT	// PAGE_UP(9) PAGE_DOWN(3)
-            || vk == VK_UP || vk == VK_DOWN || vk == VK_LEFT || vk == VK_RIGHT // UP(8) DOWN(2) LEFT(4) RIGHT(6)
-            || vk == VK_INSERT || vk == VK_DELETE ) { // INSERT(0) DELETE(.)
+        if (vk >= VK_NUMPAD0 && vk <= VK_DIVIDE || vk == VK_NUMLOCK
+            || vk == VK_HOME || vk == VK_END || vk == VK_PRIOR || vk == VK_NEXT
+            || vk == VK_UP || vk == VK_DOWN || vk == VK_LEFT || vk == VK_RIGHT
+            || vk == VK_INSERT || vk == VK_DELETE ) {
             num_lock_state = GetKeyState(VK_NUMLOCK);
         }
 

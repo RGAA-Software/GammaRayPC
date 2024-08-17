@@ -67,7 +67,7 @@ namespace tc
     }
 
     void FloatIcon::SetIcons(const QString& normal_path, const QString& selected_path) {
-        auto icon_size = QSize(this->width()-15, this->height()-15);
+        auto icon_size = QSize(this->width()-10, this->height()-10);
         {
             QImage image;
             image.load(normal_path);

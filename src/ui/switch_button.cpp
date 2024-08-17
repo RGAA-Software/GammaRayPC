@@ -52,7 +52,7 @@ namespace tc
 
         if (left_point_ > 0 && right_point_ > 0 && need_repair_) {
             need_repair_ = false;
-            QMetaObject::invokeMethod(this, [=]() {
+            QMetaObject::invokeMethod(this, [=, this]() {
                 ExecAnimation(selected);
             });
         }
@@ -97,7 +97,7 @@ namespace tc
             auto anim = new QPropertyAnimation();
             anim->setStartValue(left_point_);
             anim->setEndValue(right_point_);
-            connect(anim, &QPropertyAnimation::valueChanged, this, [=](const QVariant &value) {
+            connect(anim, &QPropertyAnimation::valueChanged, this, [=, this](const QVariant &value) {
                 thumb_point_ = value.toInt();
                 update();
             });
@@ -112,7 +112,7 @@ namespace tc
             auto anim = new QPropertyAnimation();
             anim->setStartValue(right_point_);
             anim->setEndValue(left_point_);
-            connect(anim, &QPropertyAnimation::valueChanged, this, [=](const QVariant &value) {
+            connect(anim, &QPropertyAnimation::valueChanged, this, [=, this](const QVariant &value) {
                 thumb_point_ = value.toInt();
                 update();
             });

@@ -32,5 +32,8 @@
         <file>resources/font/blade.ttf</file>
         <file>resources/font/quixotic-1.otf</file>
         <file>resources/image/ic_transfer.svg</file>
+        <file>resources/image/ic_arrow_right_1.svg</file>
+        <file>resources/image/ic_arrow_right_2.svg</file>
+        <file>resources/image/ic_computer.svg</file>
     </qresource>
 </RCC>
