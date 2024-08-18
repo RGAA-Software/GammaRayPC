@@ -3,12 +3,17 @@
 //
 
 #include "base_widget.h"
+#include "client_context.h"
 
 namespace tc
 {
 
     BaseWidget::BaseWidget(const std::shared_ptr<ClientContext>& ctx, QWidget* parent) : QWidget(parent), context_(ctx) {
 
+    }
+
+    void BaseWidget::CreateMsgListener() {
+        msg_listener_ = context_->GetMessageNotifier()->CreateListener();
     }
 
     void BaseWidget::SetOnClickListener(OnClickListener&& l) {

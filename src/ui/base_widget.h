@@ -29,6 +29,7 @@ namespace tc
     public:
         explicit BaseWidget(const std::shared_ptr<ClientContext>& ctx, QWidget* parent = nullptr);
         void SetOnClickListener(OnClickListener&& l);
+        void CreateMsgListener();
 
     protected:
         std::shared_ptr<ClientContext> context_ = nullptr;

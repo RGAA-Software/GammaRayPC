@@ -71,12 +71,12 @@ namespace tc
         float_controller_->setFixedSize(55, 55);
         int shadow_color = 0x999999;
         WidgetHelper::AddShadow(float_controller_, shadow_color);
+        controller_panel_ = new FloatControllerPanel(ctx, this);
+        WidgetHelper::AddShadow(controller_panel_, shadow_color);
+        RegisterControllerPanelListeners();
+        controller_panel_->hide();
+
         float_controller_->SetOnClickListener([=, this]() {
-            if (!controller_panel_) {
-                controller_panel_ = new FloatControllerPanel(ctx, this);
-                WidgetHelper::AddShadow(controller_panel_, shadow_color);
-                RegisterControllerPanelListeners();
-            }
             QPoint point = float_controller_->mapToGlobal(QPoint(0, 0));
             point.setX(float_controller_->pos().x() + float_controller_->width() + 10);
             point.setY(float_controller_->pos().y());
@@ -178,6 +178,20 @@ namespace tc
             if (settings_->clipboard_on_ && clipboard_mgr_) {
                 clipboard_mgr_->UpdateRemoteInfo(QString::fromStdString(clipboard.msg()));
             }
+        });
+
+        sdk_->SetOnServerConfigurationCallback([=, this](const ServerConfiguration& config) {
+            CaptureMonitorMessage msg;
+            msg.capturing_monitor_index_ = config.current_capturing_index();
+            LOGI("capturing: {}", msg.capturing_monitor_index_);
+            for (const auto& item : config.screen_info()) {
+                LOGI("idx: {}, name: {}", item.index(), item.name());
+                msg.monitors_.push_back(CaptureMonitorMessage::CaptureMonitor {
+                    .index_ = item.index(),
+                    .name_ = item.name(),
+                });
+            }
+            context_->SendAppMessage(msg);
         });
     }
 

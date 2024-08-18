@@ -20,7 +20,7 @@ namespace tc
 
     FloatControllerPanel::FloatControllerPanel(const std::shared_ptr<ClientContext>& ctx, QWidget* parent) : BaseWidget(ctx, parent) {
         this->setWindowFlags(Qt::FramelessWindowHint);
-        this->setFixedSize(200, 275);
+        this->setFixedSize(230, 275);
         this->setStyleSheet("background:#00000000;");
         auto root_layout = new QVBoxLayout();
         WidgetHelper::ClearMargin(root_layout);
@@ -30,11 +30,13 @@ namespace tc
         {
             auto layout = new QHBoxLayout();
 
-            {
-                auto ci = new ComputerIcon(ctx, 1, this);
+            for (int i = 0; i < 4; i++) {
+                auto ci = new ComputerIcon(ctx, i, this);
                 ci->setFixedSize(QSize(26, 26));
-                layout->addSpacing(border_spacing);
+                ci->UpdateSelectedState(true);
+                layout->addSpacing(3);
                 layout->addWidget(ci);
+                computer_icons_.insert({i, ci});
             }
 
             layout->addStretch();
@@ -293,9 +295,16 @@ namespace tc
         root_layout->addStretch();
         setLayout(root_layout);
 
-        msg_listener_ = ctx->GetMessageNotifier()->CreateListener();
+        CreateMsgListener();
         msg_listener_->Listen<MousePressedMessage>([=, this](const MousePressedMessage& msg) {
             this->Hide();
+        });
+
+        msg_listener_->Listen<CaptureMonitorMessage>([=, this](const CaptureMonitorMessage& msg) {
+            this->capture_monitor_ = msg;
+            context_->PostUITask([=, this]() {
+                UpdateCaptureMonitorInfo();
+            });
         });
     }
 
@@ -327,5 +336,30 @@ namespace tc
     void FloatControllerPanel::Hide() {
         this->hide();
         this->HideAllSubPanels();
+    }
+
+    void FloatControllerPanel::UpdateCaptureMonitorInfo() {
+        // hide extra icons
+        for (const auto& [idx, icon] : computer_icons_) {
+            bool find = false;
+            for (const auto& mon : capture_monitor_.monitors_) {
+                if (mon.index_ == idx) {
+                    find = true;
+                }
+            }
+            if (!find) {
+                icon->hide();
+            }
+        }
+        // update monitor info
+        for (const auto& item: capture_monitor_.monitors_) {
+            if (computer_icons_.count(item.index_) > 0) {
+                bool selected = false;
+                if (item.index_ == capture_monitor_.capturing_monitor_index_) {
+                    selected = true;
+                }
+                computer_icons_[item.index_]->UpdateSelectedState(selected);
+            }
+        }
     }
 }

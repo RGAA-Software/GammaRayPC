@@ -43,6 +43,9 @@ void ParseCommandLine(QApplication& app) {
     QCommandLineOption opt_clipboard("clipboard", "Clipboard", "value", "0" );
     parser.addOption(opt_clipboard);
 
+    QCommandLineOption opt_ignore_mouse("ignore_mouse", "Ignore mouse event", "value", "0");
+    parser.addOption(opt_ignore_mouse);
+
     parser.process(app);
 
     g_host_ = parser.value(opt_host).toStdString();
@@ -55,10 +58,13 @@ void ParseCommandLine(QApplication& app) {
 
     auto clipboard_on = parser.value(opt_clipboard).toInt();
     settings->clipboard_on_ = (clipboard_on == 1);
+    settings->ignore_mouse_event_ = parser.value(opt_ignore_mouse).toInt() == 1;
+
     LOGI("host: {}", g_host_);
     LOGI("port: {}", g_port_);
     LOGI("audio on: {}", settings->audio_on_);
     LOGI("clipboard on: {}", settings->clipboard_on_);
+    LOGI("ignore mouse event: {}", settings->ignore_mouse_event_);
 }
 
 int main(int argc, char** argv) {

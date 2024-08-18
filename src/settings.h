@@ -55,6 +55,7 @@ namespace tc
         std::string remote_address_;
         int file_transfer_port_ = 20372;
         std::string file_transfer_path_ = "/file/transfer";
+        bool ignore_mouse_event_ = false;
     };
 
 }

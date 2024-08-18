@@ -7,6 +7,7 @@
 #include "tc_client_sdk_new/thunder_sdk.h"
 #include "client_context.h"
 #include "app_message.h"
+#include "settings.h"
 
 #ifdef WIN32
 #include <Windows.h>
@@ -180,7 +181,9 @@ namespace tc
     void VideoWidgetEvent::SendMouseEvent(const MouseEventDesc& mouse_event_desc) {
 
         // test to ignore events
-        //if (true) return;
+        if (Settings::Instance()->ignore_mouse_event_) {
+            return;
+        }
 
         auto msg = std::make_shared<Message>();
         msg->set_type(tc::kMouseEvent);

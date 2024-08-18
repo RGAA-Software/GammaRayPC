@@ -88,6 +88,19 @@ namespace tc
 
     };
 
+    class CaptureMonitorMessage : public AppMessage {
+    public:
+        class CaptureMonitor {
+        public:
+            int index_;
+            std::string name_;
+        };
+
+    public:
+        int capturing_monitor_index_;
+        std::vector<CaptureMonitor> monitors_;
+    };
+
 }
 
 #endif //SAILFISH_CLIENT_PC_APPMESSAGE_H

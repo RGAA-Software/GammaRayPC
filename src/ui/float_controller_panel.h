@@ -6,6 +6,7 @@
 #define GAMMARAYPC_FLOAT_CONTROLLER_PANEL_H
 
 #include "base_widget.h"
+#include "app_message.h"
 
 namespace tc
 {
@@ -18,6 +19,8 @@ namespace tc
         kDebug,
     };
 
+    class ComputerIcon;
+
     class FloatControllerPanel : public BaseWidget {
     public:
         explicit FloatControllerPanel(const std::shared_ptr<ClientContext>& ctx, QWidget* parent = nullptr);
@@ -29,10 +32,13 @@ namespace tc
     private:
         BaseWidget* GetSubPanel(const SubPanelType& type);
         void HideAllSubPanels();
+        void UpdateCaptureMonitorInfo();
 
     private:
         OnClickListener debug_listener_;
         std::map<SubPanelType, BaseWidget*> sub_panels_;
+        std::map<int, ComputerIcon*> computer_icons_;
+        CaptureMonitorMessage capture_monitor_;
 
     };
 
