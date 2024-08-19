@@ -101,6 +101,18 @@ namespace tc
         std::vector<CaptureMonitor> monitors_;
     };
 
+    class SwitchMonitorMessage : public AppMessage {
+    public:
+        int index_;
+        std::string name_;
+    };
+
+    class MonitorSwitchedMessage : public AppMessage {
+    public:
+        int index_;
+        std::string name_;
+    };
+
 }
 
 #endif //SAILFISH_CLIENT_PC_APPMESSAGE_H

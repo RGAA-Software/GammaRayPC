@@ -37,6 +37,10 @@ namespace tc
                 layout->addSpacing(3);
                 layout->addWidget(ci);
                 computer_icons_.insert({i, ci});
+
+                ci->SetOnClickListener([=, this](auto w) {
+                    SwitchMonitor(ci);
+                });
             }
 
             layout->addStretch();
@@ -306,6 +310,12 @@ namespace tc
                 UpdateCaptureMonitorInfo();
             });
         });
+
+        msg_listener_->Listen<MonitorSwitchedMessage>([=, this](const MonitorSwitchedMessage& msg) {
+            context_->PostUITask([=, this]() {
+                UpdateCapturingMonitor(msg.index_, msg.name_);
+            });
+        });
     }
 
     void FloatControllerPanel::paintEvent(QPaintEvent *event) {
@@ -358,7 +368,25 @@ namespace tc
                 if (item.index_ == capture_monitor_.capturing_monitor_index_) {
                     selected = true;
                 }
+                computer_icons_[item.index_]->SetMonitorName(item.name_);
                 computer_icons_[item.index_]->UpdateSelectedState(selected);
+            }
+        }
+    }
+
+    void FloatControllerPanel::SwitchMonitor(ComputerIcon* w) {
+        context_->SendAppMessage(SwitchMonitorMessage {
+            .index_ = w->GetMonitorIndex(),
+            .name_ = w->GetMonitorName(),
+        });
+    }
+
+    void FloatControllerPanel::UpdateCapturingMonitor(int index, const std::string& name) {
+        for (const auto& [idx, w]: computer_icons_) {
+            if (idx == index) {
+                w->UpdateSelectedState(true);
+            } else {
+                w->UpdateSelectedState(false);
             }
         }
     }

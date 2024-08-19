@@ -125,6 +125,10 @@ namespace tc
             this->SendClipboardMessage(msg.msg_);
         });
 
+        msg_listener_->Listen<SwitchMonitorMessage>([=, this](const SwitchMonitorMessage& msg) {
+            this->SendSwitchMonitorMessage(msg.index_, msg.name_);
+        });
+
         QTimer::singleShot(100, [=, this](){
             file_transfer_ = std::make_shared<FileTransferChannel>(context_);
             file_transfer_->Start();
@@ -192,6 +196,13 @@ namespace tc
                 });
             }
             context_->SendAppMessage(msg);
+        });
+
+        sdk_->SetOnMonitorSwitchedCallback([=, this](const MonitorSwitched& ms) {
+            context_->SendAppMessage(MonitorSwitchedMessage {
+                .index_ = ms.index(),
+                .name_ = ms.name(),
+            });
         });
     }
 
@@ -321,6 +332,17 @@ namespace tc
         tc::Message m;
         m.set_type(tc::kClipboardInfo);
         m.mutable_clipboard_info()->set_msg(msg);
+        sdk_->PostBinaryMessage(m.SerializeAsString());
+    }
+
+    void Workspace::SendSwitchMonitorMessage(int index, const std::string& name) {
+        if (!sdk_) {
+            return;
+        }
+        tc::Message m;
+        m.set_type(tc::kSwitchMonitor);
+        m.mutable_switch_monitor()->set_index(index);
+        m.mutable_switch_monitor()->set_name(name);
         sdk_->PostBinaryMessage(m.SerializeAsString());
     }
 

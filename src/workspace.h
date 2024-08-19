@@ -50,6 +50,7 @@ namespace tc
         void RegisterControllerPanelListeners();
         void UpdateDebugPanelPosition();
         void SendClipboardMessage(const std::string& msg);
+        void SendSwitchMonitorMessage(int index, const std::string& name);
 
     private:
         std::shared_ptr<ClientContext> context_ = nullptr;

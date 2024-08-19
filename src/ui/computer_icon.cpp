@@ -13,7 +13,7 @@ namespace tc
         image.load(":resources/image/ic_computer.svg");
         pixmap_ = QPixmap::fromImage(image);
         pixmap_ = pixmap_.scaled(icon_size_, icon_size_, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-        index_ = idx;
+        monitor_index_ = idx;
     }
 
     void ComputerIcon::paintEvent(QPaintEvent *event) {
@@ -49,7 +49,7 @@ namespace tc
         font.setPointSize(7);
         painter.setFont(font);
         painter.setPen(QPen(0x333333));
-        painter.drawText(QRect(rect().x(), rect().y() - 1, rect().width(), rect().height()), Qt::AlignCenter, std::to_string(index_+1).c_str());
+        painter.drawText(QRect(rect().x(), rect().y() - 1, rect().width(), rect().height()), Qt::AlignCenter, std::to_string(monitor_index_+1).c_str());
 
         if (selected_) {
             painter.setPen(QPen(0x333333));
@@ -87,6 +87,18 @@ namespace tc
     void ComputerIcon::UpdateSelectedState(bool selected) {
         selected_ = selected;
         repaint();
+    }
+
+    void ComputerIcon::SetMonitorName(const std::string& name) {
+        monitor_name_ = name;
+    }
+
+    int ComputerIcon::GetMonitorIndex() {
+        return monitor_index_;
+    }
+
+    std::string ComputerIcon::GetMonitorName() {
+        return monitor_name_;
     }
 
 }

@@ -19,10 +19,14 @@ namespace tc
         void mousePressEvent(QMouseEvent *event) override;
         void mouseReleaseEvent(QMouseEvent *event) override;
         void UpdateSelectedState(bool selected);
+        void SetMonitorName(const std::string& name);
+        int GetMonitorIndex();
+        std::string GetMonitorName();
 
     private:
         QPixmap pixmap_;
-        int index_ = 0;
+        int monitor_index_ = 0;
+        std::string monitor_name_{};
         bool enter_ = false;
         bool pressed_ = false;
         int icon_size_ = 22;

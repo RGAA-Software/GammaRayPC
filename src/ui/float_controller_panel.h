@@ -33,6 +33,8 @@ namespace tc
         BaseWidget* GetSubPanel(const SubPanelType& type);
         void HideAllSubPanels();
         void UpdateCaptureMonitorInfo();
+        void SwitchMonitor(ComputerIcon* w);
+        void UpdateCapturingMonitor(int index, const std::string& name);
 
     private:
         OnClickListener debug_listener_;
