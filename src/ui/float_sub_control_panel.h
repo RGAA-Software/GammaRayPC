@@ -13,7 +13,7 @@ namespace tc
 
     class SubControlPanel : BaseWidget {
     public:
-        SubControlPanel(const std::shared_ptr<ClientContext>& ctx, QWidget* parent = nullptr);
+        explicit SubControlPanel(const std::shared_ptr<ClientContext>& ctx, QWidget* parent = nullptr);
         void paintEvent(QPaintEvent *event) override;
 
     };

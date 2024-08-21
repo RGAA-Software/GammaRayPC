@@ -80,6 +80,7 @@ set(SRCS_WS
         ui/key_state_panel.cpp
         ui/debug_panel.cpp
         ui/float_sub_control_panel.cpp
+        ui/float_sub_mode_panel.cpp
         ui/computer_icon.cpp
         transfer/file_transfer.cpp
         transfer/fs_object.cpp

@@ -7,6 +7,7 @@
 
 #include <memory>
 #include <string>
+#include "tc_message.pb.h"
 
 namespace tc
 {
@@ -44,6 +45,7 @@ namespace tc
         void SetTempAudioEnabled(bool enabled);
         void SetClipboardEnabled(bool enabled);
         void SetMultiDisplayMode(MultiDisplayMode mode);
+        void SetModeMode(SwitchWorkMode::WorkMode mode);
 
     public:
         std::string version_ = "V 1.1.5";
@@ -56,6 +58,7 @@ namespace tc
         int file_transfer_port_ = 20372;
         std::string file_transfer_path_ = "/file/transfer";
         bool ignore_mouse_event_ = false;
+        SwitchWorkMode::WorkMode work_mode_ = SwitchWorkMode::kGame;
     };
 
 }

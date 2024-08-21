@@ -14,6 +14,7 @@
 #include "float_sub_control_panel.h"
 #include "tc_common_new/log.h"
 #include "computer_icon.h"
+#include "float_sub_mode_panel.h"
 
 namespace tc
 {
@@ -131,13 +132,35 @@ namespace tc
             layout->addWidget(icon);
 
             auto text = new QLabel();
-            text->setText(tr("Work Mode ="));
+            text->setText(tr("Mode"));
             text->setStyleSheet(R"(font-weight: bold;)");
             //layout->addSpacing(border_spacing);
             layout->addWidget(text);
 
             layout->addStretch();
+
+            auto icon_right = new QLabel(this);
+            icon_right->setFixedSize(icon_size);
+            icon_right->setStyleSheet(R"( background-image: url(:resources/image/ic_arrow_right_2.svg);
+                                    background-repeat:no-repeat;
+                                    background-position: center center;)");
+            layout->addWidget(icon_right);
+            layout->addSpacing(border_spacing);
+
             root_layout->addWidget(widget);
+            // click
+            widget->SetOnClickListener([=, this](auto w) {
+                auto panel = GetSubPanel(SubPanelType::kWorkMode);
+                if (!panel) {
+                    panel = (BaseWidget*)(new SubModePanel(ctx, (QWidget*)this->parent()));
+                    sub_panels_[SubPanelType::kWorkMode] = panel;
+                    WidgetHelper::AddShadow(panel, 0xbbbbbb);
+                }
+                auto item_pos = this->mapTo((QWidget*)this->parent(), w->pos());
+                HideAllSubPanels();
+                panel->setGeometry(this->pos().x() + this->width(), item_pos.y(), panel->width(), panel->height());
+                panel->show();
+            });
         }
         // control
         {
@@ -184,7 +207,6 @@ namespace tc
                 HideAllSubPanels();
                 panel->setGeometry(this->pos().x() + this->width(), item_pos.y(), panel->width(), panel->height());
                 panel->show();
-                LOGI("{} {} ", panel->x(), panel->y());
             });
         }
         // Display

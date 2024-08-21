@@ -129,6 +129,10 @@ namespace tc
             this->SendSwitchMonitorMessage(msg.index_, msg.name_);
         });
 
+        msg_listener_->Listen<SwitchWorkModeMessage>([=, this](const SwitchWorkModeMessage& msg) {
+            this->SendSwitchWorkModeMessage(msg.mode_);
+        });
+
         QTimer::singleShot(100, [=, this](){
             file_transfer_ = std::make_shared<FileTransferChannel>(context_);
             file_transfer_->Start();
@@ -343,6 +347,17 @@ namespace tc
         m.set_type(tc::kSwitchMonitor);
         m.mutable_switch_monitor()->set_index(index);
         m.mutable_switch_monitor()->set_name(name);
+        sdk_->PostBinaryMessage(m.SerializeAsString());
+    }
+
+    void Workspace::SendSwitchWorkModeMessage(SwitchWorkMode::WorkMode mode) {
+        if (!sdk_) {
+            return;
+        }
+        tc::Message m;
+        m.set_type(tc::kSwitchWorkMode);
+        auto wm = m.mutable_work_mode();
+        wm->set_mode(mode);
         sdk_->PostBinaryMessage(m.SerializeAsString());
     }
 

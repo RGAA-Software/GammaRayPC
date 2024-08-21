@@ -9,6 +9,7 @@
 #include <memory>
 
 #include "db/stream_item.h"
+#include "tc_message.pb.h"
 
 namespace tc
 {
@@ -111,6 +112,11 @@ namespace tc
     public:
         int index_;
         std::string name_;
+    };
+
+    class SwitchWorkModeMessage : public AppMessage {
+    public:
+        SwitchWorkMode::WorkMode mode_;
     };
 
 }

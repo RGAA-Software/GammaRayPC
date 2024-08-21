@@ -51,6 +51,7 @@ namespace tc
         void UpdateDebugPanelPosition();
         void SendClipboardMessage(const std::string& msg);
         void SendSwitchMonitorMessage(int index, const std::string& name);
+        void SendSwitchWorkModeMessage(SwitchWorkMode::WorkMode mode);
 
     private:
         std::shared_ptr<ClientContext> context_ = nullptr;
