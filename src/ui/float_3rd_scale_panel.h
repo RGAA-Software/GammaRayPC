@@ -13,7 +13,7 @@ namespace tc
 {
 
     class Settings;
-    class SwitchButton;
+    class SingleSelectedList;
 
     class ThirdScalePanel : BaseWidget {
     public:
@@ -25,9 +25,7 @@ namespace tc
 
     private:
         Settings* settings_ = nullptr;
-        SwitchButton* sb_keep_ratio_ = nullptr;
-        SwitchButton* sb_fullscreen_ = nullptr;
-        SwitchButton* sb_origin_size_ = nullptr;
+        SingleSelectedList* listview_ = nullptr;
     };
 
 }

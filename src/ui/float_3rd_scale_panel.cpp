@@ -9,7 +9,9 @@
 #include "settings.h"
 #include "client_context.h"
 #include "app_message.h"
+#include "single_selected_list.h"
 #include <QLabel>
+#include <memory>
 
 namespace tc
 {
@@ -18,115 +20,27 @@ namespace tc
         this->setWindowFlags(Qt::FramelessWindowHint);
         this->setStyleSheet("background:#00000000;");
         setFixedSize(200, 130);
-        auto item_height = 38;
-        auto border_spacing = 10;
-        auto item_size = QSize(this->width(), item_height);
         auto root_layout = new NoMarginVLayout();
 
         settings_ = Settings::Instance();
 
-        {
-            auto layout = new NoMarginHLayout();
-            auto widget = new QWidget(this);
-            widget->setLayout(layout);
-            widget->setFixedSize(item_size);
-            layout->addWidget(widget);
-
-            auto lbl = new QLabel();
-            lbl->setText(tr("Keep Aspect Ratio"));
-            layout->addSpacing(border_spacing);
-            layout->addWidget(lbl);
-
-            layout->addStretch();
-
-            auto sb = new SwitchButton(this);
-            sb_keep_ratio_ = sb;
-            sb->setFixedSize(35, 20);
-            sb->SetStatus(settings_->scale_mode_ == ScaleMode::kKeepAspectRatio);
-            layout->addWidget(sb);
-            sb->SetClickCallback([=, this](bool enabled) {
-                if (enabled) {
-                    UpdateScaleMode(ScaleMode::kKeepAspectRatio);
-                }
-                context_->SendAppMessage(SwitchScaleModeMessage {
-                    .mode_ = settings_->scale_mode_,
-                });
-            });
-
-            layout->addSpacing(border_spacing);
-
-            root_layout->addSpacing(5);
-            root_layout->addWidget(widget);
-        }
-        {
-            auto layout = new NoMarginHLayout();
-            auto widget = new QWidget(this);
-            widget->setLayout(layout);
-            widget->setFixedSize(item_size);
-            layout->addWidget(widget);
-
-            auto lbl = new QLabel();
-            lbl->setText(tr("Fullscreen"));
-            layout->addSpacing(border_spacing);
-            layout->addWidget(lbl);
-
-            layout->addStretch();
-
-            auto sb = new SwitchButton(this);
-            sb_fullscreen_ = sb;
-            sb->setFixedSize(35, 20);
-            sb->SetStatus(settings_->scale_mode_ == ScaleMode::kFullscreen);
-            layout->addWidget(sb);
-            sb->SetClickCallback([=, this](bool enabled) {
-                if (enabled) {
-                    UpdateScaleMode(ScaleMode::kFullscreen);
-                }
-                context_->SendAppMessage(SwitchWorkModeMessage {
-                    .mode_ = settings_->work_mode_,
-                });
-            });
-
-            layout->addSpacing(border_spacing);
-
-            root_layout->addSpacing(5);
-            root_layout->addWidget(widget);
-        }
-
-        {
-            auto layout = new NoMarginHLayout();
-            auto widget = new QWidget(this);
-            widget->setLayout(layout);
-            widget->setFixedSize(item_size);
-            layout->addWidget(widget);
-
-            auto lbl = new QLabel();
-            lbl->setText(tr("Origin Size"));
-            layout->addSpacing(border_spacing);
-            layout->addWidget(lbl);
-
-            layout->addStretch();
-
-            auto sb = new SwitchButton(this);
-            sb_origin_size_ = sb;
-            sb->setFixedSize(35, 20);
-            sb->SetStatus(settings_->scale_mode_ == ScaleMode::kOriginSize);
-            layout->addWidget(sb);
-            sb->SetClickCallback([=, this](bool enabled) {
-                if (enabled) {
-                    UpdateScaleMode(ScaleMode::kOriginSize);
-                }
-                context_->SendAppMessage(SwitchScaleModeMessage {
-                    .mode_ = settings_->scale_mode_,
-                });
-            });
-
-            layout->addSpacing(border_spacing);
-
-            root_layout->addSpacing(5);
-            root_layout->addWidget(widget);
-        }
-
-        root_layout->addStretch();
+        listview_ = new SingleSelectedList(this);
+        listview_->setFixedSize(this->size());
+        listview_->UpdateItems({
+            std::make_shared<SingleItem>(SingleItem {
+                   .name_ = "Keep Aspect Ratio",
+                   .icon_path_ = "",
+            }),
+            std::make_shared<SingleItem>(SingleItem {
+                   .name_ = "Fullscreen",
+                   .icon_path_ = "",
+            }),
+            std::make_shared<SingleItem>(SingleItem {
+                   .name_ = "Original Size",
+                   .icon_path_ = "",
+            }),
+        });
+        root_layout->addWidget(listview_);
         setLayout(root_layout);
     }
 
@@ -144,19 +58,7 @@ namespace tc
 
     void ThirdScalePanel::UpdateScaleMode(ScaleMode mode) {
         settings_->scale_mode_ = mode;
-        if (mode == ScaleMode::kKeepAspectRatio) {
-            sb_keep_ratio_->SetStatus(true);
-            sb_fullscreen_->SetStatus(false);
-            sb_origin_size_->SetStatus(false);
-        } else if (mode == ScaleMode::kFullscreen) {
-            sb_keep_ratio_->SetStatus(false);
-            sb_fullscreen_->SetStatus(true);
-            sb_origin_size_->SetStatus(true);
-        } else if (mode == ScaleMode::kOriginSize) {
-            sb_keep_ratio_->SetStatus(false);
-            sb_fullscreen_->SetStatus(false);
-            sb_origin_size_->SetStatus(true);
-        }
+
     }
 
 }
