@@ -21,7 +21,7 @@ namespace tc
 
     FloatControllerPanel::FloatControllerPanel(const std::shared_ptr<ClientContext>& ctx, QWidget* parent) : BaseWidget(ctx, parent) {
         this->setWindowFlags(Qt::FramelessWindowHint);
-        this->setFixedSize(230, 275);
+        this->setFixedSize(230, 285);
         this->setStyleSheet("background:#00000000;");
         auto root_layout = new QVBoxLayout();
         WidgetHelper::ClearMargin(root_layout);
