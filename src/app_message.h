@@ -10,6 +10,7 @@
 
 #include "db/stream_item.h"
 #include "tc_message.pb.h"
+#include "settings.h"
 
 namespace tc
 {
@@ -117,6 +118,11 @@ namespace tc
     class SwitchWorkModeMessage : public AppMessage {
     public:
         SwitchWorkMode::WorkMode mode_;
+    };
+
+    class SwitchScaleModeMessage : public AppMessage {
+    public:
+        ScaleMode mode_;
     };
 
 }

@@ -20,4 +20,12 @@ namespace tc
         click_listener_ = l;
     }
 
+    void BaseWidget::Hide() {
+        this->hide();
+    }
+
+    void BaseWidget::Show() {
+        this->show();
+    }
+
 }

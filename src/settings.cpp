@@ -14,6 +14,7 @@ namespace tc
     const std::string kKeyAudioStatus = "key_audio_status";
     const std::string kKeyClipboardStatus = "key_clipboard_status";
     const std::string kKeyWorkMode = "key_work_mode";
+    const std::string kKeyScaleMode = "key_scale_mode";
 
     void Settings::SetSharedPreference(const std::shared_ptr<SharedPreference>& sp) {
         sp_ = sp;
@@ -74,10 +75,14 @@ namespace tc
         sp_->Put(kKeyDisplayMode, std::to_string((int)mode));
     }
 
-    void Settings::SetModeMode(SwitchWorkMode::WorkMode mode) {
+    void Settings::SetWorkMode(SwitchWorkMode::WorkMode mode) {
         work_mode_ = mode;
         sp_->Put(kKeyWorkMode, std::to_string((int)mode));
     }
 
+    void Settings::SetScaleMOde(ScaleMode mode) {
+        scale_mode_ = mode;
+        sp_->Put(kKeyScaleMode, std::to_string((int)mode));
+    }
 
 }

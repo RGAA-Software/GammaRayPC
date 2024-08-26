@@ -23,6 +23,12 @@ namespace tc
         kCombined,
     };
 
+    enum class ScaleMode {
+        kKeepAspectRatio,
+        kFullscreen,
+        kOriginSize,
+    };
+
     class SharedPreference;
 
     class Settings {
@@ -45,7 +51,8 @@ namespace tc
         void SetTempAudioEnabled(bool enabled);
         void SetClipboardEnabled(bool enabled);
         void SetMultiDisplayMode(MultiDisplayMode mode);
-        void SetModeMode(SwitchWorkMode::WorkMode mode);
+        void SetWorkMode(SwitchWorkMode::WorkMode mode);
+        void SetScaleMOde(ScaleMode mode);
 
     public:
         std::string version_ = "V 1.1.6";
@@ -59,6 +66,8 @@ namespace tc
         std::string file_transfer_path_ = "/file/transfer";
         bool ignore_mouse_event_ = false;
         SwitchWorkMode::WorkMode work_mode_ = SwitchWorkMode::kGame;
+        ScaleMode scale_mode_ = ScaleMode::kKeepAspectRatio;
+
     };
 
 }

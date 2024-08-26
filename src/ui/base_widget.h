@@ -31,6 +31,9 @@ namespace tc
         void SetOnClickListener(OnClickListener&& l);
         void CreateMsgListener();
 
+        virtual void Hide();
+        virtual void Show();
+
     protected:
         std::shared_ptr<ClientContext> context_ = nullptr;
         OnClickListener click_listener_;

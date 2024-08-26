@@ -81,6 +81,9 @@ set(SRCS_WS
         ui/debug_panel.cpp
         ui/float_sub_control_panel.cpp
         ui/float_sub_mode_panel.cpp
+        ui/float_sub_display_panel.cpp
+        ui/float_3rd_scale_panel.cpp
+        ui/float_3rd_resolution_panel.cpp
         ui/computer_icon.cpp
         transfer/file_transfer.cpp
         transfer/fs_object.cpp
