@@ -9,6 +9,7 @@
 #include "settings.h"
 #include "client_context.h"
 #include "app_message.h"
+#include "single_selected_list.h"
 #include <QLabel>
 
 namespace tc
@@ -17,7 +18,7 @@ namespace tc
     ThirdResolutionPanel::ThirdResolutionPanel(const std::shared_ptr<ClientContext>& ctx, QWidget* parent) : BaseWidget(ctx, parent) {
         this->setWindowFlags(Qt::FramelessWindowHint);
         this->setStyleSheet("background:#00000000;");
-        setFixedSize(200, 130);
+        setFixedSize(200, 350);
         auto item_height = 38;
         auto border_spacing = 10;
         auto item_size = QSize(this->width(), item_height);
@@ -25,59 +26,27 @@ namespace tc
 
         settings_ = Settings::Instance();
 
-        {
-            auto layout = new NoMarginHLayout();
-            auto widget = new QWidget(this);
-            widget->setLayout(layout);
-            widget->setFixedSize(item_size);
-            layout->addWidget(widget);
-
-            auto lbl = new QLabel();
-            lbl->setText(tr("1920x1080"));
-            layout->addSpacing(border_spacing);
-            layout->addWidget(lbl);
-            layout->addStretch();
-            layout->addSpacing(border_spacing);
-
-            root_layout->addSpacing(5);
-            root_layout->addWidget(widget);
-        }
-        {
-            auto layout = new NoMarginHLayout();
-            auto widget = new QWidget(this);
-            widget->setLayout(layout);
-            widget->setFixedSize(item_size);
-            layout->addWidget(widget);
-
-            auto lbl = new QLabel();
-            lbl->setText(tr("1600x900"));
-            layout->addSpacing(border_spacing);
-            layout->addWidget(lbl);
-
-            layout->addStretch();
-            layout->addSpacing(border_spacing);
-            root_layout->addSpacing(5);
-            root_layout->addWidget(widget);
-        }
-
-        {
-            auto layout = new NoMarginHLayout();
-            auto widget = new QWidget(this);
-            widget->setLayout(layout);
-            widget->setFixedSize(item_size);
-            layout->addWidget(widget);
-
-            auto lbl = new QLabel();
-            lbl->setText(tr("1280x720"));
-            layout->addSpacing(border_spacing);
-            layout->addWidget(lbl);
-
-            layout->addStretch();
-            layout->addSpacing(border_spacing);
-
-            root_layout->addSpacing(5);
-            root_layout->addWidget(widget);
-        }
+        listview_ = new SingleSelectedList(this);
+        listview_->setFixedSize(this->size());
+        listview_->UpdateItems({
+           std::make_shared<SingleItem>(SingleItem { .name_ = "1920x1080", }),
+           std::make_shared<SingleItem>(SingleItem { .name_ = "1680x1050", }),
+           std::make_shared<SingleItem>(SingleItem { .name_ = "1600x1024", }),
+           std::make_shared<SingleItem>(SingleItem { .name_ = "1600x900", }),
+           std::make_shared<SingleItem>(SingleItem { .name_ = "1400x1080", }),
+           std::make_shared<SingleItem>(SingleItem { .name_ = "1400x1050", }),
+           std::make_shared<SingleItem>(SingleItem { .name_ = "1400x900", }),
+           std::make_shared<SingleItem>(SingleItem { .name_ = "1366x768", }),
+           std::make_shared<SingleItem>(SingleItem { .name_ = "1280x1024", }),
+           std::make_shared<SingleItem>(SingleItem { .name_ = "1280x960", }),
+           std::make_shared<SingleItem>(SingleItem { .name_ = "1280x800", }),
+           std::make_shared<SingleItem>(SingleItem { .name_ = "1280x768", }),
+           std::make_shared<SingleItem>(SingleItem { .name_ = "1280x720", }),
+           std::make_shared<SingleItem>(SingleItem { .name_ = "1152x864", }),
+           std::make_shared<SingleItem>(SingleItem { .name_ = "1024x768", }),
+           std::make_shared<SingleItem>(SingleItem { .name_ = "800x600", }),
+       });
+        root_layout->addWidget(listview_);
 
         root_layout->addStretch();
         setLayout(root_layout);

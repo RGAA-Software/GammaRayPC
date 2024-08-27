@@ -13,6 +13,7 @@ namespace tc
 
     class Settings;
     class SwitchButton;
+    class SingleSelectedList;
 
     class ThirdResolutionPanel : BaseWidget {
     public:
@@ -21,8 +22,7 @@ namespace tc
 
     private:
         Settings* settings_ = nullptr;
-        SwitchButton* sb_work_ = nullptr;
-        SwitchButton* sb_game_ = nullptr;
+        SingleSelectedList* listview_ = nullptr;
     };
 
 }

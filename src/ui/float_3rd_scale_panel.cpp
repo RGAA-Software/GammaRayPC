@@ -42,6 +42,16 @@ namespace tc
         });
         root_layout->addWidget(listview_);
         setLayout(root_layout);
+
+        int target_index = 0;
+        if (settings_->scale_mode_ == ScaleMode::kKeepAspectRatio) {
+            target_index = 0;
+        } else if (settings_->scale_mode_ == ScaleMode::kFullscreen) {
+            target_index = 1;
+        } else if (settings_->scale_mode_ == ScaleMode::kOriginSize) {
+            target_index = 2;
+        }
+        listview_->Select(target_index);
     }
 
     void ThirdScalePanel::paintEvent(QPaintEvent *event) {
