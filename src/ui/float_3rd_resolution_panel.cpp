@@ -29,6 +29,13 @@ namespace tc
         listview_ = new SingleSelectedList(this);
         listview_->setFixedSize(this->size());
         listview_->UpdateItems({
+           std::make_shared<SingleItem>(SingleItem { .name_ = "3840x2160", }),
+           std::make_shared<SingleItem>(SingleItem { .name_ = "2560x1600", }),
+           std::make_shared<SingleItem>(SingleItem { .name_ = "2560x1440", }),
+           std::make_shared<SingleItem>(SingleItem { .name_ = "2560x1080", }),
+           std::make_shared<SingleItem>(SingleItem { .name_ = "2048x1536", }),
+           std::make_shared<SingleItem>(SingleItem { .name_ = "1920x1440", }),
+           std::make_shared<SingleItem>(SingleItem { .name_ = "1920x1200", }),
            std::make_shared<SingleItem>(SingleItem { .name_ = "1920x1080", }),
            std::make_shared<SingleItem>(SingleItem { .name_ = "1680x1050", }),
            std::make_shared<SingleItem>(SingleItem { .name_ = "1600x1024", }),
