@@ -93,7 +93,7 @@ namespace tc
         monitor_name_ = name;
     }
 
-    int ComputerIcon::GetMonitorIndex() {
+    int ComputerIcon::GetMonitorIndex() const {
         return monitor_index_;
     }
 
@@ -101,4 +101,7 @@ namespace tc
         return monitor_name_;
     }
 
+    bool ComputerIcon::IsSelected() {
+        return selected_;
+    }
 }

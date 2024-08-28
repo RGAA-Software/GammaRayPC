@@ -97,4 +97,12 @@ namespace tc
         return render_;
     }
 
+    void ClientContext::UpdateCapturingMonitorIndex(int idx) {
+        capturing_monitor_index_ = idx;
+    }
+
+    int ClientContext::GetCapturingMonitorIndex() {
+        return capturing_monitor_index_;
+    }
+
 }

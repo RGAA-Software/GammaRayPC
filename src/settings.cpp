@@ -17,6 +17,7 @@ namespace tc
     const std::string kKeyScaleMode = "key_scale_mode";
 
     void Settings::SetSharedPreference(const std::shared_ptr<SharedPreference>& sp) {
+        version_ = "V 1.1.7";
         sp_ = sp;
     }
 

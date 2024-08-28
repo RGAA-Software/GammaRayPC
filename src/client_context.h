@@ -34,6 +34,8 @@ namespace tc
         std::string GetValueByKey(const std::string& k);
         std::shared_ptr<boost::asio::io_context> GetBoostIoContext();
         bool IsRender();
+        void UpdateCapturingMonitorIndex(int idx);
+        int GetCapturingMonitorIndex();
 
         template<class T>
         void SendAppMessage(const T& msg) {
@@ -52,6 +54,7 @@ namespace tc
         std::shared_ptr<boost::asio::io_context> boost_io_ctx_ = nullptr;
         std::unique_ptr<boost::asio::executor_work_guard<boost::asio::io_context::executor_type>> work_guard_;
         bool render_ = false;
+        std::atomic_int capturing_monitor_index_ = -1;
     };
 
 }

@@ -27,7 +27,8 @@ namespace tc
         void paintEvent(QPaintEvent *event) override;
 
         void SetOnDebugListener(OnClickListener&& l) { debug_listener_ = l; }
-        void Hide();
+        void Hide() override;
+        int GetCurrentMonitorIndex();
 
     private:
         BaseWidget* GetSubPanel(const SubPanelType& type);

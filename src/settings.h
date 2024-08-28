@@ -55,7 +55,7 @@ namespace tc
         void SetScaleMOde(ScaleMode mode);
 
     public:
-        std::string version_ = "V 1.1.6";
+        std::string version_;
         bool audio_on_ = false;
         bool clipboard_on_ = false;
         MultiDisplayMode display_mode_ = MultiDisplayMode::kSeparated;

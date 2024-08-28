@@ -151,6 +151,7 @@ namespace tc
         sdk_->SetOnVideoFrameDecodedCallback([=, this](const std::shared_ptr<RawImage>& image, const CaptureMonitorInfo& info) {
             video_widget_->RefreshCapturedMonitorInfo(info);
             video_widget_->RefreshI420Image(image);
+            context_->UpdateCapturingMonitorIndex(info.mon_idx_);
         });
 
         sdk_->SetOnAudioFrameDecodedCallback([=, this](const std::shared_ptr<Data>& data, int samples, int channels, int bits) {

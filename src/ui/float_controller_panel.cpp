@@ -436,4 +436,13 @@ namespace tc
             }
         }
     }
+
+    int FloatControllerPanel::GetCurrentMonitorIndex() {
+        for (const auto& [idx, w]: computer_icons_) {
+            if (w->IsSelected()) {
+                return idx;
+            }
+        }
+        return 0;
+    }
 }
