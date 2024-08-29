@@ -44,6 +44,9 @@ namespace tc
         void RefreshCapturedMonitorInfo(const CaptureMonitorInfo &mon_info);
         void Exit();
 
+        int GetCapturingMonitorWidth();
+        int GetCapturingMonitorHeight();
+
     protected:
         void resizeEvent(QResizeEvent *event) override;
         void initializeGL() override;

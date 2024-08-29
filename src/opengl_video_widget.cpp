@@ -178,6 +178,9 @@ namespace tc
 
 	void OpenGLVideoWidget::resizeEvent(QResizeEvent* event) {
 		QOpenGLWidget::resizeEvent(event);
+        if (event->size().width() <= 0 || event->size().height() <= 0) {
+            return;
+        }
         glViewport(0, 0, event->size().width(), event->size().height());
 	}
 
@@ -331,6 +334,14 @@ namespace tc
 
     void OpenGLVideoWidget::RefreshCapturedMonitorInfo(const CaptureMonitorInfo& mon_info) {
         cap_mon_info_ = mon_info;
+    }
+
+    int OpenGLVideoWidget::GetCapturingMonitorWidth() {
+        return cap_mon_info_.Width();
+    }
+
+    int OpenGLVideoWidget::GetCapturingMonitorHeight() {
+        return cap_mon_info_.Height();
     }
 
 	void OpenGLVideoWidget::resizeGL(int width, int height) {

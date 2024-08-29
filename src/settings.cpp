@@ -21,7 +21,7 @@ namespace tc
         sp_ = sp;
     }
 
-    void Settings::LoadSettings() {
+    void Settings::LoadMainSettings() {
         auto init = sp_->Get(kKeyInit);
         if (init.empty()) {
             sp_->Put(kKeyInit, "inited");
@@ -33,11 +33,18 @@ namespace tc
             audio_on_ = std::atoi(sp_->Get(kKeyAudioStatus).c_str());
             clipboard_on_ = std::atoi(sp_->Get(kKeyClipboardStatus).c_str());
             display_mode_ = (MultiDisplayMode)std::atoi(sp_->Get(kKeyDisplayMode).c_str());
+        }
+    }
 
-            auto mode = sp_->Get(kKeyWorkMode);
-            if (!mode.empty()) {
-                work_mode_ = (SwitchWorkMode::WorkMode)std::atoi(mode.c_str());
-            }
+    void Settings::LoadRenderSettings() {
+        auto work_mode = sp_->Get(kKeyWorkMode);
+        if (!work_mode.empty()) {
+            work_mode_ = (SwitchWorkMode::WorkMode)std::atoi(work_mode.c_str());
+        }
+
+        auto scale_mode = sp_->Get(kKeyScaleMode);
+        if (!scale_mode.empty()) {
+            scale_mode_ = (ScaleMode)std::atoi(scale_mode.c_str());
         }
     }
 
@@ -81,7 +88,7 @@ namespace tc
         sp_->Put(kKeyWorkMode, std::to_string((int)mode));
     }
 
-    void Settings::SetScaleMOde(ScaleMode mode) {
+    void Settings::SetScaleMode(ScaleMode mode) {
         scale_mode_ = mode;
         sp_->Put(kKeyScaleMode, std::to_string((int)mode));
     }

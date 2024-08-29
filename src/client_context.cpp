@@ -33,7 +33,9 @@ namespace tc
         auto settings = Settings::Instance();
         settings->SetSharedPreference(sp_);
         if (!render) {
-            settings->LoadSettings();
+            settings->LoadMainSettings();
+        } else {
+            settings->LoadRenderSettings();
         }
 
         db_mgr_ = std::make_shared<StreamDBManager>();

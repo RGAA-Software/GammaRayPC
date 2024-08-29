@@ -25,7 +25,7 @@ namespace tc
 
     enum class ScaleMode {
         kKeepAspectRatio,
-        kFullscreen,
+        kFullWindow,
         kOriginSize,
     };
 
@@ -40,7 +40,8 @@ namespace tc
         }
 
         void SetSharedPreference(const std::shared_ptr<SharedPreference>& sp);
-        void LoadSettings();
+        void LoadMainSettings();
+        void LoadRenderSettings();
 
         bool IsAudioEnabled() const;
         bool IsClipboardEnabled() const;
@@ -52,7 +53,7 @@ namespace tc
         void SetClipboardEnabled(bool enabled);
         void SetMultiDisplayMode(MultiDisplayMode mode);
         void SetWorkMode(SwitchWorkMode::WorkMode mode);
-        void SetScaleMOde(ScaleMode mode);
+        void SetScaleMode(ScaleMode mode);
 
     public:
         std::string version_;
@@ -66,7 +67,7 @@ namespace tc
         std::string file_transfer_path_ = "/file/transfer";
         bool ignore_mouse_event_ = false;
         SwitchWorkMode::WorkMode work_mode_ = SwitchWorkMode::kGame;
-        ScaleMode scale_mode_ = ScaleMode::kKeepAspectRatio;
+        ScaleMode scale_mode_ = ScaleMode::kFullWindow;
 
     };
 

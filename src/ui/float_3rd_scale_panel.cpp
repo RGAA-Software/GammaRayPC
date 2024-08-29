@@ -32,13 +32,13 @@ namespace tc
                    .icon_path_ = "",
             }),
             std::make_shared<SingleItem>(SingleItem {
-                   .name_ = "Fullscreen",
+                   .name_ = "Full Window",
                    .icon_path_ = "",
             }),
-            std::make_shared<SingleItem>(SingleItem {
-                   .name_ = "Original Size",
-                   .icon_path_ = "",
-            }),
+            // std::make_shared<SingleItem>(SingleItem {
+            //        .name_ = "Original Size",
+            //        .icon_path_ = "",
+            // }),
         });
         root_layout->addWidget(listview_);
         setLayout(root_layout);
@@ -46,12 +46,23 @@ namespace tc
         int target_index = 0;
         if (settings_->scale_mode_ == ScaleMode::kKeepAspectRatio) {
             target_index = 0;
-        } else if (settings_->scale_mode_ == ScaleMode::kFullscreen) {
+        } else if (settings_->scale_mode_ == ScaleMode::kFullWindow) {
             target_index = 1;
         } else if (settings_->scale_mode_ == ScaleMode::kOriginSize) {
             target_index = 2;
         }
         listview_->Select(target_index);
+
+        listview_->SetOnItemClickListener([=, this](int idx, QWidget* w) {
+            context_->SendAppMessage(SwitchScaleModeMessage{
+                .mode_ = [idx]() {
+                    if (idx == 0) { return ScaleMode::kKeepAspectRatio;}
+                    else if (idx == 1) {return ScaleMode::kFullWindow;}
+                    else if (idx == 2) {return ScaleMode::kOriginSize;}
+                    return ScaleMode::kFullWindow;
+                }(),
+            });
+        });
     }
 
     void ThirdScalePanel::paintEvent(QPaintEvent *event) {

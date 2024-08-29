@@ -27,6 +27,7 @@
 #include "ui/sized_msg_box.h"
 #include "ui/debug_panel.h"
 #include "clipboard_manager.h"
+#include "ui/no_margin_layout.h"
 
 namespace tc
 {
@@ -50,14 +51,12 @@ namespace tc
         sdk_->Init(params, nullptr, DecoderRenderType::kFFmpegI420);
 
         // ui
-        auto root_layout = new QHBoxLayout();
-        root_layout->setSpacing(0);
-        root_layout->setContentsMargins(0,0,0,0);
+        auto root_layout = new NoMarginVLayout();
         auto root_widget = new QWidget(this);
         root_widget->setLayout(root_layout);
 
         video_widget_ = new OpenGLVideoWidget(ctx, sdk_, 0, RawImageFormat::kI420, this);
-        root_layout->addWidget(video_widget_);
+        //layout->addWidget(video_widget_);
 
         setCentralWidget(root_widget);
 
@@ -131,6 +130,10 @@ namespace tc
 
         msg_listener_->Listen<SwitchWorkModeMessage>([=, this](const SwitchWorkModeMessage& msg) {
             this->SendSwitchWorkModeMessage(msg.mode_);
+        });
+
+        msg_listener_->Listen<SwitchScaleModeMessage>([=, this](const SwitchScaleModeMessage& msg) {
+            this->SwitchScaleMode(msg.mode_);
         });
 
         QTimer::singleShot(100, [=, this](){
@@ -263,6 +266,11 @@ namespace tc
     void Workspace::resizeEvent(QResizeEvent *event) {
         UpdateNotificationHandlePosition();
         UpdateDebugPanelPosition();
+        if (settings_->scale_mode_ == ScaleMode::kFullWindow) {
+            SwicthToFullWindow();
+        } else if (settings_->scale_mode_ == ScaleMode::kKeepAspectRatio) {
+            CalculateAspectRatio();
+        }
     }
 
     void Workspace::UpdateNotificationHandlePosition() {
@@ -360,6 +368,43 @@ namespace tc
         auto wm = m.mutable_work_mode();
         wm->set_mode(mode);
         sdk_->PostBinaryMessage(m.SerializeAsString());
+    }
+
+    void Workspace::SwitchScaleMode(const tc::ScaleMode& mode) {
+        settings_->SetScaleMode(mode);
+        if (!video_widget_) {return;}
+        if (mode == ScaleMode::kFullWindow) {
+            SwicthToFullWindow();
+        } else if (mode == ScaleMode::kKeepAspectRatio) {
+            CalculateAspectRatio();
+        }
+    }
+
+    void Workspace::CalculateAspectRatio() {
+        auto vw = video_widget_->GetCapturingMonitorWidth();
+        auto vh = video_widget_->GetCapturingMonitorHeight();
+        if (vw <= 0 || vh <= 0) {
+            return;
+        }
+        float h_ratio = vw * 1.0f / this->width();
+        float v_ratio = vh * 1.0f / this->height();
+        int target_width = 0;
+        int target_height = 0;
+        if (h_ratio > v_ratio) {
+            // use width
+            target_width = this->width();
+            target_height = vh * (this->width()*1.0f/vw);
+        } else {
+            // use height
+            target_height = this->height();
+            target_width = vw * (this->height()*1.0f/vh);
+        }
+
+        video_widget_->setGeometry((this->width()-target_width)/2, (this->height()-target_height)/2, target_width, target_height);
+    }
+
+    void Workspace::SwicthToFullWindow() {
+        video_widget_->setGeometry(0, 0, this->width(), this->height());
     }
 
     void Workspace::Exit() {
