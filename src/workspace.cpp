@@ -28,6 +28,7 @@
 #include "ui/debug_panel.h"
 #include "clipboard_manager.h"
 #include "ui/no_margin_layout.h"
+#include "tc_client_sdk_new/sdk_messages.h"
 
 namespace tc
 {
@@ -134,6 +135,14 @@ namespace tc
 
         msg_listener_->Listen<SwitchScaleModeMessage>([=, this](const SwitchScaleModeMessage& msg) {
             this->SwitchScaleMode(msg.mode_);
+        });
+
+        msg_listener_->Listen<MsgWsConnected>([=, this](const MsgWsConnected& msg) {
+            this->SendSwitchWorkModeMessage(settings_->work_mode_);
+        });
+
+        msg_listener_->Listen<MsgWsDisconnected>([=, this](const MsgWsDisconnected& msg) {
+
         });
 
         QTimer::singleShot(100, [=, this](){
@@ -363,6 +372,7 @@ namespace tc
         if (!sdk_) {
             return;
         }
+        settings_->SetWorkMode(mode);
         tc::Message m;
         m.set_type(tc::kSwitchWorkMode);
         auto wm = m.mutable_work_mode();
