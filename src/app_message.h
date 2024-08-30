@@ -125,6 +125,14 @@ namespace tc
         ScaleMode mode_;
     };
 
+    // change monitor resolution
+    class MsgChangeMonitorResolution {
+    public:
+        std::string monitor_name_;
+        int width_ = 0;
+        int height_ = 0;
+    };
+
 }
 
 #endif //SAILFISH_CLIENT_PC_APPMESSAGE_H

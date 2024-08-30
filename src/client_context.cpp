@@ -99,25 +99,16 @@ namespace tc
         return render_;
     }
 
-    void ClientContext::UpdateCapturingMonitorIndex(int idx) {
-        capturing_monitor_index_ = idx;
+    void ClientContext::UpdateCapturingMonitorInfo(const CaptureMonitorInfo& info) {
+        capturing_info_ = info;
+    }
+
+    CaptureMonitorInfo ClientContext::GetCapturingMonitorInfo() {
+        return capturing_info_;
     }
 
     int ClientContext::GetCapturingMonitorIndex() {
-        return capturing_monitor_index_;
-    }
-
-    void ClientContext::UpdateCapturingMonitorSize(int w, int h) {
-        capturing_width_ = w;
-        capturing_height_ = h;
-    }
-
-    int ClientContext::GetCapturingMonitorWidth() {
-        return capturing_width_;
-    }
-
-    int ClientContext::GetCapturingMonitorHeight() {
-        return capturing_height_;
+        return capturing_info_.mon_idx_;
     }
 
 }

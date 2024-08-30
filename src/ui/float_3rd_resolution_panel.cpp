@@ -10,6 +10,7 @@
 #include "client_context.h"
 #include "app_message.h"
 #include "single_selected_list.h"
+#include "tc_common_new/log.h"
 #include <QLabel>
 
 namespace tc
@@ -52,7 +53,32 @@ namespace tc
            std::make_shared<SingleItem>(SingleItem { .name_ = "1152x864", }),
            std::make_shared<SingleItem>(SingleItem { .name_ = "1024x768", }),
            std::make_shared<SingleItem>(SingleItem { .name_ = "800x600", }),
-       });
+        });
+
+        listview_->SetOnItemClickListener([=, this](int idx, QWidget*) {
+            auto item = listview_->GetItems().at(idx);
+            auto split_size = item->name_.split("x");
+            if (split_size.size() < 2) {
+                return;
+            }
+            int width = split_size.at(0).toInt();
+            int height = split_size.at(1).toInt();
+            if (width <= 0 || height <= 0) {
+                LOGE("Error monitor resolution size: {}", item->name_.toStdString());
+                return;
+            }
+            auto monitor_name = context_->GetCapturingMonitorInfo().mon_name_;
+            if (monitor_name.empty()) {
+                LOGE("Target monitor name is empty");
+                return;
+            }
+            context_->SendAppMessage(MsgChangeMonitorResolution {
+                .monitor_name_ = monitor_name,
+                .width_ = width,
+                .height_ = height,
+            });
+        });
+
         root_layout->addWidget(listview_);
 
         root_layout->addStretch();
@@ -81,12 +107,11 @@ namespace tc
     }
 
     void ThirdResolutionPanel::SelectCapturingMonitorSize() {
-        auto monitor_width = context_->GetCapturingMonitorWidth();
-        auto monitor_height = context_->GetCapturingMonitorHeight();
-        if (monitor_width <= 0 || monitor_height <= 0) {
+        auto monitor_info = context_->GetCapturingMonitorInfo();
+        if (monitor_info.Width() <= 0 || monitor_info.Height() <= 0) {
             return;
         }
-        listview_->SelectByName(std::format("{}x{}", monitor_width, monitor_height));
+        listview_->SelectByName(std::format("{}x{}", monitor_info.Width(), monitor_info.Height()));
     }
 
 }

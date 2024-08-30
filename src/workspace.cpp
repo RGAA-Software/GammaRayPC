@@ -112,11 +112,13 @@ namespace tc
         notification_panel_ = new NotificationPanel(ctx, this);
         notification_panel_->hide();
 
+        // message listener
+        msg_listener_ = context_->GetMessageNotifier()->CreateListener();
+
         // sdk
         RegisterSdkMsgCallbacks();
         sdk_->Start();
 
-        msg_listener_ = context_->GetMessageNotifier()->CreateListener();
         msg_listener_->Listen<ExitAppMessage>([=, this](const ExitAppMessage& msg) {
             this->Exit();
         });
@@ -145,6 +147,10 @@ namespace tc
 
         });
 
+        msg_listener_->Listen<MsgChangeMonitorResolution>([=, this](const MsgChangeMonitorResolution& msg) {
+            this->SendChangeMonitorResolutionMessage(msg);
+        });
+
         QTimer::singleShot(100, [=, this](){
             file_transfer_ = std::make_shared<FileTransferChannel>(context_);
             file_transfer_->Start();
@@ -163,8 +169,7 @@ namespace tc
         sdk_->SetOnVideoFrameDecodedCallback([=, this](const std::shared_ptr<RawImage>& image, const CaptureMonitorInfo& info) {
             video_widget_->RefreshCapturedMonitorInfo(info);
             video_widget_->RefreshI420Image(image);
-            context_->UpdateCapturingMonitorSize(info.Width(), info.Height());
-            context_->UpdateCapturingMonitorIndex(info.mon_idx_);
+            context_->UpdateCapturingMonitorInfo(info);
         });
 
         sdk_->SetOnAudioFrameDecodedCallback([=, this](const std::shared_ptr<Data>& data, int samples, int channels, int bits) {
@@ -222,6 +227,15 @@ namespace tc
                 .name_ = ms.name(),
             });
         });
+
+        msg_listener_->Listen<MsgChangeMonitorResolutionResult>([=, this](const MsgChangeMonitorResolutionResult& msg) {
+            if (msg.result) {
+                context_->PostUITask([=, this]() {
+                    // to trigger re-layout
+                    this->move(pos().x()+1, pos().y());
+                });
+            }
+        });
     }
 
     void Workspace::changeEvent(QEvent* event) {
@@ -277,7 +291,7 @@ namespace tc
         UpdateNotificationHandlePosition();
         UpdateDebugPanelPosition();
         if (settings_->scale_mode_ == ScaleMode::kFullWindow) {
-            SwicthToFullWindow();
+            SwitchToFullWindow();
         } else if (settings_->scale_mode_ == ScaleMode::kKeepAspectRatio) {
             CalculateAspectRatio();
         }
@@ -385,7 +399,7 @@ namespace tc
         settings_->SetScaleMode(mode);
         if (!video_widget_) {return;}
         if (mode == ScaleMode::kFullWindow) {
-            SwicthToFullWindow();
+            SwitchToFullWindow();
         } else if (mode == ScaleMode::kKeepAspectRatio) {
             CalculateAspectRatio();
         }
@@ -414,8 +428,21 @@ namespace tc
         video_widget_->setGeometry((this->width()-target_width)/2, (this->height()-target_height)/2, target_width, target_height);
     }
 
-    void Workspace::SwicthToFullWindow() {
+    void Workspace::SwitchToFullWindow() {
         video_widget_->setGeometry(0, 0, this->width(), this->height());
+    }
+
+    void Workspace::SendChangeMonitorResolutionMessage(const MsgChangeMonitorResolution& msg) {
+        if (!sdk_) {
+            return;
+        }
+        tc::Message m;
+        m.set_type(tc::kChangeMonitorResolution);
+        auto cmr = m.mutable_change_monitor_resolution();
+        cmr->set_monitor_name(msg.monitor_name_);
+        cmr->set_target_width(msg.width_);
+        cmr->set_target_height(msg.height_);
+        sdk_->PostBinaryMessage(m.SerializeAsString());
     }
 
     void Workspace::Exit() {

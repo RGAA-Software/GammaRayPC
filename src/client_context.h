@@ -11,6 +11,7 @@
 #include <QWidget>
 #include <boost/asio.hpp>
 #include "tc_common_new/message_notifier.h"
+#include "tc_client_sdk_new/sdk_messages.h"
 
 namespace tc
 {
@@ -34,11 +35,9 @@ namespace tc
         std::string GetValueByKey(const std::string& k);
         std::shared_ptr<boost::asio::io_context> GetBoostIoContext();
         bool IsRender();
-        void UpdateCapturingMonitorIndex(int idx);
+        void UpdateCapturingMonitorInfo(const CaptureMonitorInfo& info);
+        CaptureMonitorInfo GetCapturingMonitorInfo();
         int GetCapturingMonitorIndex();
-        void UpdateCapturingMonitorSize(int w, int h);
-        int GetCapturingMonitorWidth();
-        int GetCapturingMonitorHeight();
 
         template<class T>
         void SendAppMessage(const T& msg) {
@@ -58,8 +57,10 @@ namespace tc
         std::unique_ptr<boost::asio::executor_work_guard<boost::asio::io_context::executor_type>> work_guard_;
         bool render_ = false;
         std::atomic_int capturing_monitor_index_ = -1;
+        std::string capturing_monitor_name_;
         int capturing_width_ = 0;
         int capturing_height_ = 0;
+        CaptureMonitorInfo capturing_info_;
     };
 
 }

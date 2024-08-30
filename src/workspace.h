@@ -55,7 +55,8 @@ namespace tc
         void SendSwitchWorkModeMessage(SwitchWorkMode::WorkMode mode);
         void SwitchScaleMode(const ScaleMode& mode);
         void CalculateAspectRatio();
-        void SwicthToFullWindow();
+        void SwitchToFullWindow();
+        void SendChangeMonitorResolutionMessage(const MsgChangeMonitorResolution& msg);
 
     private:
         std::shared_ptr<ClientContext> context_ = nullptr;
