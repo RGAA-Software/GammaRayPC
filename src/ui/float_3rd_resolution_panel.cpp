@@ -71,4 +71,22 @@ namespace tc
         BaseWidget::paintEvent(event);
     }
 
+    void ThirdResolutionPanel::Hide() {
+        BaseWidget::Hide();
+    }
+
+    void ThirdResolutionPanel::Show() {
+        BaseWidget::Show();
+        this->SelectCapturingMonitorSize();
+    }
+
+    void ThirdResolutionPanel::SelectCapturingMonitorSize() {
+        auto monitor_width = context_->GetCapturingMonitorWidth();
+        auto monitor_height = context_->GetCapturingMonitorHeight();
+        if (monitor_width <= 0 || monitor_height <= 0) {
+            return;
+        }
+        listview_->SelectByName(std::format("{}x{}", monitor_width, monitor_height));
+    }
+
 }

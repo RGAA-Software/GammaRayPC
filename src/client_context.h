@@ -36,6 +36,9 @@ namespace tc
         bool IsRender();
         void UpdateCapturingMonitorIndex(int idx);
         int GetCapturingMonitorIndex();
+        void UpdateCapturingMonitorSize(int w, int h);
+        int GetCapturingMonitorWidth();
+        int GetCapturingMonitorHeight();
 
         template<class T>
         void SendAppMessage(const T& msg) {
@@ -55,6 +58,8 @@ namespace tc
         std::unique_ptr<boost::asio::executor_work_guard<boost::asio::io_context::executor_type>> work_guard_;
         bool render_ = false;
         std::atomic_int capturing_monitor_index_ = -1;
+        int capturing_width_ = 0;
+        int capturing_height_ = 0;
     };
 
 }

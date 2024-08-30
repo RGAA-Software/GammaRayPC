@@ -60,7 +60,7 @@ namespace tc
                 auto item_pos = this->mapTo((QWidget*)this->parent(), w->pos());
                 HideAllSubPanels();
                 panel->setGeometry(this->pos().x() + this->width(), item_pos.y(), panel->width(), panel->height());
-                panel->show();
+                panel->Show();
             });
         }
         {
@@ -100,7 +100,7 @@ namespace tc
                 auto item_pos = this->mapTo((QWidget*)this->parent(), w->pos());
                 HideAllSubPanels();
                 panel->setGeometry(this->pos().x() + this->width(), item_pos.y(), panel->width(), panel->height());
-                panel->show();
+                panel->Show();
             });
 
         }

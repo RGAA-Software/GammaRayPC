@@ -19,6 +19,10 @@ namespace tc
     public:
         explicit ThirdResolutionPanel(const std::shared_ptr<ClientContext>& ctx, QWidget* parent = nullptr);
         void paintEvent(QPaintEvent *event) override;
+        void Hide() override;
+        void Show() override;
+    private:
+        void SelectCapturingMonitorSize();
 
     private:
         Settings* settings_ = nullptr;

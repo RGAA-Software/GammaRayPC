@@ -107,4 +107,17 @@ namespace tc
         return capturing_monitor_index_;
     }
 
+    void ClientContext::UpdateCapturingMonitorSize(int w, int h) {
+        capturing_width_ = w;
+        capturing_height_ = h;
+    }
+
+    int ClientContext::GetCapturingMonitorWidth() {
+        return capturing_width_;
+    }
+
+    int ClientContext::GetCapturingMonitorHeight() {
+        return capturing_height_;
+    }
+
 }
