@@ -65,40 +65,40 @@ namespace tc
         void InitI420Texture();
 
     private:
-        std::shared_ptr<ClientContext> context;
-        glm::mat4 model;
-        std::shared_ptr<ShaderProgram> shader_program = nullptr;
-        GLuint vao{0};
-        GLuint vbo{0};
-        GLuint ibo{0};
+        std::shared_ptr<ClientContext> context_ = nullptr;
+        glm::mat4 model_;
+        std::shared_ptr<ShaderProgram> shader_program_ = nullptr;
+        GLuint vao_{0};
+        GLuint vbo_{0};
+        GLuint ibo_{0};
 
-        std::shared_ptr<Data> y_buffer = nullptr;
-        char *uv_buffer = nullptr;
-        GLuint y_texture_id = 0;
-        GLuint uv_texture_id = 0;
-        bool need_create_texture = true;
-        int tex_width = 0;
-        int tex_height = 0;
-        int tex_channel;
-        char *rgb_buffer = nullptr;
-        GLuint rgb_texture_id = 0;
+        std::shared_ptr<Data> y_buffer_ = nullptr;
+        char *uv_buffer_ = nullptr;
+        GLuint y_texture_id_ = 0;
+        GLuint uv_texture_id_ = 0;
+        bool need_create_texture_ = true;
+        int tex_width_ = 0;
+        int tex_height_ = 0;
+        int tex_channel_;
+        char *rgb_buffer_ = nullptr;
+        GLuint rgb_texture_id_ = 0;
 
         // I420
-        std::shared_ptr<Data> u_buffer = nullptr;
-        std::shared_ptr<Data> v_buffer = nullptr;
-        GLuint u_texture_id = 0;
-        GLuint v_texture_id = 0;
+        std::shared_ptr<Data> u_buffer_ = nullptr;
+        std::shared_ptr<Data> v_buffer_ = nullptr;
+        GLuint u_texture_id_ = 0;
+        GLuint v_texture_id_ = 0;
 
-        std::mutex buf_mtx;
-        RawImageFormat raw_image_format;
+        std::mutex buf_mtx_;
+        RawImageFormat raw_image_format_;
 
         std::shared_ptr<Director> director_ = nullptr;
         std::shared_ptr<Sprite> cursor_ = nullptr;
 
-        int render_fps = 0;
-        uint64_t last_update_fps_time = 0;
+        int render_fps_ = 0;
+        uint64_t last_update_fps_time_ = 0;
 
-        Statistics *statistics = nullptr;
+        Statistics* statistics_ = nullptr;
 
         int tex_rect_left_ = 0;
         int tex_rect_right_ = 0;
