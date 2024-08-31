@@ -94,6 +94,7 @@ namespace tc
 
         std::shared_ptr<Director> director_ = nullptr;
         std::shared_ptr<Sprite> cursor_ = nullptr;
+        std::shared_ptr<Sprite> logo_ = nullptr;
 
         int render_fps_ = 0;
         uint64_t last_update_fps_time_ = 0;

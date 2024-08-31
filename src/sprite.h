@@ -29,6 +29,7 @@ namespace tc
 		void UpdateTranslationPercentWindow(float x, float y);
 		void UpdateTranslationAdjuster(float x, float y);
 		void ForceImageSize(int width, int height);
+        std::shared_ptr<RawImage> GetRawImage();
 
 	private:
 		std::shared_ptr<RawImage> image_ = nullptr;

@@ -138,6 +138,8 @@ namespace tc
         functions->glDisable(GL_BLEND);
 	}
 
-
+    std::shared_ptr<RawImage> Sprite::GetRawImage() {
+        return image_;
+    }
 
 }

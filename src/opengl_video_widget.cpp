@@ -24,6 +24,8 @@
 #include "tc_common_new/data.h"
 #include "director.h"
 #include "sprite.h"
+#include "tc_common_new/image.h"
+#include "tc_common_new/file.h"
 
 namespace tc
 {
@@ -115,6 +117,15 @@ namespace tc
 
         // cursor
         cursor_ = std::make_shared<Sprite>(director_);
+
+        // logo
+        logo_ = std::make_shared<Sprite>(director_);
+        auto data = File::OpenForReadB(":/resources/image/logo_text.png")->ReadAll();
+        auto image = Image::MakeByCompressedImage(data);
+        auto raw_image = RawImage::MakeRGBA(image->data->DataAddr(), image->data->Size(), image->width, image->height);
+        logo_->UpdateImage(raw_image);
+        logo_->ForceImageSize(image->width/6, image->height/6);
+
 	}
 
 	void OpenGLVideoWidget::RefreshRGBImage(const std::shared_ptr<RawImage>& image) {
@@ -260,7 +271,9 @@ namespace tc
         if (cursor_) {
             cursor_->Render(0);
         }
-
+        if (logo_) {
+            logo_->Render(0);
+        }
 		render_fps_ += 1;
 		auto current_time = TimeExt::GetCurrentTimestamp();
 		if (current_time - last_update_fps_time_ > 1000) {
@@ -352,6 +365,14 @@ namespace tc
         glViewport(0, 0, width, height);
         if (cursor_) {
             cursor_->OnWindowResized(width, height);
+        }
+        if (logo_) {
+            logo_->OnWindowResized(width, height);
+            auto image = logo_->GetRawImage();
+            if (image) {
+                auto x = 1.0f - image->img_width*1.0f/6.0f / width;
+                logo_->UpdateTranslationPercentWindow(x, 0.0f);
+            }
         }
 	}
 
