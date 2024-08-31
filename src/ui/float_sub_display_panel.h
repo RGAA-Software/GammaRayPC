@@ -7,6 +7,7 @@
 
 #include "base_widget.h"
 #include <QPainter>
+#include "app_message.h"
 
 namespace tc
 {
@@ -22,6 +23,7 @@ namespace tc
         void paintEvent(QPaintEvent *event) override;
         void Show() override;
         void Hide() override;
+        void UpdateMonitorInfo(const CaptureMonitorMessage& m);
 
     private:
         BaseWidget* GetSubPanel(const SubDisplayType& type);
@@ -29,7 +31,7 @@ namespace tc
 
     private:
         std::map<SubDisplayType, BaseWidget*> sub_panels_;
-
+        CaptureMonitorMessage monitors_;
     };
 
 }

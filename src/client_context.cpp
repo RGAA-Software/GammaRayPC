@@ -9,7 +9,7 @@
 #include "tc_common_new/shared_preference.h"
 #include "tc_common_new/thread.h"
 #include "db/stream_db_manager.h"
-
+#include "app_message.h"
 #include <QTimer>
 
 namespace tc
@@ -18,7 +18,9 @@ namespace tc
     ClientContext::ClientContext(const std::string& name, QObject* parent) : QObject(parent) {
         this->name_ = name;
         this->msg_notifier_ = std::make_shared<MessageNotifier>();
-
+        this->capturing_info_ = CaptureMonitorInfo {
+            .mon_idx_ = -1,
+        };
     }
 
     ClientContext::~ClientContext() {
@@ -100,7 +102,11 @@ namespace tc
     }
 
     void ClientContext::UpdateCapturingMonitorInfo(const CaptureMonitorInfo& info) {
+        bool new_monitor = info.mon_idx_ != capturing_info_.mon_idx_;
         capturing_info_ = info;
+        if (new_monitor) {
+            SendAppMessage(MsgMonitorChanged{});
+        }
     }
 
     CaptureMonitorInfo ClientContext::GetCapturingMonitorInfo() {

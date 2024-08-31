@@ -29,6 +29,7 @@
 #include "clipboard_manager.h"
 #include "ui/no_margin_layout.h"
 #include "tc_client_sdk_new/sdk_messages.h"
+#include "tc_common_new/process_util.h"
 
 namespace tc
 {
@@ -120,7 +121,9 @@ namespace tc
         sdk_->Start();
 
         msg_listener_->Listen<ExitAppMessage>([=, this](const ExitAppMessage& msg) {
-            this->Exit();
+            context_->PostUITask([=, this]() {
+                this->Exit();
+            });
         });
 
         msg_listener_->Listen<ClipboardMessage>([=, this](const ClipboardMessage& msg) {
@@ -211,11 +214,19 @@ namespace tc
             CaptureMonitorMessage msg;
             msg.capturing_monitor_index_ = config.current_capturing_index();
             LOGI("capturing: {}", msg.capturing_monitor_index_);
-            for (const auto& item : config.screen_info()) {
+            for (const auto& item : config.monitor_info()) {
                 LOGI("idx: {}, name: {}", item.index(), item.name());
+                std::vector<CaptureMonitorMessage::Resolution> resolutions;
+                for (auto& res : item.resolutions()) {
+                    resolutions.push_back(CaptureMonitorMessage::Resolution {
+                        .width_ = res.width(),
+                        .height_ = res.height(),
+                    });
+                }
                 msg.monitors_.push_back(CaptureMonitorMessage::CaptureMonitor {
                     .index_ = item.index(),
                     .name_ = item.name(),
+                    .resolutions_ = resolutions,
                 });
             }
             context_->SendAppMessage(msg);
@@ -229,12 +240,18 @@ namespace tc
         });
 
         msg_listener_->Listen<MsgChangeMonitorResolutionResult>([=, this](const MsgChangeMonitorResolutionResult& msg) {
-            if (msg.result) {
-                context_->PostUITask([=, this]() {
-                    // to trigger re-layout
+            context_->PostUITask([=, this]() {
+                // to trigger re-layout
+                if (msg.result) {
                     this->move(pos().x()+1, pos().y());
-                });
-            }
+                    auto box = SizedMessageBox::MakeInfoOkBox(tr("Info"), tr("Changing resolution success."));
+                    box->exec();
+                } else {
+                    auto box = SizedMessageBox::MakeErrorOkBox(tr("Error"), tr("Changing resolution failed, please check your server's monitor."));
+                    box->exec();
+                }
+            });
+
         });
     }
 
@@ -446,6 +463,11 @@ namespace tc
     }
 
     void Workspace::Exit() {
+        std::thread t([]() {
+            std::this_thread::sleep_for(std::chrono::milliseconds(500));
+            ProcessUtil::KillProcess(QApplication::applicationPid());
+        });
+        t.detach();
         if (sdk_) {
             sdk_->Exit();
             sdk_ = nullptr;

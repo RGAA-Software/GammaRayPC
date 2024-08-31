@@ -41,6 +41,7 @@ namespace tc
                 computer_icons_.insert({i, ci});
 
                 ci->SetOnClickListener([=, this](auto w) {
+                    HideAllSubPanels();
                     SwitchMonitor(ci);
                 });
             }
@@ -252,6 +253,7 @@ namespace tc
                 }
                 auto item_pos = this->mapTo((QWidget*)this->parent(), w->pos());
                 HideAllSubPanels();
+                ((SubDisplayPanel*)panel)->UpdateMonitorInfo(this->capture_monitor_);
                 panel->setGeometry(this->pos().x() + this->width(), item_pos.y(), panel->width(), panel->height());
                 panel->show();
             });

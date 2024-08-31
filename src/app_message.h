@@ -92,10 +92,16 @@ namespace tc
 
     class CaptureMonitorMessage : public AppMessage {
     public:
+        class Resolution {
+        public:
+            int width_ = 0;
+            int height_ = 0;
+        };
         class CaptureMonitor {
         public:
             int index_;
             std::string name_;
+            std::vector<Resolution> resolutions_;
         };
 
     public:
@@ -131,6 +137,11 @@ namespace tc
         std::string monitor_name_;
         int width_ = 0;
         int height_ = 0;
+    };
+
+    // monitor changed from video frame callback
+    class MsgMonitorChanged : public AppMessage {
+    public:
     };
 
 }

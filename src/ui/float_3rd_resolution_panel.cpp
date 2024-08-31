@@ -11,7 +11,9 @@
 #include "app_message.h"
 #include "single_selected_list.h"
 #include "tc_common_new/log.h"
+#include "tc_common_new/message_notifier.h"
 #include <QLabel>
+#include <format>
 
 namespace tc
 {
@@ -29,31 +31,6 @@ namespace tc
 
         listview_ = new SingleSelectedList(this);
         listview_->setFixedSize(this->size());
-        listview_->UpdateItems({
-           std::make_shared<SingleItem>(SingleItem { .name_ = "3840x2160", }),
-           std::make_shared<SingleItem>(SingleItem { .name_ = "2560x1600", }),
-           std::make_shared<SingleItem>(SingleItem { .name_ = "2560x1440", }),
-           std::make_shared<SingleItem>(SingleItem { .name_ = "2560x1080", }),
-           std::make_shared<SingleItem>(SingleItem { .name_ = "2048x1536", }),
-           std::make_shared<SingleItem>(SingleItem { .name_ = "1920x1440", }),
-           std::make_shared<SingleItem>(SingleItem { .name_ = "1920x1200", }),
-           std::make_shared<SingleItem>(SingleItem { .name_ = "1920x1080", }),
-           std::make_shared<SingleItem>(SingleItem { .name_ = "1680x1050", }),
-           std::make_shared<SingleItem>(SingleItem { .name_ = "1600x1024", }),
-           std::make_shared<SingleItem>(SingleItem { .name_ = "1600x900", }),
-           std::make_shared<SingleItem>(SingleItem { .name_ = "1400x1080", }),
-           std::make_shared<SingleItem>(SingleItem { .name_ = "1400x1050", }),
-           std::make_shared<SingleItem>(SingleItem { .name_ = "1400x900", }),
-           std::make_shared<SingleItem>(SingleItem { .name_ = "1366x768", }),
-           std::make_shared<SingleItem>(SingleItem { .name_ = "1280x1024", }),
-           std::make_shared<SingleItem>(SingleItem { .name_ = "1280x960", }),
-           std::make_shared<SingleItem>(SingleItem { .name_ = "1280x800", }),
-           std::make_shared<SingleItem>(SingleItem { .name_ = "1280x768", }),
-           std::make_shared<SingleItem>(SingleItem { .name_ = "1280x720", }),
-           std::make_shared<SingleItem>(SingleItem { .name_ = "1152x864", }),
-           std::make_shared<SingleItem>(SingleItem { .name_ = "1024x768", }),
-           std::make_shared<SingleItem>(SingleItem { .name_ = "800x600", }),
-        });
 
         listview_->SetOnItemClickListener([=, this](int idx, QWidget*) {
             auto item = listview_->GetItems().at(idx);
@@ -83,6 +60,13 @@ namespace tc
 
         root_layout->addStretch();
         setLayout(root_layout);
+
+        CreateMsgListener();
+        msg_listener_->Listen<MsgMonitorChanged>([=, this](const MsgMonitorChanged& msg) {
+            context_->PostUITask([=, this]() {
+                this->SelectCapturingMonitorSize();
+            });
+        });
     }
 
     void ThirdResolutionPanel::paintEvent(QPaintEvent *event) {
@@ -112,6 +96,15 @@ namespace tc
             return;
         }
         listview_->SelectByName(std::format("{}x{}", monitor_info.Width(), monitor_info.Height()));
+    }
+
+    void ThirdResolutionPanel::UpdateMonitor(const CaptureMonitorMessage::CaptureMonitor& m) {
+        monitor_ = m;
+        std::vector<SingleItemPtr> items;
+        for (const auto& res : monitor_.resolutions_) {
+            items.push_back(std::make_shared<SingleItem>(SingleItem { .name_ = std::format("{}x{}", res.width_, res.height_).c_str() }));
+        }
+        listview_->UpdateItems(items);
     }
 
 }

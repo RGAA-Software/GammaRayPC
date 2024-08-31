@@ -12,7 +12,7 @@ namespace tc
 
     std::shared_ptr<SizedMessageBox> SizedMessageBox::MakeOkBox(const QString& title, const QString& msg) {
         auto msg_box = std::make_shared<SizedMessageBox>(true, false);
-        msg_box->Resize(400, 220);
+        msg_box->Resize(400, 190);
         msg_box->setWindowTitle(title);
         msg_box->lbl_message_->setText(msg);
 
@@ -24,7 +24,7 @@ namespace tc
 
     std::shared_ptr<SizedMessageBox> SizedMessageBox::MakeOkCancelBox(const QString& title, const QString& msg) {
         auto msg_box = std::make_shared<SizedMessageBox>(true, true);
-        msg_box->Resize(400, 220);
+        msg_box->Resize(400, 190);
         msg_box->setWindowTitle(title);
         msg_box->lbl_message_->setText(msg);
 

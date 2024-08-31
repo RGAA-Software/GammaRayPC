@@ -9,6 +9,8 @@
 #include "settings.h"
 #include "float_3rd_scale_panel.h"
 #include "float_3rd_resolution_panel.h"
+#include "client_context.h"
+#include "tc_common_new/log.h"
 #include <QLabel>
 
 namespace tc
@@ -99,6 +101,12 @@ namespace tc
                 }
                 auto item_pos = this->mapTo((QWidget*)this->parent(), w->pos());
                 HideAllSubPanels();
+                int capturing_monitor_index = context_->GetCapturingMonitorIndex();
+                if (monitors_.monitors_.empty() || capturing_monitor_index < 0 || capturing_monitor_index >= monitors_.monitors_.size()) {
+                    LOGE("Error monitor index, capturing: {}, total monitor size: {}", capturing_monitor_index, monitors_.monitors_.size());
+                    return;
+                }
+                ((ThirdResolutionPanel*)panel)->UpdateMonitor(monitors_.monitors_.at(capturing_monitor_index));
                 panel->setGeometry(this->pos().x() + this->width(), item_pos.y(), panel->width(), panel->height());
                 panel->Show();
             });
@@ -137,9 +145,19 @@ namespace tc
         BaseWidget::Show();
     }
 
-    void  SubDisplayPanel::Hide() {
+    void SubDisplayPanel::Hide() {
         BaseWidget::Hide();
         HideAllSubPanels();
+    }
+
+    void SubDisplayPanel::UpdateMonitorInfo(const CaptureMonitorMessage& m) {
+        monitors_ = m;
+        // sort it
+        for (auto& monitor : monitors_.monitors_) {
+            std::sort(monitor.resolutions_.begin(), monitor.resolutions_.end(), [](const auto& left, const auto& right) {
+                return left.width_ > right.width_;
+            });
+        }
     }
 
 }

@@ -7,6 +7,7 @@
 
 #include "base_widget.h"
 #include <QPainter>
+#include "app_message.h"
 
 namespace tc
 {
@@ -21,12 +22,14 @@ namespace tc
         void paintEvent(QPaintEvent *event) override;
         void Hide() override;
         void Show() override;
+        void UpdateMonitor(const CaptureMonitorMessage::CaptureMonitor& m);
     private:
         void SelectCapturingMonitorSize();
 
     private:
         Settings* settings_ = nullptr;
         SingleSelectedList* listview_ = nullptr;
+        CaptureMonitorMessage::CaptureMonitor monitor_;
     };
 
 }
