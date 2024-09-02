@@ -27,6 +27,7 @@ namespace tc
     class FileTransferChannel;
     class DebugPanel;
     class ClipboardManager;
+    class FloatButtonStateIndicator;
 
     class Workspace : public QMainWindow {
     public:
@@ -57,6 +58,7 @@ namespace tc
         void CalculateAspectRatio();
         void SwitchToFullWindow();
         void SendChangeMonitorResolutionMessage(const MsgChangeMonitorResolution& msg);
+        void UpdateFloatButtonIndicatorPosition();
 
     private:
         std::shared_ptr<ClientContext> context_ = nullptr;
@@ -75,6 +77,7 @@ namespace tc
         uint32_t cursor_type_ = 100000;
         DebugPanel* debug_panel_ = nullptr;
         std::shared_ptr<ClipboardManager> clipboard_mgr_ = nullptr;
+        FloatButtonStateIndicator* btn_indicator_ = nullptr;
     };
 
 }

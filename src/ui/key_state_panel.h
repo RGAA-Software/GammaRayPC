@@ -15,11 +15,12 @@ namespace tc
 
     class KeyItem : public QWidget {
     public:
-        KeyItem(const QString& txt, QWidget* parent = nullptr);
+        explicit KeyItem(const QString& txt, QWidget* parent = nullptr);
         void paintEvent(QPaintEvent *event) override;
         void UpdateText(const QString& txt);
         void UpdateState(bool pressed);
         void UpdateIndicator(bool pressed);
+        bool IsPressed();
 
     private:
         int color_;

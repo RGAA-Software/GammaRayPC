@@ -30,6 +30,7 @@
 #include "ui/no_margin_layout.h"
 #include "tc_client_sdk_new/sdk_messages.h"
 #include "tc_common_new/process_util.h"
+#include "ui/float_button_state_indicator.h"
 
 namespace tc
 {
@@ -62,6 +63,12 @@ namespace tc
 
         setCentralWidget(root_widget);
 
+        // button indicator
+        int shadow_color = 0x999999;
+        btn_indicator_ = new FloatButtonStateIndicator(ctx, this);
+        btn_indicator_->hide();
+        WidgetHelper::AddShadow(btn_indicator_, shadow_color);
+
         // debug panel
         debug_panel_ = new DebugPanel(context_, this);
         WidgetHelper::AddShadow(debug_panel_, 0x999999);
@@ -70,7 +77,6 @@ namespace tc
         // float controller
         float_controller_ = new FloatController(ctx, this);
         float_controller_->setFixedSize(55, 55);
-        int shadow_color = 0x999999;
         WidgetHelper::AddShadow(float_controller_, shadow_color);
         controller_panel_ = new FloatControllerPanel(ctx, this);
         WidgetHelper::AddShadow(controller_panel_, shadow_color);
@@ -202,6 +208,9 @@ namespace tc
             if (debug_panel_) {
                 debug_panel_->UpdateOnHeartBeat(hb);
             }
+            if (btn_indicator_) {
+                btn_indicator_->UpdateOnHeartBeat(hb);
+            }
         });
 
         sdk_->SetOnClipboardCallback([=, this](const ClipboardInfo& clipboard) {
@@ -312,6 +321,8 @@ namespace tc
         } else if (settings_->scale_mode_ == ScaleMode::kKeepAspectRatio) {
             CalculateAspectRatio();
         }
+
+        UpdateFloatButtonIndicatorPosition();
     }
 
     void Workspace::UpdateNotificationHandlePosition() {
@@ -324,6 +335,10 @@ namespace tc
         }
         notification_panel_->setGeometry(this->width()-notification_panel_->width() - offset_border, offset_border, notification_panel_->width(), this->height() - 2*offset_border);
         notification_handler_->setGeometry(this->width()-notification_handler_->width()/2 - notification_panel_width-handle_offset, 100, notification_handler_->width(), notification_handler_->height());
+    }
+
+    void Workspace::UpdateFloatButtonIndicatorPosition() {
+        btn_indicator_->setGeometry(0, 0, btn_indicator_->width(), btn_indicator_->height());
     }
 
     void Workspace::UpdateLocalCursor(uint32_t type) {

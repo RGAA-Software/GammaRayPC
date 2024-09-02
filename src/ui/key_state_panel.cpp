@@ -48,6 +48,10 @@ namespace tc
         indicator_ = pressed;
     }
 
+    bool KeyItem::IsPressed() {
+        return pressed_;
+    }
+
     // panel
     KeyStatePanel::KeyStatePanel(const std::shared_ptr<ClientContext>& ctx, QWidget* parent) : BaseWidget(ctx, parent) {
         setFixedWidth(300);
