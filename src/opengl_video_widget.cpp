@@ -124,7 +124,7 @@ namespace tc
         auto image = Image::MakeByCompressedImage(data);
         auto raw_image = RawImage::MakeRGBA(image->data->DataAddr(), image->data->Size(), image->width, image->height);
         logo_->UpdateImage(raw_image);
-        logo_->ForceImageSize(image->width/6.5f, image->height/6.5f);
+        logo_->ForceImageSize(image->width, image->height);
 
 	}
 
@@ -370,7 +370,7 @@ namespace tc
             logo_->OnWindowResized(width, height);
             auto image = logo_->GetRawImage();
             if (image) {
-                auto x = 1.0f - image->img_width*1.0f/6.5f / width;
+                auto x = 1.0f - image->img_width*1.0f / width;
                 logo_->UpdateTranslationPercentWindow(x, 0.0f);
             }
         }
