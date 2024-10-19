@@ -59,6 +59,7 @@ namespace tc
         void SwitchToFullWindow();
         void SendChangeMonitorResolutionMessage(const MsgChangeMonitorResolution& msg);
         void UpdateFloatButtonIndicatorPosition();
+        void UpdateVideoWidgetSize();
 
     private:
         std::shared_ptr<ClientContext> context_ = nullptr;
@@ -78,6 +79,7 @@ namespace tc
         DebugPanel* debug_panel_ = nullptr;
         std::shared_ptr<ClipboardManager> clipboard_mgr_ = nullptr;
         FloatButtonStateIndicator* btn_indicator_ = nullptr;
+        std::atomic_bool has_frame_arrived_ = false;
     };
 
 }

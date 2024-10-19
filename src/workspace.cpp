@@ -176,6 +176,10 @@ namespace tc
 
     void Workspace::RegisterSdkMsgCallbacks() {
         sdk_->SetOnVideoFrameDecodedCallback([=, this](const std::shared_ptr<RawImage>& image, const CaptureMonitorInfo& info) {
+            if (!has_frame_arrived_) {
+                has_frame_arrived_ = true;
+                UpdateVideoWidgetSize();
+            }
             video_widget_->RefreshCapturedMonitorInfo(info);
             video_widget_->RefreshI420Image(image);
             context_->UpdateCapturingMonitorInfo(info);
@@ -316,12 +320,7 @@ namespace tc
     void Workspace::resizeEvent(QResizeEvent *event) {
         UpdateNotificationHandlePosition();
         UpdateDebugPanelPosition();
-        if (settings_->scale_mode_ == ScaleMode::kFullWindow) {
-            SwitchToFullWindow();
-        } else if (settings_->scale_mode_ == ScaleMode::kKeepAspectRatio) {
-            CalculateAspectRatio();
-        }
-
+        UpdateVideoWidgetSize();
         UpdateFloatButtonIndicatorPosition();
     }
 
@@ -440,7 +439,9 @@ namespace tc
     void Workspace::CalculateAspectRatio() {
         auto vw = video_widget_->GetCapturingMonitorWidth();
         auto vh = video_widget_->GetCapturingMonitorHeight();
+        // no frame, fill the window
         if (vw <= 0 || vh <= 0) {
+            video_widget_->setGeometry(0, 0, this->width(), this->height());
             return;
         }
         float h_ratio = vw * 1.0f / this->width();
@@ -475,6 +476,13 @@ namespace tc
         cmr->set_target_width(msg.width_);
         cmr->set_target_height(msg.height_);
         sdk_->PostBinaryMessage(m.SerializeAsString());
+    }
+
+    void Workspace::UpdateVideoWidgetSize() {
+        context_->PostUITask([=, this]() {
+            auto scale_mode = settings_->scale_mode_;
+            SwitchScaleMode(scale_mode);
+        });
     }
 
     void Workspace::Exit() {
