@@ -50,6 +50,7 @@ void ParseCommandLine(QApplication& app) {
 
     g_host_ = parser.value(opt_host).toStdString();
     g_port_ = parser.value(opt_port).toInt();
+    //g_port_ = 9090;
 
     auto settings = tc::Settings::Instance();
     settings->remote_address_ = g_host_;
@@ -112,7 +113,7 @@ int main(int argc, char** argv) {
             .enable_controller_ = false,
             .ip_ = host,
             .port_ = port,
-            .req_path_ = "/media",
+            .req_path_ = "/media?only_audio=0",
 #if defined(WIN32)
             .client_type_ = ClientType::kWindows,
 #elif defined(ANDROID)
