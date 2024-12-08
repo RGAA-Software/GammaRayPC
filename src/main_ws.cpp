@@ -119,6 +119,8 @@ int main(int argc, char** argv) {
 #elif defined(ANDROID)
             .client_type_ = ClientType::kAndroid,
 #endif
+            //.conn_type_ = ClientConnType::kUdpKcp,
+            .conn_type_ = ClientConnType::kWebsocket,
     });
     ws.setWindowTitle(QMainWindow::tr("GammaRay Game Streamer"));
     ws.resize(1280, 768);
