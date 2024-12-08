@@ -1,5 +1,5 @@
 //
-// Created by hy on 17/08/2024.
+// Created by RGAA on 17/08/2024.
 //
 
 #ifndef GAMMARAYPC_FLOAT_SUB_MODE_PANEL_H

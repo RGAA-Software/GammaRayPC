@@ -1,5 +1,5 @@
 //
-// Created by hy on 12/08/2024.
+// Created by RGAA on 12/08/2024.
 //
 
 #ifndef GAMMARAYPC_KEY_STATE_PANEL_H
