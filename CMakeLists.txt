@@ -62,8 +62,8 @@ add_subdirectory(deps)
 
 add_custom_target(tc_build_all COMMENT "Build all targets")
 add_dependencies(tc_build_all GammaRayClient tc_rtc GammaRayClientInner)
-#add_custom_command(TARGET tc_build_all POST_BUILD
-#        COMMAND ${CMAKE_COMMAND} -E copy
-#            "${CMAKE_CURRENT_BINARY_DIR}/deps/tc_webrtc_client/tc_rtc.dll"
-#            "${CMAKE_CURRENT_BINARY_DIR}/src/"
-#)
+add_custom_command(TARGET tc_build_all POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_SOURCE_DIR}/src/icon.ico"  "${CMAKE_BINARY_DIR}/src/icon.ico"
+        COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/package"  "${CMAKE_BINARY_DIR}/src/package"
+        COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_SOURCE_DIR}/install.py"  "${CMAKE_BINARY_DIR}/src/package/install.py"
+)

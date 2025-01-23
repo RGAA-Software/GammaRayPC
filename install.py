@@ -8,16 +8,16 @@ from shutil import copytree
 
 def collceion_program_files(type, force_update, publish, in_target_path):
     base_path = ""
-    target_folder_suffix = ""
+    #target_folder_suffix = ""
     if type == "debug":
-        base_path = "./cmake-build-debug/"
-        target_folder_suffix = "_debug"
+        base_path = "./../"
+        #target_folder_suffix = "_debug"
     elif type == "release":
-        base_path = "./cmake-build-release/src/"
-        target_folder_suffix = "_client_windows"
+        base_path = "./../"
+        #target_folder_suffix = "_client_windows"
     elif type == "rel-debug":
-        base_path = "./cmake-build-relwithdebinfo/src/"
-        target_folder_suffix = "_client_windows_dbginfo"
+        base_path = "./../"
+        #target_folder_suffix = "_client_windows_dbginfo"
     else:
         print("don't known the mode : {}, must debug/release".format(sys.argv[1]))
         return
@@ -37,6 +37,8 @@ def collceion_program_files(type, force_update, publish, in_target_path):
         if ".key" in file:
             files_with_ref_path.append(file_path)
         if ".toml" in file:
+            files_with_ref_path.append(file_path)
+        if ".ico" in file:
             files_with_ref_path.append(file_path)
         if not publish:
             if "data.dat" in file:
@@ -65,7 +67,7 @@ def collceion_program_files(type, force_update, publish, in_target_path):
     folders_path.append(base_path + "qml")
     folders_path.append(base_path + "qmltooling")
 
-    target_path = base_path + "gammaray" + target_folder_suffix
+    target_path = base_path + "package/packages/com.rgaa.gammaray/data/"#"gammaray" + target_folder_suffix
     if len(in_target_path) > 0:
         target_path = in_target_path
 

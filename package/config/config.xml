@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Installer>
+    <Name>GammaRayClient</Name>
+    <Version>1.2.0</Version>
+    <Title>GammaRayClient</Title>
+    <Publisher>RGAA</Publisher>
+    <!-- Directory name is used in component.xml -->
+    <StartMenuDir>GammaRayClient</StartMenuDir>
+    <TargetDir>@HomeDir@/RGAA/GammaRayClient</TargetDir>
+</Installer>
