@@ -1,3 +1,6 @@
+### DEPRECATED 
+#### Moved to **[Server](https://github.com/RGAA-Software/GammaRay)**  
+
 ### GammaRay Client for PC platform
 #### !!! Please visit the repos !!!
 **[Server](https://github.com/RGAA-Software/GammaRay)**  
